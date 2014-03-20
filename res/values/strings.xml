@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Achmed Bomber</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="splash_screen">splash_screen</string>
+       <!-- MENU -->
+    <string name="single">SINGLE</string>
+    <string name="multiplayer">MULTIPLAYER</string>
+    <string name="settings">SETTINGS</string>
+    <string name="about">ABOUT</string>
+    <string name="exit">EXIT</string>
+    
+
+    
+</resources>
