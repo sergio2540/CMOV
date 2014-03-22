@@ -40,8 +40,13 @@ public class ABMainMenu extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		
+		Intent mainMenu= new Intent(ABMainMenu.this,
+			ABGame.class);
+			ABMainMenu.this.startActivity(mainMenu);
+			ABMainMenu.this.finish();
+			//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
 		    // setText() sets the string value of the TextView
-		    textView_exit.setText("Clicked");
+		    //textView_exit.setText("Clicked");
 		
 	    }
 	});

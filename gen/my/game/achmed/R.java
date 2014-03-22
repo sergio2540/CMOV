@@ -21,22 +21,41 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int splash_screen=0x7f020001;
+        public static final int b=0x7f020000;
+        public static final int bomb=0x7f020001;
+        public static final int bomb_button_normal=0x7f020002;
+        public static final int bomb_button_pressed=0x7f020003;
+        public static final int bomb_selector=0x7f020004;
+        public static final int doge=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int splash_screen=0x7f020007;
+        public static final int wallpaper=0x7f020008;
     }
     public static final class id {
-        public static final int about=0x7f080003;
-        public static final int exit=0x7f080004;
-        public static final int multiplayer=0x7f080001;
-        public static final int settings=0x7f080002;
-        public static final int single=0x7f080000;
-        public static final int splashScreenImage=0x7f080005;
+        public static final int about=0x7f08000e;
+        public static final int bomb_button=0x7f08000a;
+        public static final int bottomMenu=0x7f080004;
+        public static final int buttonDown=0x7f080007;
+        public static final int buttonLeft=0x7f080005;
+        public static final int buttonRight=0x7f080008;
+        public static final int buttonUp=0x7f080006;
+        public static final int dogeView=0x7f080000;
+        public static final int exit=0x7f08000f;
+        public static final int multiplayer=0x7f08000c;
+        public static final int namePlayer=0x7f080009;
+        public static final int numPlayers=0x7f080003;
+        public static final int score=0x7f080001;
+        public static final int settings=0x7f08000d;
+        public static final int single=0x7f08000b;
+        public static final int splashScreenImage=0x7f080010;
+        public static final int time=0x7f080002;
     }
     public static final class layout {
-        public static final int ab_main_menu=0x7f030000;
-        public static final int fade_in=0x7f030001;
-        public static final int fade_out=0x7f030002;
-        public static final int splash_screen=0x7f030003;
+        public static final int ab_game=0x7f030000;
+        public static final int ab_main_menu=0x7f030001;
+        public static final int fade_in=0x7f030002;
+        public static final int fade_out=0x7f030003;
+        public static final int splash_screen=0x7f030004;
     }
     public static final class raw {
         public static final int achmed=0x7f040000;

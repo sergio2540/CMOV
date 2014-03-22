@@ -26,6 +26,12 @@
             android:name="my.game.achmed.ABMainMenu">
         </activity>
         
+        <activity
+            android:name="my.game.achmed.ABGame">
+        </activity>
+        
+       
+        
         <service android:name="ABMusic"></service>
         
     </application>

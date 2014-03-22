@@ -1,8 +1,11 @@
 package my.game.achmed;
 
+import java.util.Calendar;
+
 import my.game.achmed.R;
 import android.content.Context;
 import android.content.Intent;
+import android.text.format.DateFormat;
 import android.view.View;
 
 public class ABEngine {
@@ -18,6 +21,23 @@ public class ABEngine {
 	public static Context context;
 	public static Thread musicThread;
 
+	public static Thread timeThread;
+	
+	/*
+	public void setTime() {
+	    Calendar cal = Calendar.getInstance();
+	    int minutes = cal.get(Calendar.MINUTE);
+
+	    if (DateFormat.is24HourFormat(this)) {
+	        int hours = cal.get(Calendar.HOUR_OF_DAY);
+	        mClockView.setText((hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes));
+	    }
+	    else {
+	        int hours = cal.get(Calendar.HOUR);
+	        mClockView.setText(hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + new DateFormatSymbols().getAmPmStrings()[cal.get(Calendar.AM_PM)]);
+	    }
+	}
+	*/
 
 	public boolean onExit(View v) {
 		try
