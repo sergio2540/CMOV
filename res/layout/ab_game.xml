@@ -1,0 +1,141 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <my.game.achmed.DogeView
+        android:id="@+id/dogeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="horizontal"
+        android:weightSum="3" >
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:ems="10"
+            android:text="1000 Points"
+            android:textColor="#FFFFFFFF" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:text="05:12"
+            android:textColor="#FFFFFFFF" />
+
+        <TextView
+            android:id="@+id/numPlayers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="end"
+            android:text="3 Players"
+            android:textColor="#FFFFFFFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomMenu"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/buttonLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+               
+               
+                android:gravity="center"
+                android:text="L"
+                android:textSize="5dp" />
+
+            <Button
+                android:id="@+id/buttonUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+               
+                
+                
+                
+               
+                
+                android:gravity="center"
+                android:text="U"
+                android:textSize="5dp" />
+
+            <Button
+                android:id="@+id/buttonDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+               
+               
+                
+               
+               
+                
+                android:gravity="center"
+                android:text="D"
+                android:textSize="5dp" />
+
+            <Button
+                android:id="@+id/buttonRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+              
+                
+                android:gravity="center"
+                android:text="R"
+                android:textSize="5dp" />
+            
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/namePlayer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Achmed"
+            android:textColor="#FFFFFFFF" />
+
+        <ImageButton
+            android:id="@+id/bomb_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:scaleType="fitEnd"
+            android:src="@drawable/bomb_selector" />
+    </LinearLayout>
+
+</RelativeLayout>
