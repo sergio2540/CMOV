@@ -22,6 +22,8 @@ public class ABEngine {
 	public static Thread musicThread;
 
 	public static Thread timeThread;
+	public static final int GAME_DURATION = 300000; //5 minutes
+	public static final int UPDATE_INTERVAL = 1000; //every second
 	
 	/*
 	public void setTime() {

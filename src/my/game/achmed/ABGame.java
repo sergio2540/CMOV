@@ -1,6 +1,10 @@
 package my.game.achmed;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -47,7 +51,26 @@ public class ABGame extends Activity {
 		};
 		*/
 		
-		findViewById(R.id.dogeView).setOnTouchListener(new OnTouchListener(){
+		new CountDownTimer(ABEngine.GAME_DURATION, ABEngine.UPDATE_INTERVAL) {
+			 
+			 private Date date = new Date();
+			 private SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+			 
+		     public void onTick(long millisUntilFinished) {
+				 date.setTime(millisUntilFinished);
+		         ((TextView)findViewById(R.id.time)).setText(formatter.format(date));
+		     }
+
+		     public void onFinish() {
+		    	 date.setTime(0);
+		         ((TextView)findViewById(R.id.time)).setText(formatter.format(date));
+		         ((TextView)findViewById(R.id.time)).setText("Over!!");
+		         
+		     }
+		  }.start();
+
+		
+		/*findViewById(R.id.dogeView).setOnTouchListener(new OnTouchListener(){
 		
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -84,7 +107,7 @@ public class ABGame extends Activity {
 				
 			}
 			
-		});
+		});*/
 		
 	}
 
