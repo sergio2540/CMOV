@@ -6,12 +6,8 @@ import java.util.Date;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 
@@ -39,29 +35,20 @@ public class ABGame extends Activity {
 		textView_time.setTypeface(font);
 		textView_namePlayer.setTypeface(font);
 		
-		
-		/*
-		ABEngine.timeThread = new Thread(){
-		    @Override
-		    public void run(){
-
-			textView_time.setT
-
-		    }
-		};
-		*/
-		
+		//TODO: Colocar em ABEngine
 		new CountDownTimer(ABEngine.GAME_DURATION, ABEngine.UPDATE_INTERVAL) {
 			 
-			 private Date date = new Date();
-			 private SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+			 private final Date date = new Date();
+			 private final SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
 			 
-		     public void onTick(long millisUntilFinished) {
+		     @Override
+		    public void onTick(long millisUntilFinished) {
 				 date.setTime(millisUntilFinished);
 		         ((TextView)findViewById(R.id.time)).setText(formatter.format(date));
 		     }
 
-		     public void onFinish() {
+		     @Override
+		    public void onFinish() {
 		    	 date.setTime(0);
 		         ((TextView)findViewById(R.id.time)).setText(formatter.format(date));
 		         ((TextView)findViewById(R.id.time)).setText("Over!!");
@@ -70,44 +57,7 @@ public class ABGame extends Activity {
 		  }.start();
 
 		
-		/*findViewById(R.id.dogeView).setOnTouchListener(new OnTouchListener(){
 		
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				float counter = 0;
-				float steps = 5;
-				float stepSize = 0;
-				if(Float.compare(DogeView.x, event.getX()) == 0){
-					stepSize = event.getY()/steps;
-					while((counter+=stepSize) != event.getY())
-					{
-						Log.v("LOL","ON YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-						DogeView.y = counter;
-						findViewById(R.id.dogeView).invalidate();
-
-					}
-					return true;
-
-				}
-				else if (Float.compare(DogeView.y, event.getY()) == 0){
-					stepSize = event.getX()/steps;
-					while((counter+=stepSize) != event.getX())
-					{
-						Log.v("LOL","ON XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!!!!!!!!!!!!!!!!!!!!!!!!!");
-						DogeView.x = counter;
-						findViewById(R.id.dogeView).invalidate();
-					}
-					return true;
-
-				}
-
-				return false;
-
-				
-			}
-			
-		});*/
 		
 	}
 
