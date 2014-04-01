@@ -2,11 +2,9 @@ package my.game.achmed;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.util.Log;
-import android.view.Display;
+
+import my.game.achmed.R;
 import android.view.View;
-import android.view.WindowManager;
 
 public class ABEngine {
 
@@ -116,25 +114,9 @@ public class ABEngine {
 
 	}
 
-
-
-
-	/*
-	public void setTime() {
-	    Calendar cal = Calendar.getInstance();
-	    int minutes = cal.get(Calendar.MINUTE);
-
-	    if (DateFormat.is24HourFormat(this)) {
-	        int hours = cal.get(Calendar.HOUR_OF_DAY);
-	        mClockView.setText((hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes));
-	    }
-	    else {
-	        int hours = cal.get(Calendar.HOUR);
-	        mClockView.setText(hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + " " + new DateFormatSymbols().getAmPmStrings()[cal.get(Calendar.AM_PM)]);
-	    }
-	}
-	 */
-
+	public static final int GAME_DURATION = 300000; //5 minutes
+	public static final int UPDATE_INTERVAL = 1000; //every second
+	
 	public boolean onExit(View v) {
 		try
 		{
