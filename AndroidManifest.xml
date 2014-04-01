@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="my.game.achmed"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="my.game.achmed"
     android:versionCode="1"
-    android:versionName="1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    android:versionName="1.0" >
 
+    <uses-feature android:glEsVersion="0x00010000" />
+    
     <uses-sdk
         android:minSdkVersion="19"
         android:targetSdkVersion="19" />
@@ -21,19 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity
-            android:name="my.game.achmed.ABMainMenu">
+        <activity android:name="my.game.achmed.ABMainMenu" >
         </activity>
-        
-        <activity
-            android:name="my.game.achmed.ABGame">
+        <activity android:name="my.game.achmed.ABGame" >
         </activity>
-        
-       
-        
-        <service android:name="ABMusic"></service>
-        
+
+        <service android:name="ABMusic" >
+        </service>
     </application>
 
 </manifest>

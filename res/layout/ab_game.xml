@@ -1,11 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/game_view"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <my.game.achmed.DogeView
-        android:id="@+id/dogeView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+        <my.game.achmed.ABGameView
+            android:id="@+id/game_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -122,7 +129,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Achmed"
-            android:textColor="#FFFFFFFF"/>
+            android:textColor="#FFFFFFFF" />
 
         <ImageButton
             android:id="@+id/bomb_button"

@@ -1,10 +1,15 @@
 package my.game.achmed;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 public class ABMainMenu extends Activity {
@@ -40,7 +45,7 @@ public class ABMainMenu extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		
-		Intent mainMenu= new Intent(ABMainMenu.this,
+		Intent mainMenu= new Intent(getApplicationContext(),
 			ABGame.class);
 			ABMainMenu.this.startActivity(mainMenu);
 			ABMainMenu.this.finish();
@@ -51,12 +56,20 @@ public class ABMainMenu extends Activity {
 	    }
 	});
 
+	Log.w("MYTAG", "initDisplay");
+	
+	WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+	Display display = wm.getDefaultDisplay();
 
+	Point point = new Point();
+	display.getRealSize(point);
 
-
-
-
-	ABEngine.musicThread = new Thread(){
+	ABEngine.displayWidth = point.x;
+	ABEngine.displayHeight = point.y;
+	
+	Log.w("MYTAG2", "Fim do display " + ABEngine.displayWidth + " : " + ABEngine.displayHeight);	
+	
+	ABEngine.musicThread = new Thread() {
 	    @Override
 	    public void run(){
 

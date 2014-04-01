@@ -12,7 +12,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
 @SuppressLint("NewApi")
-public class DogeView extends SurfaceView implements Callback{
+public class DogeView extends SurfaceView implements Callback {
 	Options opt;
 	Bitmap image;
 	Bitmap doge;
