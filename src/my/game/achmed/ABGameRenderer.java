@@ -11,20 +11,43 @@ public class ABGameRenderer implements Renderer {
 	private final ABMap map = new ABMap();
 	private final ABAchmedPlayer achmed = new ABAchmedPlayer();
 	private final ABBomb bomb = new ABBomb();
-	
+
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		Log.w("MYTAG", "onSurfaceChanged");
-		
-		float ratio = (float) width / height;
-		
+
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glDepthRangef(1f, 0f);
 		gl.glViewport(0, 0, width, height);
-		
+
 		gl.glLoadIdentity();
-		gl.glOrthof(0.0f, 1.0f, 0.0f, 1.0f, 10.0f, -10.0f);
-		
+
+		float x_max=1;
+		float x_min=0;
+
+		float y_max=1;
+		float y_min=0;
+
+		float z_max=-10;
+		float z_min=10;
+
+		float rac = (float)width/height;
+
+		if(rac > 1){
+
+			ABEngine.start_x = (float) Math.sqrt(Math.pow(rac*x_min,2) +  Math.pow(rac*x_max,2))/2;
+			ABEngine.start_y = (float) Math.sqrt(Math.pow(y_min,2) + Math.pow(y_max,2))/2;
+			
+			gl.glOrthof(rac*x_min, rac*x_max,y_min,y_max,z_min,z_max);
+		}
+		else {
+
+			ABEngine.start_x = (float) Math.sqrt( Math.pow(x_min,2) +  Math.pow(x_max,2))/2;
+			ABEngine.start_y = (float) Math.sqrt(Math.pow(y_min/rac,2) + Math.pow(y_max/rac,2))/2;
+
+			gl.glOrthof(x_min,x_max, y_min/rac, y_max/rac, z_min, z_max);
+		}
+
 	}
 
 	@Override
@@ -44,9 +67,9 @@ public class ABGameRenderer implements Renderer {
 		map.loadTexture(gl, ABEngine.GAME_MAP, ABEngine.context);
 		achmed.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 		bomb.loadTexture(gl, ABEngine.GAME_BOMB, ABEngine.context);
-		
+
 	}
-	
+
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		Log.w("MYTAG", "onDrawFrame");
@@ -67,7 +90,7 @@ public class ABGameRenderer implements Renderer {
 		drawMap(gl, ABEngine.game_map);
 		dropBomb(gl);
 		moveAchmed(gl);
-		
+
 	}
 
 	private void dropBomb(GL10 gl) {
@@ -75,11 +98,11 @@ public class ABGameRenderer implements Renderer {
 		switch (ABEngine.BOMB_ACTION) {
 
 		case ABEngine.NO_BOMB:
-			
+
 			break;
-			
+
 		case ABEngine.DROP_BOMB:
-			
+
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
@@ -95,9 +118,9 @@ public class ABGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 
 			break;
-			
+
 		}
-		
+
 	}
 
 	public void moveAchmed(GL10 gl) {
@@ -139,6 +162,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glScalef(.05f, .05f, 1f);
 
 			if(ABEngine.X_POSITION < 20) {
+				
 				ABEngine.X_POSITION += ABEngine.ACHMED_SPEED;
 				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
@@ -292,11 +316,13 @@ public class ABGameRenderer implements Renderer {
 
 	public void drawMap(GL10 gl, char[][] game_matrix) {
 
-		float tileLocX = 0f;
-		float tileLocY = 0f;
+		//ADD
+		float tileLocX = (ABEngine.start_x/0.05f) - game_matrix[0].length/2;
+		float tileLocY = (ABEngine.start_y/0.05f) - game_matrix.length/2;
 
-		for(int x=0; x<20; x++) {
-			for(int y=0; y<20; y++) {
+		//ADD
+		for(int x=0; x< game_matrix[0].length ; x++) {
+			for(int y=0; y< game_matrix.length; y++) {
 
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
@@ -310,7 +336,7 @@ public class ABGameRenderer implements Renderer {
 				switch(game_matrix[game_matrix.length - 1 - y][x]) {
 
 				case 'W':
-					
+
 					gl.glMatrixMode(GL10.GL_TEXTURE);
 					gl.glLoadIdentity();
 					gl.glTranslatef(0.9375f, 0.0625f, 0f);
@@ -341,15 +367,16 @@ public class ABGameRenderer implements Renderer {
 					gl.glLoadIdentity();
 
 					break;
-					
+
 				}
-				
+
 				tileLocY += 1;
 			}
 
 			tileLocX += 1;
-			tileLocY = 0;
+			tileLocY = (ABEngine.start_y/0.05f) - game_matrix.length/2;
+
 		}
 	}
-	
+
 }
