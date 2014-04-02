@@ -15,14 +15,16 @@ public class ABGameRenderer implements Renderer {
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		Log.w("MYTAG", "onSurfaceChanged");
-
+		
+		float ratio = (float) width / height;
+		
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glDepthRangef(1f, 0f);
 		gl.glViewport(0, 0, width, height);
 		
 		gl.glLoadIdentity();
 		gl.glOrthof(0.0f, 1.0f, 0.0f, 1.0f, 10.0f, -10.0f);
-
+		
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public class ABGameRenderer implements Renderer {
 		drawMap(gl, ABEngine.game_map);
 		dropBomb(gl);
 		moveAchmed(gl);
-
+		
 	}
 
 	private void dropBomb(GL10 gl) {
@@ -109,7 +111,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
+			gl.glScalef(.05f, .05f, 1f);
 
 			if(ABEngine.X_POSITION > 0) {
 
@@ -134,9 +136,9 @@ public class ABGameRenderer implements Renderer {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
+			gl.glScalef(.05f, .05f, 1f);
 
-			if(ABEngine.X_POSITION < 10) {
+			if(ABEngine.X_POSITION < 20) {
 				ABEngine.X_POSITION += ABEngine.ACHMED_SPEED;
 				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
@@ -158,9 +160,9 @@ public class ABGameRenderer implements Renderer {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
+			gl.glScalef(.05f, .05f, 1f);
 
-			if(ABEngine.Y_POSITION < 10) {
+			if(ABEngine.Y_POSITION < 20) {
 
 				ABEngine.Y_POSITION += ABEngine.ACHMED_SPEED;
 				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
@@ -183,7 +185,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
+			gl.glScalef(.05f, .05f, 1f);
 
 			if(ABEngine.Y_POSITION > 0) {
 
@@ -209,7 +211,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
+			gl.glScalef(.05f, .05f, 1f);
 
 			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
@@ -229,7 +231,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
+			gl.glScalef(.05f, .05f, 1f);
 
 			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
@@ -249,7 +251,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
+			gl.glScalef(.05f, .05f, 1f);
 
 			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
@@ -269,7 +271,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
+			gl.glScalef(.05f, .05f, 1f);
 
 			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
