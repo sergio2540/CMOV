@@ -77,12 +77,12 @@ public class ABGameRenderer implements Renderer {
 	    gl.glLoadIdentity();
 	    gl.glPushMatrix();
 	    gl.glScalef(.07f, .07f, 1f);
-	    gl.glTranslatef(ABEngine.X_POSITION+2, ABEngine.Y_POSITION, 0.3f);
+	    gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.3f);
 	    
 	    gl.glMatrixMode(GL10.GL_TEXTURE);
 	    gl.glLoadIdentity();
 	    gl.glScalef(1f, 1f, 1f);
-	    gl.glTranslatef(0.250f, 1.002f , 0f);
+	    gl.glTranslatef(0.250f, 0.835f , 0f);
 	    bomb.draw(gl);
 	    gl.glPopMatrix();
 	    gl.glLoadIdentity();
