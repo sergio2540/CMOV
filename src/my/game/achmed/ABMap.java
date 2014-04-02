@@ -107,14 +107,7 @@ public class ABMap {
 				GL10.GL_REPEAT);
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 		bitmap.recycle();
+	
 	}
-
-	
-	
-	
 	
 }
-
-
-
-

@@ -7,7 +7,6 @@ public class GameMatrix {
 	
 	char[][] gameMatrix;
 	
-	
 	//para criar um objecto quando for para loadar de um ficheiro
 	public void GameMatrix() {}
 	
@@ -19,14 +18,9 @@ public class GameMatrix {
 		
 	}
 	
-	
-
-	
 	//TODO lodar a matriz de um file
 	public void loadMatrixFromFile() {
 		
 	}
-	
-	
 
 }

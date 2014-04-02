@@ -79,7 +79,7 @@
                 android:layout_toLeftOf="@+id/arrow_right"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/arrow_down_selector" />
+                android:src="@drawable/arrow_down_normal" />
 
             <ImageButton
                 android:id="@+id/dot"
@@ -98,7 +98,7 @@
                 android:layout_above="@+id/arrow_down"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/arrow_left_selector" />
+                android:src="@drawable/arrow_left_normal" />
 
             <ImageButton
                 android:id="@+id/arrow_up"
@@ -109,7 +109,7 @@
                 android:layout_toLeftOf="@+id/arrow_right"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/arrow_up_selector" />
+                android:src="@drawable/arrow_up_normal" />
 
             <ImageButton
                 android:id="@+id/arrow_right"
@@ -119,7 +119,7 @@
                 android:layout_toRightOf="@+id/dot"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/arrow_right_selector" />
+                android:src="@drawable/arrow_right_normal" />
         </RelativeLayout>
 
         <TextView
@@ -138,7 +138,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:scaleType="fitEnd"
-            android:src="@drawable/bomb_selector" />
+            android:src="@drawable/bomb_button_normal" />
     </LinearLayout>
 
 </RelativeLayout>

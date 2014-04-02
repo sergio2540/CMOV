@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.widget.Toast;
 
 public class ABMusic extends Service {
 
@@ -20,7 +19,6 @@ public class ABMusic extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		 Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
 
 		setMusicOptions(this, ABEngine.LOOP_BACKGROUND_MUSIC, ABEngine.R_VOLUME, ABEngine.L_VOLUME,
 				ABEngine.SPLASH_SCREEN_MUSIC);
@@ -32,7 +30,7 @@ public class ABMusic extends Service {
 		player = MediaPlayer.create(context, soundFile);
 		player.setLooping(isLooped);
 		player.setVolume(rVolume,lVolume);
-				
+
 	}
 
 	@Override
@@ -48,7 +46,6 @@ public class ABMusic extends Service {
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
-		 Toast.makeText(this, "on Start Command", Toast.LENGTH_SHORT).show();
 		try
 		{
 			player.start();
@@ -63,23 +60,21 @@ public class ABMusic extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		
+
 		player.start();
-		
+
 	}
 
 	public void onStop() {
-//		isRunning = false;
+		//isRunning = false;
 	}
 
-	public IBinder onUnBind(Intent arg0) {
+	public IBinder onUnBind(Intent intent) {
 		return null;
 	}
 
 	public void onPause() {
+		
 	}
-
-
-
 
 }

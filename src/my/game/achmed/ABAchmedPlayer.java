@@ -83,8 +83,6 @@ public class ABAchmedPlayer {
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glDisable(GL10.GL_CULL_FACE);
 		
-		
-
 	}
 
 	public void loadTexture(GL10 gl, int texture, Context context) {
@@ -116,9 +114,8 @@ public class ABAchmedPlayer {
 		
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 		
-		
-		
 		bitmap.recycle();
+		
 	}
 
 	

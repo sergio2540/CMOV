@@ -12,8 +12,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-
-
 public class ABGame extends Activity {
 
 	private ABGameView gameView;
@@ -23,15 +21,11 @@ public class ABGame extends Activity {
 
 		Log.w("MYTAG", "onCreate ABGAME class");
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.ab_game);
-
-		gameView = 
-				(ABGameView)findViewById(R.id.game_frame);
+		gameView = (ABGameView)findViewById(R.id.game_frame);
 
 		//TODO se calhar uma boa opcao de desenho e passar isto para o constructor de ABGameView
 		gameView.setRenderer(new ABGameRenderer());
-
 
 		final ImageButton setaEsquerda = (ImageButton) findViewById(R.id.arrow_left);
 
@@ -41,14 +35,13 @@ public class ABGame extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-					Log.w("TOUCH", "seta esquerda largada");
+
 					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_LEFT_RELEASE;
 					setaEsquerda.setImageResource(R.drawable.arrow_left_normal);
 
-
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
-					Log.w("TOUCH", "seta esquerda pressionada");
+
 					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_LEFT;
 					setaEsquerda.setImageResource(R.drawable.arrow_left);
 
@@ -65,13 +58,13 @@ public class ABGame extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-					Log.w("TOUCH", "seta direita largada");
+
 					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_RIGHT_RELEASE;
 					setaDireita.setImageResource(R.drawable.arrow_right_normal);
 
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
-					Log.w("TOUCH", "seta direita pressionada");
+
 					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_RIGHT;
 					setaDireita.setImageResource(R.drawable.arrow_right);
 
@@ -88,14 +81,16 @@ public class ABGame extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-					Log.w("TOUCH", "seta cima largada");
+
 					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_UP_RELEASE;
 					setaCima.setImageResource(R.drawable.arrow_up_normal);
+					
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
-					Log.w("TOUCH", "seta cima pressionada");
+
 					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_UP;
 					setaCima.setImageResource(R.drawable.arrow_up);
+					
 				}
 				return true;
 			}
@@ -110,23 +105,14 @@ public class ABGame extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-					Log.w("TOUCH", "seta baixo largada");
-					
-					/*
-					createPalyer(Characters.)
-					player.Down();
-					*/
-					
-					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN_RELEASE;
 
+					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN_RELEASE;
 					setaBaixo.setImageResource(R.drawable.arrow_down_normal);
 
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
-					Log.w("TOUCH", "seta baixo pressionada");
 
 					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN;
-
 					setaBaixo.setImageResource(R.drawable.arrow_down);
 
 				}
@@ -137,30 +123,23 @@ public class ABGame extends Activity {
 		
 		final ImageButton bombButton = (ImageButton) findViewById(R.id.bomb_button);
 		
-		
 		bombButton.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-					Log.w("TOUCH", "seta baixo largada");
-					
 					/*
 					createPalyer(Characters.)
 					player.Down();
 					*/
-					
 					ABEngine.BOMB_ACTION = ABEngine.NO_BOMB;
-
 					bombButton.setImageResource(R.drawable.bomb_button_normal);
 
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
-					Log.w("TOUCH", "seta baixo pressionada");
 
 					ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
-
 					bombButton.setImageResource(R.drawable.bomb_button_pressed);
 
 				}
@@ -168,15 +147,13 @@ public class ABGame extends Activity {
 			}
 		});
 
-		//Colocar numa funcao
+		//TODO: Colocar numa funcao
 		Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
 		
 		TextView textView_score  =(TextView)findViewById(R.id.score);
 		TextView textView_numPlayers =(TextView)findViewById(R.id.numPlayers);
 		final TextView textView_time = (TextView)findViewById(R.id.time);
-		
 		TextView textView_namePlayer = (TextView)findViewById(R.id.namePlayer);
-		
 		
 		textView_score.setTypeface(font);
 		textView_numPlayers.setTypeface(font);
@@ -204,7 +181,6 @@ public class ABGame extends Activity {
 			}
 		}.start();
 
-
 	}
 
 	//	@Override
@@ -218,44 +194,5 @@ public class ABGame extends Activity {
 	//		super.onPause();
 	//		gameView.onPause();
 	//	}
-
-//	@Override
-//	public boolean onTouchEvent(MotionEvent event) {
-//
-//		float x = event.getX();
-//		float y = event.getY();
-//
-//		Log.w("MYTAG2", "event.getX(): " + x + "           evetn.getY(): " + y);
-//		Log.w("MYTAG2", "height: " + ABEngine.displayHeight + "      display width" + ABEngine.displayWidth); 
-//
-//		int height = ABEngine.displayHeight / 4;
-//		int playableArea = ABEngine.displayHeight - height;
-//
-//		if (y > playableArea){
-//			switch (event.getAction()){
-//
-//			case MotionEvent.ACTION_DOWN:
-//
-//				if(x < ABEngine.displayWidth / 2) {
-//
-//					ABEngine.playerFlightAction =
-//							ABEngine.PLAYER_BANK_LEFT_1;
-//
-//				} else{
-//
-//					ABEngine.playerFlightAction =
-//							ABEngine.PLAYER_BANK_RIGHT_1;
-//				}
-//				
-//				break;
-//
-//			case MotionEvent.ACTION_UP:
-//				ABEngine.playerFlightAction = ABEngine.PLAYER_RELEASE;
-//				break;
-//
-//			}
-//		}
-//		return false;
-//	}
 
 }
