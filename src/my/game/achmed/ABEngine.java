@@ -37,6 +37,8 @@ public class ABEngine {
 	
 	public static final int GAME_PLAYER = R.raw.bomberman;
 	
+	public static final int GAME_BOMB = R.raw.bombs;
+	
 	public static final int PLAYER_LEFT = 1;
 	public static final int PLAYER_UP = 4;
 	public static final int PLAYER_RIGHT = 2;

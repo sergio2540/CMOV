@@ -77,7 +77,7 @@ public class ABGameRenderer implements Renderer {
 	    gl.glLoadIdentity();
 	    gl.glPushMatrix();
 	    gl.glScalef(.07f, .07f, 1f);
-	    gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.3f);
+	    gl.glTranslatef(ABEngine.X_POSITION+2, ABEngine.Y_POSITION, 0.3f);
 	    
 	    gl.glMatrixMode(GL10.GL_TEXTURE);
 	    gl.glLoadIdentity();
@@ -574,6 +574,8 @@ public class ABGameRenderer implements Renderer {
 	abTileMap.loadTexture(gl, ABEngine.GAME_MAP, ABEngine.context);
 
 	achmed.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
+	
+	bomb.loadTexture(gl, ABEngine.GAME_BOMB, ABEngine.context);
 
 
     }
