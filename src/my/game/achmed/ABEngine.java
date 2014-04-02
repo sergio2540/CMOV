@@ -67,7 +67,11 @@ public class ABEngine {
 	public static float Y_POSITION = 0f;
 	
 	public static final int PLAYER_ACHMED_FRAMES = 0;
-
+	
+	public static int BOMB_ACTION = 0;
+	public static final int NO_BOMB = 0;
+	public static final int DROP_BOMB = 1;
+	
 
 	public static int displayHeight;
 	public static int displayWidth;
@@ -116,6 +120,11 @@ public class ABEngine {
 
 	public static final int GAME_DURATION = 300000; //5 minutes
 	public static final int UPDATE_INTERVAL = 1000; //every second
+
+	
+
+	
+	
 	
 	public boolean onExit(View v) {
 		try

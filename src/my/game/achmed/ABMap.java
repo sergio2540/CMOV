@@ -13,7 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
-public class ABTileMap {
+public class ABMap {
 
 
 	private FloatBuffer vertexBuffer;
@@ -40,7 +40,7 @@ public class ABTileMap {
 			0,2,3,
 	};
 
-	public ABTileMap() {
+	public ABMap() {
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());

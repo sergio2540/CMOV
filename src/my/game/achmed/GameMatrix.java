@@ -18,6 +18,8 @@ public class GameMatrix {
 		gameMatrix = new char[rows][cols];
 		
 	}
+	
+	
 
 	
 	//TODO lodar a matriz de um file

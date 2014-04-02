@@ -1,7 +1,5 @@
 package my.game.achmed;
 
-
-import android.opengl.GLSurfaceView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.os.Bundle;
@@ -11,12 +9,9 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.webkit.WebView.FindListener;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 
 public class ABGame extends Activity {
@@ -116,7 +111,12 @@ public class ABGame extends Activity {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
 					Log.w("TOUCH", "seta baixo largada");
-
+					
+					/*
+					createPalyer(Characters.)
+					player.Down();
+					*/
+					
 					ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN_RELEASE;
 
 					setaBaixo.setImageResource(R.drawable.arrow_down_normal);
@@ -133,22 +133,55 @@ public class ABGame extends Activity {
 				return true;
 			}
 		});
+		
+		
+		final ImageButton bombButton = (ImageButton) findViewById(R.id.bomb_button);
+		
+		
+		bombButton.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+
+				if(event.getAction() == (MotionEvent.ACTION_UP)){
+					Log.w("TOUCH", "seta baixo largada");
+					
+					/*
+					createPalyer(Characters.)
+					player.Down();
+					*/
+					
+					ABEngine.BOMB_ACTION = ABEngine.NO_BOMB;
+
+					bombButton.setImageResource(R.drawable.bomb_button_normal);
+
+				}
+				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
+					Log.w("TOUCH", "seta baixo pressionada");
+
+					ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
+
+					bombButton.setImageResource(R.drawable.bomb_button_pressed);
+
+				}
+				return true;
+			}
+		});
 
 		//Colocar numa funcao
-				Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
+		Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
 		
-				TextView textView_score  =(TextView)findViewById(R.id.score);
-				TextView textView_numPlayers =(TextView)findViewById(R.id.numPlayers);
+		TextView textView_score  =(TextView)findViewById(R.id.score);
+		TextView textView_numPlayers =(TextView)findViewById(R.id.numPlayers);
+		final TextView textView_time = (TextView)findViewById(R.id.time);
 		
-				final TextView textView_time = (TextView)findViewById(R.id.time);
-		
-				TextView textView_namePlayer = (TextView)findViewById(R.id.namePlayer);
+		TextView textView_namePlayer = (TextView)findViewById(R.id.namePlayer);
 		
 		
-				textView_score.setTypeface(font);
-				textView_numPlayers.setTypeface(font);
-				textView_time.setTypeface(font);
-				textView_namePlayer.setTypeface(font);
+		textView_score.setTypeface(font);
+		textView_numPlayers.setTypeface(font);
+		textView_time.setTypeface(font);
+		textView_namePlayer.setTypeface(font);
 
 		//TODO: Colocar em ABEngine
 		new CountDownTimer(ABEngine.GAME_DURATION, ABEngine.UPDATE_INTERVAL) {
@@ -186,43 +219,43 @@ public class ABGame extends Activity {
 	//		gameView.onPause();
 	//	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-
-		float x = event.getX();
-		float y = event.getY();
-
-		Log.w("MYTAG2", "event.getX(): " + x + "           evetn.getY(): " + y);
-		Log.w("MYTAG2", "height: " + ABEngine.displayHeight + "      display width" + ABEngine.displayWidth); 
-
-		int height = ABEngine.displayHeight / 4;
-		int playableArea = ABEngine.displayHeight - height;
-
-		if (y > playableArea){
-			switch (event.getAction()){
-
-			case MotionEvent.ACTION_DOWN:
-
-				if(x < ABEngine.displayWidth / 2) {
-
-					ABEngine.playerFlightAction =
-							ABEngine.PLAYER_BANK_LEFT_1;
-
-				} else{
-
-					ABEngine.playerFlightAction =
-							ABEngine.PLAYER_BANK_RIGHT_1;
-				}
-				
-				break;
-
-			case MotionEvent.ACTION_UP:
-				ABEngine.playerFlightAction = ABEngine.PLAYER_RELEASE;
-				break;
-
-			}
-		}
-		return false;
-	}
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//
+//		float x = event.getX();
+//		float y = event.getY();
+//
+//		Log.w("MYTAG2", "event.getX(): " + x + "           evetn.getY(): " + y);
+//		Log.w("MYTAG2", "height: " + ABEngine.displayHeight + "      display width" + ABEngine.displayWidth); 
+//
+//		int height = ABEngine.displayHeight / 4;
+//		int playableArea = ABEngine.displayHeight - height;
+//
+//		if (y > playableArea){
+//			switch (event.getAction()){
+//
+//			case MotionEvent.ACTION_DOWN:
+//
+//				if(x < ABEngine.displayWidth / 2) {
+//
+//					ABEngine.playerFlightAction =
+//							ABEngine.PLAYER_BANK_LEFT_1;
+//
+//				} else{
+//
+//					ABEngine.playerFlightAction =
+//							ABEngine.PLAYER_BANK_RIGHT_1;
+//				}
+//				
+//				break;
+//
+//			case MotionEvent.ACTION_UP:
+//				ABEngine.playerFlightAction = ABEngine.PLAYER_RELEASE;
+//				break;
+//
+//			}
+//		}
+//		return false;
+//	}
 
 }
