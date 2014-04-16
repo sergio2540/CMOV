@@ -15,10 +15,13 @@ import android.opengl.GLUtils;
 
 public class ABAchmedPlayer {
 
-	
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
+
+	private float x_position = 0;
+	private float y_position = 0;
+	
 	private int[] textures = new int[1];
 
 

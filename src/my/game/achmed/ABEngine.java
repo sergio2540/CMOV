@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import my.game.achmed.R;
+import android.util.Log;
 import android.view.View;
 
 public class ABEngine {
@@ -55,6 +56,8 @@ public class ABEngine {
 
 	public static float start_x;
 	public static float start_y;
+	
+	public static boolean firstmapdraw = true;
 
 
 
@@ -74,15 +77,67 @@ public class ABEngine {
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
-		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
-		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
-		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
+		{'W','-','-','-','-','-','W','W','W','-','-','-','-','-','-','-','-','-','-','W'},
+		{'W','-','-','-','1','-','-','-','W','-','-','-','-','-','-','-','-','-','-','W'},
+		{'W','-','-','-','-','-','W','W','W','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W'},
 
 
 	};
+	
+	
+	public static boolean detectColision(float x, float y) {
+		
+		int matrix_x = 0, matrix_y = 0;
+		
+		float startX = (ABEngine.start_x/0.05f) - game_map[0].length/2;
+		float startY = (ABEngine.start_y/0.05f) - game_map.length/2;
+		
+		switch(ABEngine.PLAYER_ACTION) {
+		
+		case ABEngine.PLAYER_UP: 
+			
+			matrix_x = (int) Math.round((x - startX));
+			matrix_y = (int) Math.floor(game_map.length - 1 - (y - startY));
+			
+			break;
+			
+		case ABEngine.PLAYER_DOWN: 
+			
+			matrix_x = (int) Math.round((x - startX));
+			matrix_y = (int) Math.ceil(game_map.length - 1 - (y - startY));
+			
+			break;
+			
+		case ABEngine.PLAYER_LEFT:
+			
+			matrix_x = (int) Math.floor((x - startX));
+			matrix_y = (int) Math.round(game_map.length - 1 - (y - startY));
+			
+			break;
+			
+		case ABEngine.PLAYER_RIGHT:
+			
+			matrix_x = (int) Math.ceil((x - startX));
+			matrix_y = (int) Math.round(game_map.length - 1 - (y - startY));
+			
+			break;
+		
+		}
+		
+		char pos = game_map[matrix_y][matrix_x];
+		
+		if(pos == '-' || pos == '1' ) {
+			Log.w("RESULT", "false");
+			return false;
+		} else {
+			Log.w("RESULT", "true");
+			return true;
+		}
+		
+	}
 
 
 
@@ -95,7 +150,7 @@ public class ABEngine {
 			musicThread.interrupt();
 			return true;			
 
-		} catch(Exception e){
+		} catch(Exception e) {
 			return false;
 		}
 

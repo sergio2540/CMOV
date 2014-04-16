@@ -37,7 +37,7 @@ public class ABGameRenderer implements Renderer {
 
 			ABEngine.start_x = (float) Math.sqrt(Math.pow(rac*x_min,2) +  Math.pow(rac*x_max,2))/2;
 			ABEngine.start_y = (float) Math.sqrt(Math.pow(y_min,2) + Math.pow(y_max,2))/2;
-			
+
 			gl.glOrthof(rac*x_min, rac*x_max,y_min,y_max,z_min,z_max);
 		}
 		else {
@@ -89,7 +89,7 @@ public class ABGameRenderer implements Renderer {
 		//não trocar a ordem das linhas 
 		drawMap(gl, ABEngine.game_map);
 		dropBomb(gl);
-		moveAchmed(gl);
+		moveAchmed(gl, ABEngine.game_map);
 
 	}
 
@@ -123,7 +123,7 @@ public class ABGameRenderer implements Renderer {
 
 	}
 
-	public void moveAchmed(GL10 gl) {
+	public void moveAchmed(GL10 gl, char[][] game_matrix) {
 
 		//Player.Create(ENUM.BLACKSKIN);
 
@@ -136,9 +136,16 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			if(ABEngine.X_POSITION > 0) {
+			float pos = ABEngine.X_POSITION - ABEngine.ACHMED_SPEED;
+
+			if(!ABEngine.detectColision(pos, ABEngine.Y_POSITION)) {
 
 				ABEngine.X_POSITION -= ABEngine.ACHMED_SPEED;
+
+				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+
+			} else {
+
 				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
 			}
@@ -161,12 +168,21 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			if(ABEngine.X_POSITION < 20) {
-				
+			pos = ABEngine.X_POSITION + ABEngine.ACHMED_SPEED;
+
+			if(!ABEngine.detectColision(pos, ABEngine.Y_POSITION)) {
+
 				ABEngine.X_POSITION += ABEngine.ACHMED_SPEED;
+
+				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+
+			} else {
+
 				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
 			}
+
+
 
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
@@ -186,12 +202,21 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			if(ABEngine.Y_POSITION < 20) {
+
+			pos = ABEngine.Y_POSITION + ABEngine.ACHMED_SPEED;
+
+			if(!ABEngine.detectColision(ABEngine.X_POSITION, pos)) {
 
 				ABEngine.Y_POSITION += ABEngine.ACHMED_SPEED;
+
+				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+
+			} else {
+
 				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
 			}
+
 
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
@@ -211,9 +236,16 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			if(ABEngine.Y_POSITION > 0) {
+			pos = ABEngine.Y_POSITION - ABEngine.ACHMED_SPEED;
+
+			if(!ABEngine.detectColision(ABEngine.X_POSITION, pos)) {
 
 				ABEngine.Y_POSITION -= ABEngine.ACHMED_SPEED;
+
+				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+
+			} else {
+
 				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
 
 			}
@@ -316,11 +348,9 @@ public class ABGameRenderer implements Renderer {
 
 	public void drawMap(GL10 gl, char[][] game_matrix) {
 
-		//ADD
 		float tileLocX = (ABEngine.start_x/0.05f) - game_matrix[0].length/2;
 		float tileLocY = (ABEngine.start_y/0.05f) - game_matrix.length/2;
 
-		//ADD
 		for(int x=0; x< game_matrix[0].length ; x++) {
 			for(int y=0; y< game_matrix.length; y++) {
 
@@ -329,6 +359,9 @@ public class ABGameRenderer implements Renderer {
 				gl.glPushMatrix();
 				gl.glScalef(.05f, .05f, 1f);
 				gl.glTranslatef(tileLocX, tileLocY, 0f);
+
+				//				Log.w("PASSOX", "" + tileLocX);
+				//				Log.w("PASSOY", "" + tileLocY);
 
 				gl.glMatrixMode(GL10.GL_TEXTURE);
 				gl.glLoadIdentity();
@@ -368,6 +401,23 @@ public class ABGameRenderer implements Renderer {
 
 					break;
 
+				case '1':
+
+
+					gl.glMatrixMode(GL10.GL_TEXTURE);
+					gl.glLoadIdentity();
+					gl.glTranslatef(0.3125f, 0.375f, 0f);
+					map.draw(gl); 
+					gl.glPopMatrix();
+					gl.glLoadIdentity();
+
+					if(ABEngine.firstmapdraw) {
+						ABEngine.X_POSITION = tileLocX;
+						ABEngine.Y_POSITION = tileLocY;
+					}
+
+					break;
+
 				}
 
 				tileLocY += 1;
@@ -377,6 +427,9 @@ public class ABGameRenderer implements Renderer {
 			tileLocY = (ABEngine.start_y/0.05f) - game_matrix.length/2;
 
 		}
+
+		ABEngine.firstmapdraw = false;
+
 	}
 
 }
