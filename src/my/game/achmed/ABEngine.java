@@ -31,6 +31,7 @@ public class ABEngine {
 	public static final int GAME_MAP = R.raw.gametiles;
 	public static final int GAME_PLAYER = R.raw.bomberman;
 	public static final int GAME_BOMB = R.raw.bombs;
+	public static final int GAME_FIRE = R.raw.fireball;
 
 	public static final int PLAYER_LEFT = 1;
 	public static final int PLAYER_UP = 4;
@@ -50,9 +51,13 @@ public class ABEngine {
 
 	public static final int NO_BOMB = 0;
 	public static final int DROP_BOMB = 1;
+	public static final int BOMB_EXPLOSION = 2;
 
 	public static int PLAYER_ACTION = PLAYER_RIGHT_RELEASE;
 	public static int BOMB_ACTION = NO_BOMB;
+	public static int BOMB_TIME_TO_EXPLOSION = 2000;
+	
+	public static boolean BOMB_DROPPED = false;
 
 	public static float start_x;
 	public static float start_y;
@@ -71,10 +76,10 @@ public class ABEngine {
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
-		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
-		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
-		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
-		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
+		{'W','-','-','-','-','O','O','O','O','O','-','-','-','-','-','-','-','-','-','W'},
+		{'W','-','-','-','-','-','-','-','-','O','-','-','-','-','-','-','-','-','-','W'},
+		{'W','-','-','-','-','-','-','-','-','O','-','-','-','-','-','-','-','-','-','W'},
+		{'W','-','-','-','-','O','O','O','O','O','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','W','W','W','-','-','-','-','-','-','-','-','-','-','W'},

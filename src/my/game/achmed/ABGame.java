@@ -133,7 +133,8 @@ public class ABGame extends Activity {
 					createPalyer(Characters.)
 					player.Down();
 					*/
-					ABEngine.BOMB_ACTION = ABEngine.NO_BOMB;
+
+					//ABEngine.BOMB_ACTION = ABEngine.NO_BOMB;
 					bombButton.setImageResource(R.drawable.bomb_button_normal);
 
 				}

@@ -11,6 +11,7 @@ public class ABGameRenderer implements Renderer {
 	private final ABMap map = new ABMap();
 	private final ABAchmedPlayer achmed = new ABAchmedPlayer();
 	private final ABBomb bomb = new ABBomb();
+	private final ABFire fire = new ABFire();
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -67,6 +68,7 @@ public class ABGameRenderer implements Renderer {
 		map.loadTexture(gl, ABEngine.GAME_MAP, ABEngine.context);
 		achmed.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 		bomb.loadTexture(gl, ABEngine.GAME_BOMB, ABEngine.context);
+		fire.loadTexture(gl, ABEngine.GAME_FIRE, ABEngine.context);
 
 	}
 
@@ -90,6 +92,7 @@ public class ABGameRenderer implements Renderer {
 		drawMap(gl, ABEngine.game_map);
 		dropBomb(gl);
 		moveAchmed(gl, ABEngine.game_map);
+		explodeBomb(gl, ABEngine.game_map);
 
 	}
 
@@ -98,24 +101,37 @@ public class ABGameRenderer implements Renderer {
 		switch (ABEngine.BOMB_ACTION) {
 
 		case ABEngine.NO_BOMB:
-
+			
+			ABEngine.BOMB_DROPPED = false;
 			break;
 
 		case ABEngine.DROP_BOMB:
 
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-			gl.glLoadIdentity();
-			gl.glPushMatrix();
-			gl.glScalef(.07f, .07f, 1f);
-			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.3f);
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.05f, .05f, 1f);
 
-			gl.glMatrixMode(GL10.GL_TEXTURE);
-			gl.glLoadIdentity();
-			gl.glScalef(1f, 1f, 1f);
-			gl.glTranslatef(0.250f, 0.835f , 0f);
-			bomb.draw(gl);
-			gl.glPopMatrix();
-			gl.glLoadIdentity();
+				if(!ABEngine.BOMB_DROPPED) {
+					bomb.x_position = Math.round(ABEngine.X_POSITION);
+					bomb.y_position = Math.round(ABEngine.Y_POSITION);
+				}
+
+				gl.glTranslatef(bomb.x_position, bomb.y_position, 0.3f);
+
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glScalef(1f, 1f, 1f);
+				gl.glTranslatef(0.250f, 0.835f , 0f);
+				bomb.draw(gl);
+
+				//o timer depende do nivel
+				bomb.setTimerToBombExplosion(ABEngine.BOMB_TIME_TO_EXPLOSION);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();
+				
+				ABEngine.BOMB_DROPPED = true;
+
 
 			break;
 
@@ -360,9 +376,6 @@ public class ABGameRenderer implements Renderer {
 				gl.glScalef(.05f, .05f, 1f);
 				gl.glTranslatef(tileLocX, tileLocY, 0f);
 
-				//				Log.w("PASSOX", "" + tileLocX);
-				//				Log.w("PASSOY", "" + tileLocY);
-
 				gl.glMatrixMode(GL10.GL_TEXTURE);
 				gl.glLoadIdentity();
 
@@ -383,7 +396,7 @@ public class ABGameRenderer implements Renderer {
 
 					gl.glMatrixMode(GL10.GL_TEXTURE);
 					gl.glLoadIdentity();
-					gl.glTranslatef(0.3125f, 0.6875f, 0f);
+					gl.glTranslatef(0.0625f, 0.0625f, 0f);
 					map.draw(gl); 
 					gl.glPopMatrix();
 					gl.glLoadIdentity();
@@ -429,6 +442,32 @@ public class ABGameRenderer implements Renderer {
 		}
 
 		ABEngine.firstmapdraw = false;
+
+	}
+
+	public void explodeBomb(GL10 gl, char[][] game_map) {
+
+		if(ABEngine.BOMB_ACTION == ABEngine.BOMB_EXPLOSION) {
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+			gl.glTranslatef(bomb.x_position, bomb.y_position, 0.8f);
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0.666f, 0.75f, 0.3f);
+			fire.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			ABEngine.BOMB_ACTION = ABEngine.NO_BOMB;
+
+		} else {
+
+
+		}
 
 	}
 
