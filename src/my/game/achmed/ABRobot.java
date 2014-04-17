@@ -158,7 +158,7 @@ public class ABRobot {
 			ABEngine.GREEN_ROBOT_ACTION = possibleReturns[r.nextInt(1)];
 			
 			
-		}
+	}
 		
 		
 		//ABEngine.GREEN_ROBOT_ACTION = position[random.nextInt(3 + 1)];
