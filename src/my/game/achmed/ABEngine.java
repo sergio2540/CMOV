@@ -32,6 +32,7 @@ public class ABEngine {
 	public static final int GAME_PLAYER = R.raw.bomberman;
 	public static final int GAME_BOMB = R.raw.bombs;
 	public static final int GAME_FIRE = R.raw.fireball;
+	public static final int GAME_ROBOTS = R.raw.robots;
 
 	public static final int PLAYER_LEFT = 1;
 	public static final int PLAYER_UP = 4;
@@ -62,7 +63,17 @@ public class ABEngine {
 	public static float start_x;
 	public static float start_y;
 	
-	public static boolean firstmapdraw = true;
+	public static boolean FIRST_MAP_DRAW = true;
+	
+	
+	//GREEN ROBOT
+	
+	public static int GREEN_ROBOT_ACTION = PLAYER_RIGHT_RELEASE;
+	public static float GREEN_ROBOT_X = 0f;
+	public static float GREEN_ROBOT_Y = 0f;
+	public static final float ROBOT_SPEED = .1f;
+
+	//BLUE ROBOT ETC...ETC
 
 
 
@@ -80,7 +91,7 @@ public class ABEngine {
 		{'W','-','-','-','-','-','-','-','-','O','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','O','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','O','O','O','O','O','-','-','-','-','-','-','-','-','-','W'},
-		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
+		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','R','-','-','W'},
 		{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','-','-','W','W','W','-','-','-','-','-','-','-','-','-','-','W'},
 		{'W','-','-','-','1','-','-','-','W','-','-','-','-','-','-','-','-','-','-','W'},
@@ -134,11 +145,9 @@ public class ABEngine {
 		
 		char pos = game_map[matrix_y][matrix_x];
 		
-		if(pos == '-' || pos == '1' ) {
-			Log.w("RESULT", "false");
+		if(pos == '-' || pos == '1') {
 			return false;
 		} else {
-			Log.w("RESULT", "true");
 			return true;
 		}
 		

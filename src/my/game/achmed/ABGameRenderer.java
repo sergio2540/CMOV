@@ -12,6 +12,7 @@ public class ABGameRenderer implements Renderer {
 	private final ABAchmedPlayer achmed = new ABAchmedPlayer();
 	private final ABBomb bomb = new ABBomb();
 	private final ABFire fire = new ABFire();
+	private final ABRobot robot = new ABRobot();
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -69,6 +70,8 @@ public class ABGameRenderer implements Renderer {
 		achmed.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 		bomb.loadTexture(gl, ABEngine.GAME_BOMB, ABEngine.context);
 		fire.loadTexture(gl, ABEngine.GAME_FIRE, ABEngine.context);
+		robot.loadTexture(gl, ABEngine.GAME_ROBOTS, ABEngine.context);
+
 
 	}
 
@@ -93,6 +96,231 @@ public class ABGameRenderer implements Renderer {
 		dropBomb(gl);
 		moveAchmed(gl, ABEngine.game_map);
 		explodeBomb(gl, ABEngine.game_map);
+		moveGreenRobot(gl, ABEngine.game_map);
+
+
+	}
+
+	private void moveGreenRobot(GL10 gl, char[][] game_map) {
+
+		robot.changeRobotAction();
+		
+		switch (ABEngine.GREEN_ROBOT_ACTION) {
+
+		case ABEngine.PLAYER_LEFT : 
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+
+			float pos = ABEngine.GREEN_ROBOT_X - ABEngine.ROBOT_SPEED;
+
+			if(!ABEngine.detectColision(pos, ABEngine.GREEN_ROBOT_Y)) {
+
+				ABEngine.GREEN_ROBOT_X -= ABEngine.ROBOT_SPEED;
+
+				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.2f);
+
+			} else {
+
+				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.2f);
+
+			}
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.08333f, 0.625f, 0f);
+
+			robot.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			break;
+
+		case ABEngine.PLAYER_RIGHT : 
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+
+			pos = ABEngine.GREEN_ROBOT_X + ABEngine.ROBOT_SPEED;
+
+			if(!ABEngine.detectColision(pos, ABEngine.GREEN_ROBOT_Y)) {
+
+				ABEngine.GREEN_ROBOT_X += ABEngine.ROBOT_SPEED;
+
+				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			} else {
+
+				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			}
+
+
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.08333f, 0.75f, 0f);
+
+			robot.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			break;
+
+		case ABEngine.PLAYER_UP :
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+
+
+			pos = ABEngine.GREEN_ROBOT_Y + ABEngine.ROBOT_SPEED;
+
+			if(!ABEngine.detectColision(ABEngine.GREEN_ROBOT_X, pos)) {
+
+				ABEngine.GREEN_ROBOT_Y += ABEngine.ROBOT_SPEED;
+
+				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			} else {
+
+				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			}
+
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.08333f, 0.875f, 0f);
+
+			robot.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			break;
+
+		case ABEngine.PLAYER_DOWN : 
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+
+			pos = ABEngine.GREEN_ROBOT_Y - ABEngine.ROBOT_SPEED;
+
+			if(!ABEngine.detectColision(ABEngine.GREEN_ROBOT_X, pos)) {
+
+				ABEngine.GREEN_ROBOT_Y -= ABEngine.ROBOT_SPEED;
+
+				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			} else {
+
+				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			}
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.08333f, 0.5f, 0f);
+
+			robot.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+
+			break;
+
+		case ABEngine.PLAYER_LEFT_RELEASE :
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+
+			gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.08333f, 0.625f, 0f);
+
+			robot.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			break; 
+
+		case ABEngine.PLAYER_RIGHT_RELEASE : 
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+
+			gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.08333f, 0.75f, 0f);
+
+			robot.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			break;
+
+		case ABEngine.PLAYER_UP_RELEASE :
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+
+			gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.08333f, 0.875f, 0f);
+
+			robot.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			break;
+
+		case ABEngine.PLAYER_DOWN_RELEASE :
+
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
+
+			gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.08333f, 0.5f, 0f);
+
+			robot.draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			break;
+
+		}
 
 	}
 
@@ -101,36 +329,36 @@ public class ABGameRenderer implements Renderer {
 		switch (ABEngine.BOMB_ACTION) {
 
 		case ABEngine.NO_BOMB:
-			
+
 			ABEngine.BOMB_DROPPED = false;
 			break;
 
 		case ABEngine.DROP_BOMB:
 
-				gl.glMatrixMode(GL10.GL_MODELVIEW);
-				gl.glLoadIdentity();
-				gl.glPushMatrix();
-				gl.glScalef(.05f, .05f, 1f);
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(.05f, .05f, 1f);
 
-				if(!ABEngine.BOMB_DROPPED) {
-					bomb.x_position = Math.round(ABEngine.X_POSITION);
-					bomb.y_position = Math.round(ABEngine.Y_POSITION);
-				}
+			if(!ABEngine.BOMB_DROPPED) {
+				bomb.x_position = Math.round(ABEngine.X_POSITION);
+				bomb.y_position = Math.round(ABEngine.Y_POSITION);
+			}
 
-				gl.glTranslatef(bomb.x_position, bomb.y_position, 0.3f);
+			gl.glTranslatef(bomb.x_position, bomb.y_position, 0.3f);
 
-				gl.glMatrixMode(GL10.GL_TEXTURE);
-				gl.glLoadIdentity();
-				gl.glScalef(1f, 1f, 1f);
-				gl.glTranslatef(0.250f, 0.835f , 0f);
-				bomb.draw(gl);
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			gl.glScalef(1f, 1f, 1f);
+			gl.glTranslatef(0.250f, 0.835f , 0f);
+			bomb.draw(gl);
 
-				//o timer depende do nivel
-				bomb.setTimerToBombExplosion(ABEngine.BOMB_TIME_TO_EXPLOSION);
-				gl.glPopMatrix();
-				gl.glLoadIdentity();
-				
-				ABEngine.BOMB_DROPPED = true;
+			//o timer depende do nivel
+			bomb.setTimerToBombExplosion(ABEngine.BOMB_TIME_TO_EXPLOSION);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+
+			ABEngine.BOMB_DROPPED = true;
 
 
 			break;
@@ -424,11 +652,27 @@ public class ABGameRenderer implements Renderer {
 					gl.glPopMatrix();
 					gl.glLoadIdentity();
 
-					if(ABEngine.firstmapdraw) {
+					if(ABEngine.FIRST_MAP_DRAW) {
 						ABEngine.X_POSITION = tileLocX;
 						ABEngine.Y_POSITION = tileLocY;
 					}
 
+					break;
+					
+				case 'R':
+					
+					gl.glMatrixMode(GL10.GL_TEXTURE);
+					gl.glLoadIdentity();
+					gl.glTranslatef(0.3125f, 0.375f, 0f);
+					map.draw(gl); 
+					gl.glPopMatrix();
+					gl.glLoadIdentity();
+
+					if(ABEngine.FIRST_MAP_DRAW) {
+						ABEngine.GREEN_ROBOT_X = tileLocX;
+						ABEngine.GREEN_ROBOT_Y = tileLocY;
+					}
+					
 					break;
 
 				}
@@ -441,7 +685,7 @@ public class ABGameRenderer implements Renderer {
 
 		}
 
-		ABEngine.firstmapdraw = false;
+		ABEngine.FIRST_MAP_DRAW = false;
 
 	}
 
