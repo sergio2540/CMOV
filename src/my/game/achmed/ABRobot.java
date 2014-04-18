@@ -122,48 +122,48 @@ public class ABRobot {
 	}	
 
 	
-	public void changeRobotAction() {
-		
-		//int[] position = { ABEngine.PLAYER_LEFT, ABEngine.PLAYER_DOWN, ABEngine.PLAYER_RIGHT,
-			//	ABEngine.PLAYER_UP };
-		int leftRightDecision = 0;
-		int upDownDecision = 0;
-		
-		float xPlayerPosition = ABEngine.X_POSITION;
-		float yPlayerPosition = ABEngine.Y_POSITION;
-		float xRobotPosition = ABEngine.GREEN_ROBOT_X;
-		float yRobotPosition = ABEngine.GREEN_ROBOT_Y;
-		
-		//check if lefft or right
-		float xDistance = xRobotPosition - xPlayerPosition;
-		if(xDistance >= 0)
-			leftRightDecision = ABEngine.PLAYER_RIGHT;
-		else leftRightDecision = ABEngine.PLAYER_LEFT;
-			
-		//check if up or down.
-		float yDistance = yRobotPosition - yPlayerPosition;
-		if(yDistance >= 0)
-			upDownDecision = ABEngine.PLAYER_UP;
-		else upDownDecision = ABEngine.PLAYER_LEFT;
-		
-		if(xDistance < yDistance)
-			ABEngine.GREEN_ROBOT_ACTION = leftRightDecision;
-		
-		else if(xDistance > yDistance)
-			ABEngine.GREEN_ROBOT_ACTION = upDownDecision;
-		//if its equally far.
-		else{
-			
-			int[] possibleReturns = {leftRightDecision, upDownDecision};
-			ABEngine.GREEN_ROBOT_ACTION = possibleReturns[r.nextInt(1)];
-			
-			
-	}
+//	public void changeRobotAction() {
+//		
+//		//int[] position = { ABEngine.PLAYER_LEFT, ABEngine.PLAYER_DOWN, ABEngine.PLAYER_RIGHT,
+//			//	ABEngine.PLAYER_UP };
+//		int leftRightDecision = 0;
+//		int upDownDecision = 0;
+//		
+//		float xPlayerPosition = ABEngine.X_POSITION;
+//		float yPlayerPosition = ABEngine.Y_POSITION;
+//		float xRobotPosition = ABEngine.GREEN_ROBOT_X;
+//		float yRobotPosition = ABEngine.GREEN_ROBOT_Y;
+//		
+//		//check if lefft or right
+//		float xDistance = xRobotPosition - xPlayerPosition;
+//		if(xDistance >= 0)
+//			leftRightDecision = ABEngine.PLAYER_RIGHT;
+//		else leftRightDecision = ABEngine.PLAYER_LEFT;
+//			
+//		//check if up or down.
+//		float yDistance = yRobotPosition - yPlayerPosition;
+//		if(yDistance >= 0)
+//			upDownDecision = ABEngine.PLAYER_UP;
+//		else upDownDecision = ABEngine.PLAYER_LEFT;
+//		
+//		if(xDistance < yDistance)
+//			ABEngine.GREEN_ROBOT_ACTION = leftRightDecision;
+//		
+//		else if(xDistance > yDistance)
+//			ABEngine.GREEN_ROBOT_ACTION = upDownDecision;
+//		//if its equally far.
+//		else{
+//			
+//			int[] possibleReturns = {leftRightDecision, upDownDecision};
+//			ABEngine.GREEN_ROBOT_ACTION = possibleReturns[r.nextInt(1)];
+//			
+//			
+//	}
 		
 		
 		//ABEngine.GREEN_ROBOT_ACTION = position[random.nextInt(3 + 1)];
 		
 		
-	}
+	//}
 	
 }

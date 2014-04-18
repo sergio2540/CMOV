@@ -57,17 +57,26 @@ public class ABEngine {
 	public static int PLAYER_ACTION = PLAYER_RIGHT_RELEASE;
 	public static int BOMB_ACTION = NO_BOMB;
 	public static int BOMB_TIME_TO_EXPLOSION = 2000;
-	
+
+	public static int EXPLOSION_RADIUS = 2;
+
 	public static boolean BOMB_DROPPED = false;
 
 	public static float start_x;
 	public static float start_y;
-	
+
 	public static boolean FIRST_MAP_DRAW = true;
-	
-	
+
+	public static int MAX_COUNTER = (int) (1f / ABEngine.ACHMED_SPEED);
+
+	public static int ACHMED_COUNTER = 0;
+
+	public static boolean STOP = true;
+	public static boolean STOPPED = true;
+
+
 	//GREEN ROBOT
-	
+
 	public static int GREEN_ROBOT_ACTION = PLAYER_RIGHT_RELEASE;
 	public static float GREEN_ROBOT_X = 0f;
 	public static float GREEN_ROBOT_Y = 0f;
@@ -102,55 +111,65 @@ public class ABEngine {
 
 
 	};
-	
-	
+
 	public static boolean detectColision(float x, float y) {
-		
+
+
+
 		int matrix_x = 0, matrix_y = 0;
+
+		float startX = (ABEngine.start_x/0.05f) - ((float)game_map[0].length/2f);
+		float startY = (ABEngine.start_y/0.05f) - ((float)game_map.length/2f);
 		
-		float startX = (ABEngine.start_x/0.05f) - game_map[0].length/2;
-		float startY = (ABEngine.start_y/0.05f) - game_map.length/2;
 		
+		float X = x - startX;
+	    float Y = y - startY;
+	    
+	    Log.w("INDEXES", "xx: " + ((float)game_map.length - 1f - Y) + " yy: " + X);
+
 		switch(ABEngine.PLAYER_ACTION) {
-		
+
 		case ABEngine.PLAYER_UP: 
+
+			matrix_x = Math.round(x - startX);
 			
-			matrix_x = (int) Math.round((x - startX));
-			matrix_y = (int) Math.floor(game_map.length - 1 - (y - startY));
-			
+			matrix_y = (int) Math.floor(y - startY);
+
 			break;
-			
+
 		case ABEngine.PLAYER_DOWN: 
-			
-			matrix_x = (int) Math.round((x - startX));
-			matrix_y = (int) Math.ceil(game_map.length - 1 - (y - startY));
-			
+
+			matrix_x = Math.round(x - startX);
+			matrix_y = (int) Math.ceil(y - startY);
+
 			break;
-			
+
 		case ABEngine.PLAYER_LEFT:
-			
-			matrix_x = (int) Math.floor((x - startX));
-			matrix_y = (int) Math.round(game_map.length - 1 - (y - startY));
-			
+
+			matrix_x = Math.round(x - startX);
+			matrix_y = (int) Math.floor(y - startY);
+
 			break;
-			
+
 		case ABEngine.PLAYER_RIGHT:
-			
-			matrix_x = (int) Math.ceil((x - startX));
-			matrix_y = (int) Math.round(game_map.length - 1 - (y - startY));
-			
+
+			matrix_x = Math.round(x - startX);
+			matrix_y = (int) Math.ceil(y - startY);
+
 			break;
-		
+
 		}
-		
-		char pos = game_map[matrix_y][matrix_x];
-		
+
+		Log.w("INDEXES", "x: " + (game_map.length - 1 - matrix_y) + " y: " + matrix_x);
+
+		char pos = game_map[game_map.length - 1 - matrix_y][ matrix_x];
+
 		if(pos == '-' || pos == '1') {
 			return false;
 		} else {
 			return true;
 		}
-		
+
 	}
 
 

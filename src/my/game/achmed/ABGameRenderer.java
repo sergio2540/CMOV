@@ -103,8 +103,8 @@ public class ABGameRenderer implements Renderer {
 
 	private void moveGreenRobot(GL10 gl, char[][] game_map) {
 
-		robot.changeRobotAction();
-		
+		//robot.changeRobotAction();
+
 		switch (ABEngine.GREEN_ROBOT_ACTION) {
 
 		case ABEngine.PLAYER_LEFT : 
@@ -341,8 +341,8 @@ public class ABGameRenderer implements Renderer {
 			gl.glScalef(.05f, .05f, 1f);
 
 			if(!ABEngine.BOMB_DROPPED) {
-				bomb.x_position = Math.round(ABEngine.X_POSITION);
-				bomb.y_position = Math.round(ABEngine.Y_POSITION);
+				bomb.x_position = ABEngine.X_POSITION;
+				bomb.y_position = ABEngine.Y_POSITION;
 			}
 
 			gl.glTranslatef(bomb.x_position, bomb.y_position, 0.3f);
@@ -380,7 +380,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			float pos = ABEngine.X_POSITION - ABEngine.ACHMED_SPEED;
+			float pos = ABEngine.X_POSITION - (1.f - ABEngine.ACHMED_SPEED * (float)ABEngine.ACHMED_COUNTER);
 
 			if(!ABEngine.detectColision(pos, ABEngine.Y_POSITION)) {
 
@@ -403,6 +403,16 @@ public class ABGameRenderer implements Renderer {
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
 
+			ABEngine.ACHMED_COUNTER = (ABEngine.ACHMED_COUNTER + 1) % ABEngine.MAX_COUNTER;
+
+			if(ABEngine.ACHMED_COUNTER == 0 && ABEngine.STOP) {
+				ABEngine.STOPPED = true;
+				ABEngine.ACHMED_COUNTER = 0;
+				ABEngine.PLAYER_ACTION = ABEngine.PLAYER_LEFT_RELEASE;
+			}
+
+
+
 			break;
 
 		case ABEngine.PLAYER_RIGHT : 
@@ -411,8 +421,8 @@ public class ABGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
-
-			pos = ABEngine.X_POSITION + ABEngine.ACHMED_SPEED;
+			
+			pos = ABEngine.X_POSITION + (1.f - ABEngine.ACHMED_SPEED * (float) ABEngine.ACHMED_COUNTER);
 
 			if(!ABEngine.detectColision(pos, ABEngine.Y_POSITION)) {
 
@@ -426,8 +436,6 @@ public class ABGameRenderer implements Renderer {
 
 			}
 
-
-
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
 			gl.glScalef(1f, 1f, 1f);
@@ -436,6 +444,15 @@ public class ABGameRenderer implements Renderer {
 			achmed.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
+
+			ABEngine.ACHMED_COUNTER = (ABEngine.ACHMED_COUNTER + 1) % ABEngine.MAX_COUNTER;
+
+			if(ABEngine.ACHMED_COUNTER == 0 && ABEngine.STOP) {
+				ABEngine.STOPPED = true;
+				ABEngine.ACHMED_COUNTER = 0;
+				ABEngine.PLAYER_ACTION = ABEngine.PLAYER_RIGHT_RELEASE;
+			}
+
 
 			break;
 
@@ -447,7 +464,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glScalef(.05f, .05f, 1f);
 
 
-			pos = ABEngine.Y_POSITION + ABEngine.ACHMED_SPEED;
+			pos = ABEngine.Y_POSITION + (1.f - ABEngine.ACHMED_SPEED * (float)ABEngine.ACHMED_COUNTER);
 
 			if(!ABEngine.detectColision(ABEngine.X_POSITION, pos)) {
 
@@ -471,6 +488,14 @@ public class ABGameRenderer implements Renderer {
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
 
+			ABEngine.ACHMED_COUNTER = (ABEngine.ACHMED_COUNTER + 1) % ABEngine.MAX_COUNTER;
+
+			if(ABEngine.ACHMED_COUNTER == 0 && ABEngine.STOP) {
+				ABEngine.STOPPED = true;
+				ABEngine.ACHMED_COUNTER = 0;
+				ABEngine.PLAYER_ACTION = ABEngine.PLAYER_UP_RELEASE;
+			}
+
 			break;
 
 		case ABEngine.PLAYER_DOWN : 
@@ -480,7 +505,7 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			pos = ABEngine.Y_POSITION - ABEngine.ACHMED_SPEED;
+			pos = ABEngine.Y_POSITION - (1.f - ABEngine.ACHMED_SPEED * (float)ABEngine.ACHMED_COUNTER);
 
 			if(!ABEngine.detectColision(ABEngine.X_POSITION, pos)) {
 
@@ -502,6 +527,14 @@ public class ABGameRenderer implements Renderer {
 			achmed.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
+
+			ABEngine.ACHMED_COUNTER = (ABEngine.ACHMED_COUNTER + 1) % ABEngine.MAX_COUNTER;
+
+			if(ABEngine.ACHMED_COUNTER == 0 && ABEngine.STOP) {
+				ABEngine.STOPPED = true;
+				ABEngine.ACHMED_COUNTER = 0;
+				ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN_RELEASE;
+			}
 
 
 			break;
@@ -592,8 +625,8 @@ public class ABGameRenderer implements Renderer {
 
 	public void drawMap(GL10 gl, char[][] game_matrix) {
 
-		float tileLocX = (ABEngine.start_x/0.05f) - game_matrix[0].length/2;
-		float tileLocY = (ABEngine.start_y/0.05f) - game_matrix.length/2;
+		float tileLocX = (ABEngine.start_x/0.05f) - (float)game_matrix[0].length/2f;
+		float tileLocY = (ABEngine.start_y/0.05f) - (float)game_matrix.length/2f;
 
 		for(int x=0; x< game_matrix[0].length ; x++) {
 			for(int y=0; y< game_matrix.length; y++) {
@@ -658,9 +691,9 @@ public class ABGameRenderer implements Renderer {
 					}
 
 					break;
-					
+
 				case 'R':
-					
+
 					gl.glMatrixMode(GL10.GL_TEXTURE);
 					gl.glLoadIdentity();
 					gl.glTranslatef(0.3125f, 0.375f, 0f);
@@ -672,16 +705,16 @@ public class ABGameRenderer implements Renderer {
 						ABEngine.GREEN_ROBOT_X = tileLocX;
 						ABEngine.GREEN_ROBOT_Y = tileLocY;
 					}
-					
+
 					break;
 
 				}
 
-				tileLocY += 1;
+				tileLocY += 1.f;
 			}
 
-			tileLocX += 1;
-			tileLocY = (ABEngine.start_y/0.05f) - game_matrix.length/2;
+			tileLocX += 1.f;
+			tileLocY = (ABEngine.start_y/0.05f) - (float)game_matrix.length/2f;
 
 		}
 
@@ -693,26 +726,72 @@ public class ABGameRenderer implements Renderer {
 
 		if(ABEngine.BOMB_ACTION == ABEngine.BOMB_EXPLOSION) {
 
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-			gl.glLoadIdentity();
-			gl.glPushMatrix();
-			gl.glScalef(.05f, .05f, 1f);
-			gl.glTranslatef(bomb.x_position, bomb.y_position, 0.8f);
-
-			gl.glMatrixMode(GL10.GL_TEXTURE);
-			gl.glLoadIdentity();
-			gl.glTranslatef(0.666f, 0.75f, 0.3f);
-			fire.draw(gl);
-			gl.glPopMatrix();
-			gl.glLoadIdentity();
-
-			ABEngine.BOMB_ACTION = ABEngine.NO_BOMB;
-
-		} else {
+			int rounds = 0;
+			boolean first = true;
+			float x = 0;
+			float y = 0;
+			float inc = 0;
 
 
-		}
+
+			for(int i = 0; i < ABEngine.EXPLOSION_RADIUS * 4 + 1; i++) {
+
+				gl.glMatrixMode(GL10.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				gl.glPushMatrix();
+				gl.glScalef(.05f, .05f, 1f);
+
+
+				gl.glTranslatef(bomb.x_position + x, bomb.y_position + y, 0.8f);
+
+				gl.glMatrixMode(GL10.GL_TEXTURE);
+				gl.glLoadIdentity();
+				gl.glTranslatef(0.666f, 0.75f, 0.3f);
+				fire.draw(gl);
+				gl.glPopMatrix();
+				gl.glLoadIdentity();
+
+
+				if(rounds % 4 == 0) {
+					Log.w("BOMB", "round4");
+					//inc++; < ABEngine.RAdISU
+					x = -1 - inc; 
+					y = 0;
+
+				}
+
+				if(rounds % 4 == 1) {
+					//						Log.w("BOMB", "round3");
+					x = 1 + inc; 
+					y = 0;
+				}
+
+				if(rounds % 4 == 2) {
+					//						Log.w("BOMB", "round2");
+					x = 0; 
+					y = -1 - inc;
+				}
+
+				if(rounds % 4 == 3) {
+					//						Log.w("BOMB", "round1");
+					x = 0; 
+					y = 1 + inc;
+					
+					inc++;
+				}
+
+				rounds++;
+
+			}
+
+
+		ABEngine.BOMB_ACTION = ABEngine.NO_BOMB;
+
+	} else {
+
 
 	}
+
+}
 
 }
