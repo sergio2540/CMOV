@@ -35,14 +35,14 @@ public class ABGame extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-
+				    Log.w("ma","x" + ABEngine.X_POSITION + "y" + ABEngine.X_POSITION);
 					//ABEngine.PLAYER_ACTION = ABEngine.PLAYER_LEFT_RELEASE;
 					ABEngine.STOP = true;
 					setaEsquerda.setImageResource(R.drawable.arrow_left_normal);
 
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
-
+				   
 					if(ABEngine.STOPPED) {
 						ABEngine.STOP = false;
 						ABEngine.PLAYER_ACTION = ABEngine.PLAYER_LEFT;
@@ -62,7 +62,7 @@ public class ABGame extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-
+				    Log.w("ma","x" + ABEngine.X_POSITION + "y" + ABEngine.X_POSITION);
 					//ABEngine.PLAYER_ACTION = ABEngine.PLAYER_RIGHT_RELEASE;
 					ABEngine.STOP = true;
 					setaDireita.setImageResource(R.drawable.arrow_right_normal);
@@ -89,7 +89,7 @@ public class ABGame extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-
+				    Log.w("ma","x" + ABEngine.X_POSITION + "y" + ABEngine.X_POSITION);
 					//ABEngine.PLAYER_ACTION = ABEngine.PLAYER_UP_RELEASE;
 					ABEngine.STOP = true;
 					setaCima.setImageResource(R.drawable.arrow_up_normal);
@@ -117,7 +117,7 @@ public class ABGame extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
-
+				 
 					//ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN_RELEASE;
 					ABEngine.STOP = true;
 					setaBaixo.setImageResource(R.drawable.arrow_down_normal);
