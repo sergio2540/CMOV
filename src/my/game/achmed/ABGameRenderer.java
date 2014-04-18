@@ -103,10 +103,13 @@ public class ABGameRenderer implements Renderer {
 
 	private void moveGreenRobot(GL10 gl, char[][] game_map) {
 
-		//robot.changeRobotAction();
-
+		
+	    	float x = ABEngine.START_X;
+	    	float y = ABEngine.START_Y;
+	    
+	    	
 		switch (ABEngine.GREEN_ROBOT_ACTION) {
-
+		
 		case ABEngine.PLAYER_LEFT : 
 
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -114,17 +117,23 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			float pos = ABEngine.GREEN_ROBOT_X - ABEngine.ROBOT_SPEED;
-
-			if(!ABEngine.detectColision(pos, ABEngine.GREEN_ROBOT_Y)) {
-
+			float pos = ABEngine.GREEN_ROBOT_X - (100.f - ABEngine.ROBOT_SPEED * ABEngine.ROBOT_COUNTER);
+			
+			if(!ABEngine.detectColision(pos, ABEngine.GREEN_ROBOT_Y,ABEngine.GREEN_ROBOT_ACTION)) {
+			    
 				ABEngine.GREEN_ROBOT_X -= ABEngine.ROBOT_SPEED;
+				
+				x +=  ABEngine.GREEN_ROBOT_X/100f;
+				y +=  ABEngine.GREEN_ROBOT_Y/100f;
 
-				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.2f);
+				gl.glTranslatef(x,y, 0.2f);
 
 			} else {
-
-				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.2f);
+				
+			    	x +=  ABEngine.GREEN_ROBOT_X/100f;
+				y +=  ABEngine.GREEN_ROBOT_Y/100f;
+				
+				gl.glTranslatef(x,y, 0.2f);
 
 			}
 
@@ -136,6 +145,14 @@ public class ABGameRenderer implements Renderer {
 			robot.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
+			
+			ABEngine.ROBOT_COUNTER = (ABEngine.ROBOT_COUNTER + 1) % ABEngine.MAX_COUNTER;
+
+			if(ABEngine.ROBOT_COUNTER == 0) {
+				
+				ABEngine.ROBOT_COUNTER = 0;
+				robot.changeRobotAction();
+			}
 
 			break;
 
@@ -146,17 +163,23 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			pos = ABEngine.GREEN_ROBOT_X + ABEngine.ROBOT_SPEED;
-
-			if(!ABEngine.detectColision(pos, ABEngine.GREEN_ROBOT_Y)) {
-
+			pos = ABEngine.GREEN_ROBOT_X + (100.f - ABEngine.ROBOT_SPEED * ABEngine.ROBOT_COUNTER);;
+			
+			
+			if(!ABEngine.detectColision(pos, ABEngine.GREEN_ROBOT_Y, ABEngine.GREEN_ROBOT_ACTION)) {
+			    
 				ABEngine.GREEN_ROBOT_X += ABEngine.ROBOT_SPEED;
-
-				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+				
+				x +=  ABEngine.GREEN_ROBOT_X/100f;
+				y +=  ABEngine.GREEN_ROBOT_Y/100f;
+				
+				gl.glTranslatef(x,y, 0.5f);
 
 			} else {
-
-				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+				
+			    x +=  ABEngine.GREEN_ROBOT_X/100f;
+				y +=  ABEngine.GREEN_ROBOT_Y/100f;
+				gl.glTranslatef(x,y, 0.5f);
 
 			}
 
@@ -170,6 +193,14 @@ public class ABGameRenderer implements Renderer {
 			robot.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
+			
+			ABEngine.ROBOT_COUNTER = (ABEngine.ROBOT_COUNTER + 1) % ABEngine.MAX_COUNTER;
+			
+			if(ABEngine.ROBOT_COUNTER == 0) {
+				
+				ABEngine.ROBOT_COUNTER = 0;
+				robot.changeRobotAction();
+			}
 
 			break;
 
@@ -181,17 +212,23 @@ public class ABGameRenderer implements Renderer {
 			gl.glScalef(.05f, .05f, 1f);
 
 
-			pos = ABEngine.GREEN_ROBOT_Y + ABEngine.ROBOT_SPEED;
-
-			if(!ABEngine.detectColision(ABEngine.GREEN_ROBOT_X, pos)) {
+			pos = ABEngine.GREEN_ROBOT_Y + (100.f - ABEngine.ROBOT_SPEED * ABEngine.ROBOT_COUNTER);
+			
+			
+			if(!ABEngine.detectColision(ABEngine.GREEN_ROBOT_X, pos,ABEngine.GREEN_ROBOT_ACTION)) {
 
 				ABEngine.GREEN_ROBOT_Y += ABEngine.ROBOT_SPEED;
-
-				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+				x +=  ABEngine.GREEN_ROBOT_X/100f;
+				y +=  ABEngine.GREEN_ROBOT_Y/100f;
+				
+				gl.glTranslatef(x,y, 0.5f);
 
 			} else {
-
-				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+				
+			    	x +=  ABEngine.GREEN_ROBOT_X/100f;
+				y +=  ABEngine.GREEN_ROBOT_Y/100f;
+				
+				gl.glTranslatef(x,y, 0.5f);
 
 			}
 
@@ -204,6 +241,15 @@ public class ABGameRenderer implements Renderer {
 			robot.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
+			
+			
+			ABEngine.ROBOT_COUNTER = (ABEngine.ROBOT_COUNTER + 1) % ABEngine.MAX_COUNTER;
+
+			if(ABEngine.ROBOT_COUNTER == 0) {
+				
+				ABEngine.ROBOT_COUNTER = 0;
+				robot.changeRobotAction();
+			}
 
 			break;
 
@@ -214,17 +260,24 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			pos = ABEngine.GREEN_ROBOT_Y - ABEngine.ROBOT_SPEED;
-
-			if(!ABEngine.detectColision(ABEngine.GREEN_ROBOT_X, pos)) {
+			pos = ABEngine.GREEN_ROBOT_Y - (100.f - ABEngine.ROBOT_SPEED * ABEngine.ROBOT_COUNTER);
+			
+			
+			if(!ABEngine.detectColision(ABEngine.GREEN_ROBOT_X, pos,ABEngine.GREEN_ROBOT_ACTION)) {
 
 				ABEngine.GREEN_ROBOT_Y -= ABEngine.ROBOT_SPEED;
+				
+				x +=  ABEngine.GREEN_ROBOT_X/100f;
+				y +=  ABEngine.GREEN_ROBOT_Y/100f;
 
-				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+				gl.glTranslatef(x,y, 0.5f);
 
 			} else {
-
-				gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
+				
+			    x +=  ABEngine.GREEN_ROBOT_X/100f;
+				y +=  ABEngine.GREEN_ROBOT_Y/100f;
+				
+				gl.glTranslatef(x,y, 0.5f);
 
 			}
 
@@ -236,95 +289,115 @@ public class ABGameRenderer implements Renderer {
 			robot.draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
+			
+			ABEngine.ROBOT_COUNTER = (ABEngine.ROBOT_COUNTER + 1) % ABEngine.MAX_COUNTER;
+
+			if(ABEngine.ROBOT_COUNTER == 0) {
+				
+				ABEngine.ROBOT_COUNTER = 0;
+				robot.changeRobotAction();
+			}
 
 
 			break;
 
-		case ABEngine.PLAYER_LEFT_RELEASE :
-
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-			gl.glLoadIdentity();
-			gl.glPushMatrix();
-			gl.glScalef(.05f, .05f, 1f);
-
-			gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
-
-			gl.glMatrixMode(GL10.GL_TEXTURE);
-			gl.glLoadIdentity();
-			gl.glScalef(1f, 1f, 1f);
-			gl.glTranslatef(0.08333f, 0.625f, 0f);
-
-			robot.draw(gl);
-			gl.glPopMatrix();
-			gl.glLoadIdentity();
-
-			break; 
-
-		case ABEngine.PLAYER_RIGHT_RELEASE : 
-
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-			gl.glLoadIdentity();
-			gl.glPushMatrix();
-			gl.glScalef(.05f, .05f, 1f);
-
-			gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
-
-			gl.glMatrixMode(GL10.GL_TEXTURE);
-			gl.glLoadIdentity();
-			gl.glScalef(1f, 1f, 1f);
-			gl.glTranslatef(0.08333f, 0.75f, 0f);
-
-			robot.draw(gl);
-			gl.glPopMatrix();
-			gl.glLoadIdentity();
-
-			break;
-
-		case ABEngine.PLAYER_UP_RELEASE :
-
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-			gl.glLoadIdentity();
-			gl.glPushMatrix();
-			gl.glScalef(.05f, .05f, 1f);
-
-			gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
-
-			gl.glMatrixMode(GL10.GL_TEXTURE);
-			gl.glLoadIdentity();
-			gl.glScalef(1f, 1f, 1f);
-			gl.glTranslatef(0.08333f, 0.875f, 0f);
-
-			robot.draw(gl);
-			gl.glPopMatrix();
-			gl.glLoadIdentity();
-
-			break;
-
-		case ABEngine.PLAYER_DOWN_RELEASE :
-
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-			gl.glLoadIdentity();
-			gl.glPushMatrix();
-			gl.glScalef(.05f, .05f, 1f);
-
-			gl.glTranslatef(ABEngine.GREEN_ROBOT_X, ABEngine.GREEN_ROBOT_Y, 0.5f);
-
-			gl.glMatrixMode(GL10.GL_TEXTURE);
-			gl.glLoadIdentity();
-			gl.glScalef(1f, 1f, 1f);
-			gl.glTranslatef(0.08333f, 0.5f, 0f);
-
-			robot.draw(gl);
-			gl.glPopMatrix();
-			gl.glLoadIdentity();
-
-			break;
+//		case ABEngine.PLAYER_LEFT_RELEASE :
+//
+//			gl.glMatrixMode(GL10.GL_MODELVIEW);
+//			gl.glLoadIdentity();
+//			gl.glPushMatrix();
+//			gl.glScalef(.05f, .05f, 1f);
+//			x +=  ABEngine.GREEN_ROBOT_X/100f;
+//			y +=  ABEngine.GREEN_ROBOT_Y/100f;
+//			gl.glTranslatef(x,y, 0.5f);
+//
+//			gl.glMatrixMode(GL10.GL_TEXTURE);
+//			gl.glLoadIdentity();
+//			gl.glScalef(1f, 1f, 1f);
+//			gl.glTranslatef(0.08333f, 0.625f, 0f);
+//
+//			robot.draw(gl);
+//			gl.glPopMatrix();
+//			gl.glLoadIdentity();
+//
+//			break; 
+//
+//		case ABEngine.PLAYER_RIGHT_RELEASE : 
+//
+//			gl.glMatrixMode(GL10.GL_MODELVIEW);
+//			gl.glLoadIdentity();
+//			gl.glPushMatrix();
+//			gl.glScalef(.05f, .05f, 1f);
+//			x +=  ABEngine.GREEN_ROBOT_X/100f;
+//			y +=  ABEngine.GREEN_ROBOT_Y/100f;
+//
+//			gl.glTranslatef(x,y, 0.5f);
+//
+//			gl.glMatrixMode(GL10.GL_TEXTURE);
+//			gl.glLoadIdentity();
+//			gl.glScalef(1f, 1f, 1f);
+//			gl.glTranslatef(0.08333f, 0.75f, 0f);
+//
+//			robot.draw(gl);
+//			gl.glPopMatrix();
+//			gl.glLoadIdentity();
+//
+//			break;
+//
+//		case ABEngine.PLAYER_UP_RELEASE :
+//
+//			gl.glMatrixMode(GL10.GL_MODELVIEW);
+//			gl.glLoadIdentity();
+//			gl.glPushMatrix();
+//			gl.glScalef(.05f, .05f, 1f);
+//			x +=  ABEngine.GREEN_ROBOT_X/100f;
+//			y +=  ABEngine.GREEN_ROBOT_Y/100f;
+//
+//			gl.glTranslatef(x,y, 0.5f);
+//
+//			gl.glMatrixMode(GL10.GL_TEXTURE);
+//			gl.glLoadIdentity();
+//			gl.glScalef(1f, 1f, 1f);
+//			gl.glTranslatef(0.08333f, 0.875f, 0f);
+//
+//			robot.draw(gl);
+//			gl.glPopMatrix();
+//			gl.glLoadIdentity();
+//
+//			break;
+//
+//		case ABEngine.PLAYER_DOWN_RELEASE :
+//
+//			gl.glMatrixMode(GL10.GL_MODELVIEW);
+//			gl.glLoadIdentity();
+//			gl.glPushMatrix();
+//			gl.glScalef(.05f, .05f, 1f);
+//			
+//			
+//			x +=  ABEngine.GREEN_ROBOT_X/100f;
+//			y +=  ABEngine.GREEN_ROBOT_Y/100f;
+//			gl.glTranslatef(x,y, 0.5f);
+//
+//			gl.glMatrixMode(GL10.GL_TEXTURE);
+//			gl.glLoadIdentity();
+//			gl.glScalef(1f, 1f, 1f);
+//			gl.glTranslatef(0.08333f, 0.5f, 0f);
+//
+//			robot.draw(gl);
+//			gl.glPopMatrix();
+//			gl.glLoadIdentity();
+//
+//			break;
 
 		}
 
 	}
 
 	private void dropBomb(GL10 gl) {
+	    
+	    
+	    	float x = ABEngine.START_X;
+	    	float y = ABEngine.START_Y;
 
 		switch (ABEngine.BOMB_ACTION) {
 
@@ -344,8 +417,16 @@ public class ABGameRenderer implements Renderer {
 				bomb.x_position = ABEngine.X_POSITION;
 				bomb.y_position = ABEngine.Y_POSITION;
 			}
-
-			gl.glTranslatef(bomb.x_position, bomb.y_position, 0.3f);
+			
+			
+			
+			x += bomb.x_position/100f;
+			y += bomb.y_position/100f;
+			
+			
+			
+			//Log.w("BOMB", "TRUE: x" + x + "y" + y);
+			gl.glTranslatef(x,y, 0.3f);
 
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
@@ -370,7 +451,10 @@ public class ABGameRenderer implements Renderer {
 	public void moveAchmed(GL10 gl, char[][] game_matrix) {
 
 		//Player.Create(ENUM.BLACKSKIN);
-
+	    	
+	    	float x = ABEngine.START_X;
+	    	float y = ABEngine.START_Y;
+	    	
 		switch (ABEngine.PLAYER_ACTION) {
 
 		case ABEngine.PLAYER_LEFT : 
@@ -380,17 +464,19 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			float pos = ABEngine.X_POSITION - (1.f - ABEngine.ACHMED_SPEED * (float)ABEngine.ACHMED_COUNTER);
-
-			if(!ABEngine.detectColision(pos, ABEngine.Y_POSITION)) {
-
+			float pos = ABEngine.X_POSITION - (100.f - ABEngine.ACHMED_SPEED * ABEngine.ACHMED_COUNTER);
+			
+			if(!ABEngine.detectColision(pos, ABEngine.Y_POSITION,ABEngine.PLAYER_ACTION)) {
+			   
 				ABEngine.X_POSITION -= ABEngine.ACHMED_SPEED;
-
-				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+				x +=  ABEngine.X_POSITION/100f;
+				y +=  ABEngine.Y_POSITION/100f;
+				gl.glTranslatef(x, y, 0.5f);
 
 			} else {
-
-				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+			    	x +=  ABEngine.X_POSITION/100f;
+				y +=  ABEngine.Y_POSITION/100f;
+				gl.glTranslatef(x,y, 0.5f);
 
 			}
 
@@ -422,17 +508,23 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 			
-			pos = ABEngine.X_POSITION + (1.f - ABEngine.ACHMED_SPEED * (float) ABEngine.ACHMED_COUNTER);
+			pos = ABEngine.X_POSITION + (100.f - ABEngine.ACHMED_SPEED * ABEngine.ACHMED_COUNTER);
 
-			if(!ABEngine.detectColision(pos, ABEngine.Y_POSITION)) {
+			if(!ABEngine.detectColision(pos, ABEngine.Y_POSITION,ABEngine.PLAYER_ACTION)) {
 
 				ABEngine.X_POSITION += ABEngine.ACHMED_SPEED;
+				
+				x +=  ABEngine.X_POSITION/100f;
+				y +=  ABEngine.Y_POSITION/100f;
 
-				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+				gl.glTranslatef(x, y, 0.5f);
 
 			} else {
+			    
+			    	x +=  ABEngine.X_POSITION/100f;
+				y +=  ABEngine.Y_POSITION/100f;
 
-				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+				gl.glTranslatef(x,y, 0.5f);
 
 			}
 
@@ -464,17 +556,22 @@ public class ABGameRenderer implements Renderer {
 			gl.glScalef(.05f, .05f, 1f);
 
 
-			pos = ABEngine.Y_POSITION + (1.f - ABEngine.ACHMED_SPEED * (float)ABEngine.ACHMED_COUNTER);
+			pos = ABEngine.Y_POSITION + (100f - ABEngine.ACHMED_SPEED * ABEngine.ACHMED_COUNTER);
 
-			if(!ABEngine.detectColision(ABEngine.X_POSITION, pos)) {
-
+			if(!ABEngine.detectColision(ABEngine.X_POSITION, pos,ABEngine.PLAYER_ACTION)) {
+			   
 				ABEngine.Y_POSITION += ABEngine.ACHMED_SPEED;
-
-				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+				
+				x +=  ABEngine.X_POSITION/100f;
+				y +=  ABEngine.Y_POSITION/100f;
+				
+				gl.glTranslatef(x, y, 0.5f);
 
 			} else {
-
-				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+			    
+			    	x +=  ABEngine.X_POSITION/100f;
+				y +=  ABEngine.Y_POSITION/100f;
+				gl.glTranslatef(x, y, 0.5f);
 
 			}
 
@@ -505,17 +602,24 @@ public class ABGameRenderer implements Renderer {
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
 
-			pos = ABEngine.Y_POSITION - (1.f - ABEngine.ACHMED_SPEED * (float)ABEngine.ACHMED_COUNTER);
+			pos = ABEngine.Y_POSITION - (100f - ABEngine.ACHMED_SPEED * ABEngine.ACHMED_COUNTER);
 
-			if(!ABEngine.detectColision(ABEngine.X_POSITION, pos)) {
-
+			if(!ABEngine.detectColision(ABEngine.X_POSITION, pos, ABEngine.PLAYER_ACTION)) {
+			   
 				ABEngine.Y_POSITION -= ABEngine.ACHMED_SPEED;
+				
+				x +=  ABEngine.X_POSITION/100f;
+				y +=  ABEngine.Y_POSITION/100f;
 
-				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+				gl.glTranslatef(x,y, 0.5f);
 
 			} else {
+			    
+			    	x +=  ABEngine.X_POSITION/100f;
+				y +=  ABEngine.Y_POSITION/100f;
 
-				gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+
+				gl.glTranslatef(x,y, 0.5f);
 
 			}
 
@@ -545,8 +649,11 @@ public class ABGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
+			
+			x +=  ABEngine.X_POSITION/100f;
+			y +=  ABEngine.Y_POSITION/100f;
 
-			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+			gl.glTranslatef(x,y, 0.5f);
 
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
@@ -565,8 +672,9 @@ public class ABGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
-
-			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+			x +=  ABEngine.X_POSITION/100f;
+			y +=  ABEngine.Y_POSITION/100f;
+			gl.glTranslatef(x, y, 0.5f);
 
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
@@ -585,8 +693,9 @@ public class ABGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
-
-			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+			x +=  ABEngine.X_POSITION/100f;
+			y +=  ABEngine.Y_POSITION/100f;
+			gl.glTranslatef(x, y, 0.5f);
 
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
@@ -605,8 +714,11 @@ public class ABGameRenderer implements Renderer {
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
 			gl.glScalef(.05f, .05f, 1f);
+			
+			x +=  ABEngine.X_POSITION/100f;
+			y +=  ABEngine.Y_POSITION/100f;
 
-			gl.glTranslatef(ABEngine.X_POSITION, ABEngine.Y_POSITION, 0.5f);
+			gl.glTranslatef(x,y, 0.5f);
 
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
@@ -625,9 +737,9 @@ public class ABGameRenderer implements Renderer {
 
 	public void drawMap(GL10 gl, char[][] game_matrix) {
 
-		float tileLocX = (ABEngine.start_x/0.05f) - (float)game_matrix[0].length/2f;
-		float tileLocY = (ABEngine.start_y/0.05f) - (float)game_matrix.length/2f;
-
+	    	ABEngine.START_X = (ABEngine.start_x/0.05f) - game_matrix[0].length/2.f;
+		ABEngine.START_Y = (ABEngine.start_y/0.05f) - game_matrix.length/2.f;
+		
 		for(int x=0; x< game_matrix[0].length ; x++) {
 			for(int y=0; y< game_matrix.length; y++) {
 
@@ -635,7 +747,7 @@ public class ABGameRenderer implements Renderer {
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
 				gl.glScalef(.05f, .05f, 1f);
-				gl.glTranslatef(tileLocX, tileLocY, 0f);
+				gl.glTranslatef(ABEngine.START_X + x,ABEngine.START_Y +y, 0f);
 
 				gl.glMatrixMode(GL10.GL_TEXTURE);
 				gl.glLoadIdentity();
@@ -686,8 +798,8 @@ public class ABGameRenderer implements Renderer {
 					gl.glLoadIdentity();
 
 					if(ABEngine.FIRST_MAP_DRAW) {
-						ABEngine.X_POSITION = tileLocX;
-						ABEngine.Y_POSITION = tileLocY;
+						ABEngine.X_POSITION = x*100;
+						ABEngine.Y_POSITION = y*100;
 					}
 
 					break;
@@ -702,19 +814,17 @@ public class ABGameRenderer implements Renderer {
 					gl.glLoadIdentity();
 
 					if(ABEngine.FIRST_MAP_DRAW) {
-						ABEngine.GREEN_ROBOT_X = tileLocX;
-						ABEngine.GREEN_ROBOT_Y = tileLocY;
+						ABEngine.GREEN_ROBOT_X = x*100;
+						ABEngine.GREEN_ROBOT_Y = y*100;
+						robot.changeRobotAction();
 					}
 
 					break;
 
 				}
 
-				tileLocY += 1.f;
+				
 			}
-
-			tileLocX += 1.f;
-			tileLocY = (ABEngine.start_y/0.05f) - (float)game_matrix.length/2f;
 
 		}
 
@@ -727,23 +837,27 @@ public class ABGameRenderer implements Renderer {
 		if(ABEngine.BOMB_ACTION == ABEngine.BOMB_EXPLOSION) {
 
 			int rounds = 0;
-			boolean first = true;
+			
 			float x = 0;
 			float y = 0;
 			float inc = 0;
 
 
-
+			
+			
 			for(int i = 0; i < ABEngine.EXPLOSION_RADIUS * 4 + 1; i++) {
+			    
+			    
 
 				gl.glMatrixMode(GL10.GL_MODELVIEW);
 				gl.glLoadIdentity();
 				gl.glPushMatrix();
 				gl.glScalef(.05f, .05f, 1f);
 
-
-				gl.glTranslatef(bomb.x_position + x, bomb.y_position + y, 0.8f);
-
+				
+				gl.glTranslatef( ABEngine.START_X +  (bomb.x_position/100f) + x, ABEngine.START_Y + (bomb.y_position/100f) + y, 0.8f);
+				
+				
 				gl.glMatrixMode(GL10.GL_TEXTURE);
 				gl.glLoadIdentity();
 				gl.glTranslatef(0.666f, 0.75f, 0.3f);
@@ -777,7 +891,7 @@ public class ABGameRenderer implements Renderer {
 					x = 0; 
 					y = 1 + inc;
 					
-					inc++;
+					inc += 1;
 				}
 
 				rounds++;

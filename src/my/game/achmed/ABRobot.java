@@ -162,11 +162,11 @@ public class ABRobot {
 	    wrongPositions[1] = ABEngine.PLAYER_DOWN;
 	}
 
-	if (Math.abs(xDistance) < ABEngine.ROBOT_SPEED){
+	if (xDistance  == 0){
 	    correctDecision = upDownDecision;
 	}
 
-	else if (Math.abs(yDistance) < ABEngine.ROBOT_SPEED){
+	else if (yDistance == 0){
 	    correctDecision = leftRightDecision;
 	}
 	else if(Math.abs(xDistance) < Math.abs(yDistance))
@@ -187,7 +187,7 @@ public class ABRobot {
 	
 	
 	
-	if(r.nextInt(100) < 95){
+	if(r.nextInt(100) < 75){
 	    ABEngine.GREEN_ROBOT_ACTION = correctDecision;
 	}else {
 	    wrongDecision = wrongPositions[r.nextInt(1+1)];

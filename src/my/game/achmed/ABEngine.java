@@ -46,7 +46,7 @@ public class ABEngine {
 
 	public static float X_POSITION = 0f;
 	public static float Y_POSITION = 0f;
-	public static final float ACHMED_SPEED = .1f;
+	public static final float ACHMED_SPEED = 10f;
 	public static final int PLAYER_ACHMED_FRAMES = 0;
 	public static final int PLAYER_FRAMES_BETWEEN_ANI = 9;
 
@@ -64,12 +64,17 @@ public class ABEngine {
 
 	public static float start_x;
 	public static float start_y;
+	
+	 
+	
 
 	public static boolean FIRST_MAP_DRAW = true;
 
-	public static int MAX_COUNTER = (int) (1f / ABEngine.ACHMED_SPEED);
+	public static int MAX_COUNTER = (int) (100f / ABEngine.ACHMED_SPEED);
 
 	public static int ACHMED_COUNTER = 0;
+	
+	public static int ROBOT_COUNTER = 0;
 
 	public static boolean STOP = true;
 	public static boolean STOPPED = true;
@@ -77,10 +82,10 @@ public class ABEngine {
 
 	//GREEN ROBOT
 
-	public static int GREEN_ROBOT_ACTION = PLAYER_RIGHT_RELEASE;
+	public static int GREEN_ROBOT_ACTION = PLAYER_RIGHT;
 	public static float GREEN_ROBOT_X = 0f;
 	public static float GREEN_ROBOT_Y = 0f;
-	public static final float ROBOT_SPEED = .1f;
+	public static final float ROBOT_SPEED = 10f;
 
 	//BLUE ROBOT ETC...ETC
 
@@ -111,68 +116,64 @@ public class ABEngine {
 
 
 	};
+	
+	//Start do jogo
+	public static float START_X;
+	public static float START_Y;
+		 
 
-	public static boolean detectColision(float x, float y) {
-
-
+	public static boolean detectColision(float x, float y, int character) {
 
 		int matrix_x = 0, matrix_y = 0;
-
-		float startX = (ABEngine.start_x/0.05f) - ((float)game_map[0].length/2f);
-		float startY = (ABEngine.start_y/0.05f) - ((float)game_map.length/2f);
+		
+		x = x/100;
+		y = y/100;
+		
+		Log.w("xy", "x" + x + "y" + y);
 		
 		
-		float X = x - startX;
-	    float Y = y - startY;
-	    
-	    Log.w("INDEXES", "xx: " + ((float)game_map.length - 1f - Y) + " yy: " + X);
 
-		switch(ABEngine.PLAYER_ACTION) {
+		switch(character) {
 
 		case ABEngine.PLAYER_UP: 
 
-			matrix_x = Math.round(x - startX);
-			
-			matrix_y = (int) Math.floor(y - startY);
+		    matrix_x = Math.round(x);
+		    matrix_y = (int) Math.ceil(y);
 
-			break;
+		    break;
 
 		case ABEngine.PLAYER_DOWN: 
 
-			matrix_x = Math.round(x - startX);
-			matrix_y = (int) Math.ceil(y - startY);
+		    matrix_x = Math.round(x);
+		    matrix_y = (int) Math.floor(y);
 
-			break;
+		    break;
 
 		case ABEngine.PLAYER_LEFT:
 
-			matrix_x = Math.round(x - startX);
-			matrix_y = (int) Math.floor(y - startY);
+		    matrix_x = (int) Math.floor(x);
+		    matrix_y = Math.round(y);
 
-			break;
+		    break;
 
 		case ABEngine.PLAYER_RIGHT:
 
-			matrix_x = Math.round(x - startX);
-			matrix_y = (int) Math.ceil(y - startY);
+		    matrix_x = (int) Math.ceil(x);
+		    matrix_y = Math.round(y);
 
-			break;
+		    break;
 
 		}
 
-		Log.w("INDEXES", "x: " + (game_map.length - 1 - matrix_y) + " y: " + matrix_x);
-
-		char pos = game_map[game_map.length - 1 - matrix_y][ matrix_x];
-
-		if(pos == '-' || pos == '1') {
-			return false;
+		char pos = game_map[game_map.length - 1 - matrix_y][matrix_x];
+		
+		if(pos == '-' || pos == '1' || pos == 'R') {
+		    return false;
 		} else {
-			return true;
+		    return true;
 		}
 
-	}
-
-
+	    }
 
 	public boolean onExit(View v) {
 		try
