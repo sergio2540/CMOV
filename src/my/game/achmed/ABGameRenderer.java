@@ -103,7 +103,10 @@ public class ABGameRenderer implements Renderer {
 
 	private void moveGreenRobot(GL10 gl, char[][] game_map) {
 
-		
+	    	//Esta morto nao faz nada
+	    	if(ABEngine.ROBOT_IS_DEAD[1])
+	    	    return;
+	    	
 	    	float x = ABEngine.START_X;
 	    	float y = ABEngine.START_Y;
 	    
@@ -388,8 +391,16 @@ public class ABGameRenderer implements Renderer {
 //			gl.glLoadIdentity();
 //
 //			break;
+			
+			
+			
 
 		}
+		
+		//Altera posicao do robot
+		int mtx_x = ABEngine.getXMatrixPosition(ABEngine.GREEN_ROBOT_X,ABEngine.GREEN_ROBOT_ACTION);
+		int mtx_y = ABEngine.getYMatrixPosition(ABEngine.GREEN_ROBOT_Y,ABEngine.GREEN_ROBOT_ACTION);
+		ABEngine.setObject(mtx_x,mtx_y,'R');
 
 	}
 
@@ -451,6 +462,9 @@ public class ABGameRenderer implements Renderer {
 	public void moveAchmed(GL10 gl, char[][] game_matrix) {
 
 		//Player.Create(ENUM.BLACKSKIN);
+	    
+	    	//if(ABEngine.PLAYER_IS_DEAD[1])
+	    	    //return;
 	    	
 	    	float x = ABEngine.START_X;
 	    	float y = ABEngine.START_Y;
@@ -732,6 +746,13 @@ public class ABGameRenderer implements Renderer {
 			break;
 
 		}
+		
+		//Altera posicao do player
+		int mtx_x = ABEngine.getXMatrixPosition(ABEngine.X_POSITION,ABEngine.PLAYER_ACTION);
+		int mtx_y = ABEngine.getYMatrixPosition(ABEngine.Y_POSITION,ABEngine.PLAYER_ACTION);
+		
+		
+		ABEngine.setObject(mtx_x,mtx_y,'1');
 
 	}
 
@@ -848,50 +869,53 @@ public class ABGameRenderer implements Renderer {
 			for(int i = 0; i < ABEngine.EXPLOSION_RADIUS * 4 + 1; i++) {
 			    
 			    
+			    	boolean canBurn = ABEngine.burn((bomb.x_position + x),(bomb.y_position + y));
+				
+				if(canBurn){
 
-				gl.glMatrixMode(GL10.GL_MODELVIEW);
-				gl.glLoadIdentity();
-				gl.glPushMatrix();
-				gl.glScalef(.05f, .05f, 1f);
-
-				
-				gl.glTranslatef( ABEngine.START_X +  (bomb.x_position/100f) + x, ABEngine.START_Y + (bomb.y_position/100f) + y, 0.8f);
-				
-				
-				gl.glMatrixMode(GL10.GL_TEXTURE);
-				gl.glLoadIdentity();
-				gl.glTranslatef(0.666f, 0.75f, 0.3f);
-				fire.draw(gl);
-				gl.glPopMatrix();
-				gl.glLoadIdentity();
+        				gl.glMatrixMode(GL10.GL_MODELVIEW);
+        				gl.glLoadIdentity();
+        				gl.glPushMatrix();
+        				gl.glScalef(.05f, .05f, 1f);
+        				
+        				gl.glTranslatef( ABEngine.START_X +  (bomb.x_position + x)/100f, ABEngine.START_Y + (bomb.y_position + y)/100f, 0.8f);
+        				
+        				
+        				gl.glMatrixMode(GL10.GL_TEXTURE);
+        				gl.glLoadIdentity();
+        				gl.glTranslatef(0.666f, 0.75f, 0.3f);
+        				fire.draw(gl);
+        				gl.glPopMatrix();
+        				gl.glLoadIdentity();
+				}
 
 
 				if(rounds % 4 == 0) {
 					Log.w("BOMB", "round4");
 					//inc++; < ABEngine.RAdISU
-					x = -1 - inc; 
+					x = -100 - inc; 
 					y = 0;
 
 				}
 
 				if(rounds % 4 == 1) {
 					//						Log.w("BOMB", "round3");
-					x = 1 + inc; 
+					x = 100 + inc; 
 					y = 0;
 				}
 
 				if(rounds % 4 == 2) {
 					//						Log.w("BOMB", "round2");
 					x = 0; 
-					y = -1 - inc;
+					y = -100 - inc;
 				}
 
 				if(rounds % 4 == 3) {
 					//						Log.w("BOMB", "round1");
 					x = 0; 
-					y = 1 + inc;
+					y = 100 + inc;
 					
-					inc += 1;
+					inc += 100;
 				}
 
 				rounds++;
