@@ -17,153 +17,185 @@ import android.opengl.GLUtils;
 public class ABRobot {
 
 
-	private FloatBuffer vertexBuffer;
-	private FloatBuffer textureBuffer;
-	private ByteBuffer indexBuffer;
-	private Random r = new Random();
+    private final FloatBuffer vertexBuffer;
+    private final FloatBuffer textureBuffer;
+    private final ByteBuffer indexBuffer;
+    private final Random r = new Random();
 
 
-	private int[] textures = new int[1];
+    private final int[] textures = new int[1];
 
-	private float vertices[] = {
+    private final float vertices[] = {
 
-			0.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
+	    0.0f, 0.0f, 0.0f,
+	    1.0f, 0.0f, 0.0f,
+	    0.0f, 1.0f, 0.0f,
+	    1.0f, 1.0f, 0.0f,
 
-	};
+    };
 
-	private float texture[] = {
-			0.0f, 0.0f, //inferior esquerdo
-			0.08333f, 0.0f, //inferior direito
-			0.0f, 0.125f, //superior esquerdo
-			0.08333f, 0.125f,  //superior direito
-	};
+    private final float texture[] = {
+	    0.0f, 0.0f, //inferior esquerdo
+	    0.08333f, 0.0f, //inferior direito
+	    0.0f, 0.125f, //superior esquerdo
+	    0.08333f, 0.125f,  //superior direito
+    };
 
-	private byte indices[] = {
+    private final byte indices[] = {
 
-			2,0,3,
-			0,1,3,
+	    2,0,3,
+	    0,1,3,
 
-	};
+    };
 
-	public ABRobot() {
+    public ABRobot() {
 
-		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
-		byteBuf.order(ByteOrder.nativeOrder());
+	ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
+	byteBuf.order(ByteOrder.nativeOrder());
 
-		vertexBuffer = byteBuf.asFloatBuffer();
-		vertexBuffer.put(vertices);
-		vertexBuffer.position(0);
+	vertexBuffer = byteBuf.asFloatBuffer();
+	vertexBuffer.put(vertices);
+	vertexBuffer.position(0);
 
-		byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
-		byteBuf.order(ByteOrder.nativeOrder());
+	byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
+	byteBuf.order(ByteOrder.nativeOrder());
 
-		textureBuffer = byteBuf.asFloatBuffer();
-		textureBuffer.put(texture);
-		textureBuffer.position(0);
+	textureBuffer = byteBuf.asFloatBuffer();
+	textureBuffer.put(texture);
+	textureBuffer.position(0);
 
-		indexBuffer = ByteBuffer.allocateDirect(indices.length);
-		indexBuffer.put(indices);
-		indexBuffer.position(0);
+	indexBuffer = ByteBuffer.allocateDirect(indices.length);
+	indexBuffer.put(indices);
+	indexBuffer.position(0);
+    }
+
+    public void draw(GL10 gl) {
+
+	gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+
+	gl.glFrontFace(GL10.GL_CCW);
+	gl.glEnable(GL10.GL_CULL_FACE);
+	gl.glCullFace(GL10.GL_BACK);
+	gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+	gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+	gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
+	gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+	gl.glDrawElements(GL10.GL_TRIANGLES, indices.length,
+		GL10.GL_UNSIGNED_BYTE, indexBuffer);
+	gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+	gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+	gl.glDisable(GL10.GL_CULL_FACE);
+
+    }
+
+    public void loadTexture(GL10 gl, int texture, Context context) {
+	InputStream imagestream =
+		context.getResources().openRawResource(texture);
+	Bitmap bitmap = null;
+	try {
+	    bitmap = BitmapFactory.decodeStream(imagestream);
+	}catch(Exception e){
+	}finally {
+	    try {
+		imagestream.close();
+		imagestream = null;
+	    } catch (IOException e) {
+	    }
 	}
 
-	public void draw(GL10 gl) {
+	gl.glGenTextures(1, textures, 0);
+	gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+	gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER,
+		GL10.GL_NEAREST);
+	gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER,
+		GL10.GL_LINEAR);
+	gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
+		GL10.GL_REPEAT);
+	gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
+		GL10.GL_REPEAT);
 
-		gl.glFrontFace(GL10.GL_CCW);
-		gl.glEnable(GL10.GL_CULL_FACE);
-		gl.glCullFace(GL10.GL_BACK);
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
-		gl.glDrawElements(GL10.GL_TRIANGLES, indices.length,
-				GL10.GL_UNSIGNED_BYTE, indexBuffer);
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		gl.glDisable(GL10.GL_CULL_FACE);
+	GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 
+	bitmap.recycle();
+
+    }	
+
+
+    public void changeRobotAction() {
+
+	//int[] position = { ABEngine.PLAYER_LEFT, ABEngine.PLAYER_DOWN, ABEngine.PLAYER_RIGHT,
+	//	ABEngine.PLAYER_UP };
+	int leftRightDecision = 0;
+	int upDownDecision = 0;
+
+	int correctDecision = 0;
+	int wrongDecision = 0;
+	
+	int[] wrongPositions = new int[3];
+	
+
+	float xPlayerPosition = ABEngine.X_POSITION;
+	float yPlayerPosition = ABEngine.Y_POSITION;
+	float xRobotPosition = ABEngine.GREEN_ROBOT_X;
+	float yRobotPosition = ABEngine.GREEN_ROBOT_Y;
+
+	//check if lefft or right
+	float xDistance = xRobotPosition - xPlayerPosition;
+	if(xDistance >= 0){
+	    leftRightDecision = ABEngine.PLAYER_LEFT;
+	    wrongPositions[0] = ABEngine.PLAYER_RIGHT;
+	}
+	else {
+	    leftRightDecision = ABEngine.PLAYER_RIGHT;
+	    wrongPositions[0] = ABEngine.PLAYER_LEFT;
 	}
 
-	public void loadTexture(GL10 gl, int texture, Context context) {
-		InputStream imagestream =
-				context.getResources().openRawResource(texture);
-		Bitmap bitmap = null;
-		try {
-			bitmap = BitmapFactory.decodeStream(imagestream);
-		}catch(Exception e){
-		}finally {
-			try {
-				imagestream.close();
-				imagestream = null;
-			} catch (IOException e) {
-			}
-		}
+	//check if up or down.
+	float yDistance = yRobotPosition - yPlayerPosition;
+	if(yDistance >= 0){
+	    upDownDecision = ABEngine.PLAYER_DOWN;
+	    wrongPositions[1] = ABEngine.PLAYER_UP;
+	}
+	else {
+	    upDownDecision = ABEngine.PLAYER_UP;
+	    wrongPositions[1] = ABEngine.PLAYER_DOWN;
+	}
 
-		gl.glGenTextures(1, textures, 0);
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+	if (Math.abs(xDistance) < ABEngine.ROBOT_SPEED){
+	    correctDecision = upDownDecision;
+	}
 
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER,
-				GL10.GL_NEAREST);
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER,
-				GL10.GL_LINEAR);
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
-				GL10.GL_REPEAT);
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
-				GL10.GL_REPEAT);
+	else if (Math.abs(yDistance) < ABEngine.ROBOT_SPEED){
+	    correctDecision = leftRightDecision;
+	}
+	else if(Math.abs(xDistance) < Math.abs(yDistance))
+	    correctDecision = leftRightDecision;
 
-		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+	else if(Math.abs(xDistance) > Math.abs(yDistance))
+	    correctDecision= upDownDecision;
 
-		bitmap.recycle();
 
-	}	
+	//if its equally far.
+	else{
 
+	    int[] possibleReturns = {leftRightDecision, upDownDecision};
+	    correctDecision = possibleReturns[r.nextInt(1+1)];
+	}
 	
-//	public void changeRobotAction() {
-//		
-//		//int[] position = { ABEngine.PLAYER_LEFT, ABEngine.PLAYER_DOWN, ABEngine.PLAYER_RIGHT,
-//			//	ABEngine.PLAYER_UP };
-//		int leftRightDecision = 0;
-//		int upDownDecision = 0;
-//		
-//		float xPlayerPosition = ABEngine.X_POSITION;
-//		float yPlayerPosition = ABEngine.Y_POSITION;
-//		float xRobotPosition = ABEngine.GREEN_ROBOT_X;
-//		float yRobotPosition = ABEngine.GREEN_ROBOT_Y;
-//		
-//		//check if lefft or right
-//		float xDistance = xRobotPosition - xPlayerPosition;
-//		if(xDistance >= 0)
-//			leftRightDecision = ABEngine.PLAYER_RIGHT;
-//		else leftRightDecision = ABEngine.PLAYER_LEFT;
-//			
-//		//check if up or down.
-//		float yDistance = yRobotPosition - yPlayerPosition;
-//		if(yDistance >= 0)
-//			upDownDecision = ABEngine.PLAYER_UP;
-//		else upDownDecision = ABEngine.PLAYER_LEFT;
-//		
-//		if(xDistance < yDistance)
-//			ABEngine.GREEN_ROBOT_ACTION = leftRightDecision;
-//		
-//		else if(xDistance > yDistance)
-//			ABEngine.GREEN_ROBOT_ACTION = upDownDecision;
-//		//if its equally far.
-//		else{
-//			
-//			int[] possibleReturns = {leftRightDecision, upDownDecision};
-//			ABEngine.GREEN_ROBOT_ACTION = possibleReturns[r.nextInt(1)];
-//			
-//			
-//	}
-		
-		
-		//ABEngine.GREEN_ROBOT_ACTION = position[random.nextInt(3 + 1)];
-		
-		
-	//}
 	
+	
+	
+	
+	if(r.nextInt(100) < 95){
+	    ABEngine.GREEN_ROBOT_ACTION = correctDecision;
+	}else {
+	    wrongDecision = wrongPositions[r.nextInt(1+1)];
+	    ABEngine.GREEN_ROBOT_ACTION = wrongDecision;
+	}
+	
+
+
+    }
+
 }
