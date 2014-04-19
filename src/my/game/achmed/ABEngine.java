@@ -6,6 +6,7 @@ import android.content.Intent;
 import my.game.achmed.R;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 public class ABEngine {
 
@@ -49,10 +50,10 @@ public class ABEngine {
     public static final float ACHMED_SPEED = 10f;
     public static final int PLAYER_ACHMED_FRAMES = 0;
     public static final int PLAYER_FRAMES_BETWEEN_ANI = 9;
-    
+
     //Suporte para 3 jogadores de 1 a 3
     public static final boolean [] PLAYER_IS_DEAD ={false, false, false, false};
-    
+
     //Suporte para 3 robots de 1 a 3
     public static final boolean [] ROBOT_IS_DEAD ={false, false, false, false};
 
@@ -126,30 +127,46 @@ public class ABEngine {
     //Start do jogo
     public static float START_X;
     public static float START_Y;
-    
+
     public static void setObject(int x, int y, char object){
-   	game_map[game_map.length - 1 - y][x] = object;
+	game_map[game_map.length - 1 - y][x] = object;
     }
-    
-    private static char getObject(int x, int y){
-	return game_map[game_map.length - 1 - y][x];
+
+    private static boolean isNotInMatrixRange(int mtx_x, int mtx_y){
+	return !isInMatrixRange(mtx_x, mtx_y);
     }
-    
+
+    private static boolean isInMatrixRange(int mtx_x, int mtx_y){
+	return mtx_x > 0 && mtx_x < getMaxX() && mtx_y > 0  &&  mtx_y < getMaxY();
+    }
+
+    private static char getObject(int mtx_x, int mtx_y){
+	return game_map[game_map.length - 1 - mtx_y][mtx_x];
+    }
+
     private static int getMaxX(){
 	return game_map[0].length;
     }
-    
+
     private static int getMaxY(){
 	return game_map.length;
     }
 
 
+    public static int getXMatrixPosition(float x){
+	return (int) (x/100.f);
+    }
+
+    public static int getYMatrixPosition(float y){
+	return (int) (y/100.f);
+    }
+
     public static int getXMatrixPosition(float x, int character){
-	
+
 	int matrix_x = 0;
 
 	x = x/100;
-	
+
 	switch(character) {
 
 	case ABEngine.PLAYER_UP: 
@@ -161,7 +178,7 @@ public class ABEngine {
 	case ABEngine.PLAYER_DOWN: 
 
 	    matrix_x = Math.round(x);
-	    
+
 	    break;
 
 	case ABEngine.PLAYER_LEFT:
@@ -177,32 +194,32 @@ public class ABEngine {
 	    break;
 
 	}
-	
+
 	return matrix_x; 
     }	 
 
     public static int getYMatrixPosition(float y, int character){
-	
+
 	int matrix_y = 0;
-	
+
 	y = y/100;
-	
+
 	switch(character) {
 
 	case ABEngine.PLAYER_UP: 
-	    
+
 	    matrix_y = (int) Math.ceil(y);
 
 	    break;
 
 	case ABEngine.PLAYER_DOWN: 
-	    
+
 	    matrix_y = (int) Math.floor(y);
 
 	    break;
 
 	case ABEngine.PLAYER_LEFT:
-	    
+
 	    matrix_y = Math.round(y);
 
 	    break;
@@ -215,7 +232,7 @@ public class ABEngine {
 	    break;
 
 	}
-	
+
 	return matrix_y;
     }	 
 
@@ -224,7 +241,7 @@ public class ABEngine {
 
 	int mtx_x = getXMatrixPosition(x,character);
 	int mtx_y = getYMatrixPosition(y,character);
-	
+
 	char pos = getObject(mtx_x,mtx_y);
 
 	if(pos == '-' || pos == '1' || pos == 'R') {
@@ -234,41 +251,53 @@ public class ABEngine {
 	}
 
     }
-    
+
     //Remove objectos queimados
     public static boolean burn(float x, float y) {
-	
-	int mtx_x = (int) (x/100.f);
-	int mtx_y = (int) (y/100.f);
-	
-	
-	
-	if(!(mtx_x > 0 && mtx_x < getMaxX() && mtx_y > 0  &&  mtx_y < getMaxY()))
-		return false;
-	
-	char pos = getObject(mtx_x,mtx_y);
-	
+
+	int mtx_x = getXMatrixPosition(x);
+	int mtx_y = getYMatrixPosition(y);
+
+	if(isNotInMatrixRange(mtx_x,mtx_y)){
+	    return false;
+	}
+
+	char obj = getObject(mtx_x,mtx_y);
+
 	Log.w("BURN", "x:" + mtx_x + "y:" +mtx_y);
-	
-	if (!(pos == 'W')) {
-	    
-	    if(pos == '1'){
+
+	if (!(obj == 'W')) {
+
+	    if(obj == '1'){
 		PLAYER_IS_DEAD[1] = true;
 	    }
-	    
-	    if (pos == 'R'){
+
+	    if (obj == 'R'){
 		ROBOT_IS_DEAD[1] = true;
 	    }
-	    
+
 	    setObject(mtx_x,mtx_y,'-');
-	
+
 	    return true;
-	
+
 	}else {
 	    return false;
 	}
 
     }
+
+    
+    public static void killPlayer(int numPlayer){
+	
+	
+    }
+    
+    public static void killRobot(int numRobot){
+	
+	
+    }
+
+
 
     public boolean onExit(View v) {
 	try
