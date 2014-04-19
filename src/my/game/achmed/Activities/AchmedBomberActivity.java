@@ -1,6 +1,8 @@
-package my.game.achmed;
+package my.game.achmed.Activities;
 
+import my.game.achmed.ABEngine;
 import my.game.achmed.R;
+import my.game.achmed.R.layout;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;

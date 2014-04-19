@@ -1,7 +1,14 @@
-package my.game.achmed;
+package my.game.achmed.OpenGL;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import my.game.achmed.ABEngine;
+import my.game.achmed.Characters.ABAchmedPlayer;
+import my.game.achmed.Characters.ABBomb;
+import my.game.achmed.Characters.ABFire;
+import my.game.achmed.Characters.ABMap;
+import my.game.achmed.Characters.ABRobot;
 
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;

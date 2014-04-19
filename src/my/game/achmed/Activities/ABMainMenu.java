@@ -1,5 +1,10 @@
-package my.game.achmed;
+package my.game.achmed.Activities;
 
+import my.game.achmed.ABEngine;
+import my.game.achmed.ABMusic;
+import my.game.achmed.R;
+import my.game.achmed.R.id;
+import my.game.achmed.R.layout;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

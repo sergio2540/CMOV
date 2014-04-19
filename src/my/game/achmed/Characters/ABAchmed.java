@@ -1,12 +1,10 @@
-package my.game.achmed;
+package my.game.achmed.Characters;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -15,40 +13,34 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
-public class ABBomb {
+public class ABAchmed {
 
-	private final FloatBuffer vertexBuffer;
-	private final FloatBuffer textureBuffer;
-	private final ByteBuffer indexBuffer;
-	private final int[] textures = new int[1];
+	private FloatBuffer vertexBuffer;
+	private FloatBuffer textureBuffer;
+	private ByteBuffer indexBuffer;
+	private int[] textures = new int[1];
 
-	public float x_position = 0;
-	public float y_position = 0;
 
-	private final float vertices[] = {
-
+	private float vertices[] = {
 			0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,
-
+			0.0f, 1.0f, 0.0f,
 	};
 
-	private final float texture[] = {
-			0.0f, 0.0f, //inferior esquerdo
-			0.250f, 0.0f, //inferior direito
-			0.0f, 0.167f, //superior esquerdo
-			0.250f, 0.167f,  //superior direito
+	private float texture[] = {
+			0.0f, 0.0f,
+			0.25f, 0.0f,
+			0.25f, 0.25f,
+			0.0f, 0.25f,
 	};
 
-	private final byte indices[] = {
-
-			2,0,3,
-			0,1,3,
-
+	private byte indices[] = {
+			0,1,2,
+			0,2,3,
 	};
 
-	public ABBomb() {
+	public ABAchmed() {
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
@@ -69,24 +61,7 @@ public class ABBomb {
 		indexBuffer.position(0);
 	}
 
-	public void setTimerToBombExplosion(int delay) {
-
-		Timer timer = new Timer();
-
-		timer.schedule(
-
-				new TimerTask() {
-					@Override
-					public void run() {
-						ABEngine.BOMB_ACTION = ABEngine.BOMB_EXPLOSION;
-					}
-					
-				}, delay);
-
-	}
-
 	public void draw(GL10 gl) {
-
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
 		gl.glFrontFace(GL10.GL_CCW);
@@ -118,7 +93,7 @@ public class ABBomb {
 			} catch (IOException e) {
 			}
 		}
-
+		
 		gl.glGenTextures(1, textures, 0);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
@@ -130,10 +105,8 @@ public class ABBomb {
 				GL10.GL_REPEAT);
 		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
 				GL10.GL_REPEAT);
-
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-
 		bitmap.recycle();
+	}
 
-	}	
 }

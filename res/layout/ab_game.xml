@@ -7,11 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <my.game.achmed.ABGameView
+        <my.game.achmed.OpenGL.ABGameSurfaceView
             android:id="@+id/game_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        
     </FrameLayout>
 
     <LinearLayout
@@ -43,7 +42,22 @@
             android:text="05:12"
             android:textColor="#FFFFFFFF" />
 
-        <TextView
+        <ImageButton
+            android:id="@+id/pause"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="end"
+            android:scaleType="fitEnd"
+            android:src="@drawable/pause" />
+
+        <!--
+             <TextView
             android:id="@+id/numPlayers"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -53,7 +67,8 @@
             android:ems="10"
             android:gravity="end"
             android:text="3 Players"
-            android:textColor="#FFFFFFFF" />
+            android:textColor="#FFFFFFFF" /> -->
+
     </LinearLayout>
 
     <LinearLayout
@@ -123,12 +138,12 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/namePlayer"
+            android:id="@+id/numPlayers"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Achmed"
+            android:text="3 P"
             android:textColor="#FFFFFFFF" />
 
         <ImageButton
@@ -136,9 +151,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:adjustViewBounds="false"
             android:background="@android:color/transparent"
             android:scaleType="fitEnd"
             android:src="@drawable/bomb_button_normal" />
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,46 +1,56 @@
-package my.game.achmed;
+package my.game.achmed.Characters;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import my.game.achmed.ABEngine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
-public class ABMap {
+public class ABBomb {
 
+	private final FloatBuffer vertexBuffer;
+	private final FloatBuffer textureBuffer;
+	private final ByteBuffer indexBuffer;
+	private final int[] textures = new int[1];
 
-	private FloatBuffer vertexBuffer;
-	private FloatBuffer textureBuffer;
-	private ByteBuffer indexBuffer;
-	private int[] textures = new int[1];
+	public float x_position = 0;
+	public float y_position = 0;
 
-	private float vertices[] = {
+	private final float vertices[] = {
+
 			0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
-	};
-	
-	private float texture[] = {
-			0.0f, 0.0f, //inferior esquerdo
-			0.0f, 0.0625f, //superior esquerdo
-			0.0625f, 0.0625f, //superior direito
-			0.0625f, 0.0f //inferior direito
-	};
-	
-	private byte indices[] = {
-			0,1,2,
-			0,2,3,
+			1.0f, 1.0f, 0.0f,
+
 	};
 
-	public ABMap() {
+	private final float texture[] = {
+			0.0f, 0.0f, //inferior esquerdo
+			0.250f, 0.0f, //inferior direito
+			0.0f, 0.167f, //superior esquerdo
+			0.250f, 0.167f,  //superior direito
+	};
+
+	private final byte indices[] = {
+
+			2,0,3,
+			0,1,3,
+
+	};
+
+	public ABBomb() {
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
@@ -61,8 +71,24 @@ public class ABMap {
 		indexBuffer.position(0);
 	}
 
+	public void setTimerToBombExplosion(int delay) {
+
+		Timer timer = new Timer();
+
+		timer.schedule(
+
+				new TimerTask() {
+					@Override
+					public void run() {
+						ABEngine.BOMB_ACTION = ABEngine.BOMB_EXPLOSION;
+					}
+					
+				}, delay);
+
+	}
+
 	public void draw(GL10 gl) {
-		
+
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
 		gl.glFrontFace(GL10.GL_CCW);
@@ -94,6 +120,7 @@ public class ABMap {
 			} catch (IOException e) {
 			}
 		}
+
 		gl.glGenTextures(1, textures, 0);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
@@ -105,9 +132,10 @@ public class ABMap {
 				GL10.GL_REPEAT);
 		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
 				GL10.GL_REPEAT);
+
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+
 		bitmap.recycle();
-	
-	}
-	
+
+	}	
 }

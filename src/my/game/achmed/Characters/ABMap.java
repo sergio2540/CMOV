@@ -1,4 +1,4 @@
-package my.game.achmed;
+package my.game.achmed.Characters;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,42 +13,34 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
-public class ABAchmedPlayer {
+public class ABMap {
+
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
-
-	private float x_position = 0;
-	private float y_position = 0;
-	
 	private int[] textures = new int[1];
 
-
 	private float vertices[] = {
-			
 			0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,
-			
+			0.0f, 1.0f, 0.0f,
 	};
-
+	
 	private float texture[] = {
 			0.0f, 0.0f, //inferior esquerdo
-			0.083f, 0.0f, //inferior direito
-			0.0f, 0.125f, //superior esquerdo
-			0.083f, 0.125f,  //superior direito
+			0.0f, 0.0625f, //superior esquerdo
+			0.0625f, 0.0625f, //superior direito
+			0.0625f, 0.0f //inferior direito
 	};
-
+	
 	private byte indices[] = {
-			
-			2,0,3,
-			0,1,3,
-			
+			0,1,2,
+			0,2,3,
 	};
 
-	public ABAchmedPlayer() {
+	public ABMap() {
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
@@ -85,7 +77,7 @@ public class ABAchmedPlayer {
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glDisable(GL10.GL_CULL_FACE);
-		
+
 	}
 
 	public void loadTexture(GL10 gl, int texture, Context context) {
@@ -102,7 +94,6 @@ public class ABAchmedPlayer {
 			} catch (IOException e) {
 			}
 		}
-		
 		gl.glGenTextures(1, textures, 0);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
@@ -114,13 +105,9 @@ public class ABAchmedPlayer {
 				GL10.GL_REPEAT);
 		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
 				GL10.GL_REPEAT);
-		
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-		
 		bitmap.recycle();
-		
-	}
-
 	
+	}
 	
 }

@@ -1,4 +1,4 @@
-package my.game.achmed;
+package my.game.achmed.Characters;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +8,8 @@ import java.nio.FloatBuffer;
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import my.game.achmed.ABEngine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -187,7 +189,7 @@ public class ABRobot {
 	
 	
 	
-	if(r.nextInt(100) < 75){
+	if(r.nextInt(100) < 45){
 	    ABEngine.GREEN_ROBOT_ACTION = correctDecision;
 	}else {
 	    wrongDecision = wrongPositions[r.nextInt(1+1)];

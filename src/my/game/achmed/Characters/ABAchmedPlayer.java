@@ -1,4 +1,4 @@
-package my.game.achmed;
+package my.game.achmed.Characters;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,38 +13,42 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
-public class ABFire {
+public class ABAchmedPlayer {
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
 
+	private float x_position = 0;
+	private float y_position = 0;
+	
 	private int[] textures = new int[1];
 
-	private float vertices[] = {
 
+	private float vertices[] = {
+			
 			0.0f, 0.0f, 0.0f,
 			1.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 			1.0f, 1.0f, 0.0f,
-
+			
 	};
 
 	private float texture[] = {
 			0.0f, 0.0f, //inferior esquerdo
-			0.333f, 0.0f, //inferior direito
-			0.0f, 0.25f, //superior esquerdo
-			0.333f, 0.25f,  //superior direito
+			0.083f, 0.0f, //inferior direito
+			0.0f, 0.125f, //superior esquerdo
+			0.083f, 0.125f,  //superior direito
 	};
 
 	private byte indices[] = {
-
+			
 			2,0,3,
 			0,1,3,
-
+			
 	};
-	
-	public ABFire() {
+
+	public ABAchmedPlayer() {
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
@@ -64,8 +68,8 @@ public class ABFire {
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
 	}
-	
-public void draw(GL10 gl) {
+
+	public void draw(GL10 gl) {
 		
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
@@ -117,5 +121,6 @@ public void draw(GL10 gl) {
 		
 	}
 
-
+	
+	
 }
