@@ -234,11 +234,13 @@ public class ABGame extends Activity {
 		if(pauseOrPlay ==  R.drawable.pause){
 		    button.setImageResource(R.drawable.play);
 		    this.pauseOrPlay = R.drawable.play;
+		    onPause();
+		    
 		}
 		else {
 		    button.setImageResource(R.drawable.pause);
 		    this.pauseOrPlay = R.drawable.pause;
-
+		    onResume();
 		}
 
 	    }
@@ -285,12 +287,12 @@ public class ABGame extends Activity {
     protected void onResume() {
 	super.onResume();
 	gameView.onResume();
-
     }
 
 
     @Override
     protected void onPause() {
+	Log.w("pause","paused");
 	super.onPause();
 	gameView.onPause();
     }
@@ -298,13 +300,12 @@ public class ABGame extends Activity {
     @Override
     public void finish() {
 	super.finish();
-	gameView.onFinishTemporaryDetach();
     }
 
     @Override
     public void onBackPressed() {
 	Intent ab_dialog = new Intent(getApplicationContext(), ABGameDialog.class);
 	startActivity(ab_dialog);
-	this.finish();
+	onPause();
     }
 }

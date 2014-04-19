@@ -20,6 +20,7 @@ public class ABGameRenderer implements Renderer {
 	private final ABBomb bomb = new ABBomb();
 	private final ABFire fire = new ABFire();
 	private final ABRobot robot = new ABRobot();
+	
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
