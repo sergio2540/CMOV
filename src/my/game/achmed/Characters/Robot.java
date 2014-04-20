@@ -16,65 +16,60 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
-public class ABRobot {
+public abstract class Robot extends Character {
 
-
-    private final FloatBuffer vertexBuffer;
-    private final FloatBuffer textureBuffer;
-    private final ByteBuffer indexBuffer;
     private final Random r = new Random();
-
 
     private final int[] textures = new int[1];
 
-    private final float vertices[] = {
+    protected int[] getTextures(){
+	return textures;
+    }
 
-	    0.0f, 0.0f, 0.0f,
-	    1.0f, 0.0f, 0.0f,
-	    0.0f, 1.0f, 0.0f,
-	    1.0f, 1.0f, 0.0f,
+    private final static float vertices[] = {
 
-    };
-
-    private final float texture[] = {
-	    0.0f, 0.0f, //inferior esquerdo
-	    0.08333f, 0.0f, //inferior direito
-	    0.0f, 0.125f, //superior esquerdo
-	    0.08333f, 0.125f,  //superior direito
-    };
-
-    private final byte indices[] = {
-
-	    2,0,3,
-	    0,1,3,
+	0.0f, 0.0f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f,
+	1.0f, 1.0f, 0.0f,
 
     };
 
-    public ABRobot() {
+    private final static float texture[] = {
+	0.0f, 0.0f, //inferior esquerdo
+	0.08333f, 0.0f, //inferior direito
+	0.0f, 0.125f, //superior esquerdo
+	0.08333f, 0.125f,  //superior direito
+    };
 
-	ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
-	byteBuf.order(ByteOrder.nativeOrder());
+    private final static byte indices[] = {
 
-	vertexBuffer = byteBuf.asFloatBuffer();
-	vertexBuffer.put(vertices);
-	vertexBuffer.position(0);
+	2,0,3,
+	0,1,3,
 
-	byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
-	byteBuf.order(ByteOrder.nativeOrder());
+    };
 
-	textureBuffer = byteBuf.asFloatBuffer();
-	textureBuffer.put(texture);
-	textureBuffer.position(0);
+    private final boolean isDead = false;
 
-	indexBuffer = ByteBuffer.allocateDirect(indices.length);
-	indexBuffer.put(indices);
-	indexBuffer.position(0);
+    @Override
+    public boolean isDead(){
+	return isDead;
+    }
+
+    public Robot() {
+
+	super(vertices,texture,indices);
     }
 
     public void draw(GL10 gl) {
 
-	gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+	//Se calhar podia ir para Characters
+	FloatBuffer vertexBuffer = super.getVertexBuffer();
+	FloatBuffer textureBuffer = super.getTextureBuffer();
+	ByteBuffer indexBuffer = super.getIndexBuffer();
 
+
+	gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 	gl.glFrontFace(GL10.GL_CCW);
 	gl.glEnable(GL10.GL_CULL_FACE);
 	gl.glCullFace(GL10.GL_BACK);
@@ -121,8 +116,7 @@ public class ABRobot {
 
 	bitmap.recycle();
 
-    }	
-
+    }
 
     public void changeRobotAction() {
 
@@ -133,9 +127,9 @@ public class ABRobot {
 
 	int correctDecision = 0;
 	int wrongDecision = 0;
-	
+
 	int[] wrongPositions = new int[3];
-	
+
 
 	float xPlayerPosition = ABEngine.X_POSITION;
 	float yPlayerPosition = ABEngine.Y_POSITION;
@@ -184,20 +178,24 @@ public class ABRobot {
 	    int[] possibleReturns = {leftRightDecision, upDownDecision};
 	    correctDecision = possibleReturns[r.nextInt(1+1)];
 	}
-	
-	
-	
-	
-	
+
 	if(r.nextInt(100) < 45){
 	    ABEngine.GREEN_ROBOT_ACTION = correctDecision;
 	}else {
 	    wrongDecision = wrongPositions[r.nextInt(1+1)];
 	    ABEngine.GREEN_ROBOT_ACTION = wrongDecision;
 	}
-	
+
 
 
     }
 
+    @Override
+    public abstract boolean moveUp(GL10 gl);
+    @Override
+    public abstract boolean moveDown(GL10 gl);
+    @Override
+    public abstract boolean moveLeft(GL10 gl);
+    @Override
+    public abstract boolean moveRight(GL10 gl);
 }
