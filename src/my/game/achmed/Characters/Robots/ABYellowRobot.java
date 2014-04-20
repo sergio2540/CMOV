@@ -8,8 +8,10 @@ import android.content.Context;
 
 public class ABYellowRobot extends Robot {
 
-    public ABYellowRobot() {
+    public ABYellowRobot(float xpos, float ypos) {
 	super();
+	super.xpos = xpos;
+	super.ypos = ypos;
     }
 
     @Override
@@ -71,6 +73,11 @@ public class ABYellowRobot extends Robot {
 	gl.glTranslatef(0.33332f, 0.250f, 0f);
 	this.draw(gl);
 	return false;
+    }
+    
+    @Override
+    public void move(GL10 gl){
+	super.move(gl);
     }
 
 }

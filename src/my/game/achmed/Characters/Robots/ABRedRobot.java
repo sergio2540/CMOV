@@ -9,8 +9,10 @@ import android.content.Context;
 public class ABRedRobot extends Robot {
 
 
-    public ABRedRobot(){
+    public ABRedRobot(float xpos, float ypos){
 	super();
+	super.xpos = xpos;
+	super.ypos = ypos;
     }
 
     @Override
@@ -72,5 +74,10 @@ public class ABRedRobot extends Robot {
 	gl.glTranslatef(0.583331f, 0.75f, 0f);
 	this.draw(gl);
 	return false;
+    }
+    
+    @Override
+    public void move(GL10 gl){
+	super.move(gl);
     }
 }

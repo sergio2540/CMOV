@@ -1,5 +1,9 @@
 package my.game.achmed.OpenGL;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -7,6 +11,8 @@ import my.game.achmed.ABEngine;
 import my.game.achmed.Characters.ABBomb;
 import my.game.achmed.Characters.ABFire;
 import my.game.achmed.Characters.ABMap;
+import my.game.achmed.Characters.ACTION;
+import my.game.achmed.Characters.Robot;
 import my.game.achmed.Characters.Players.ABAchmed;
 import my.game.achmed.Characters.Players.ABGreenOgre;
 import my.game.achmed.Characters.Players.ABRedMermaid;
@@ -19,23 +25,31 @@ import android.util.Log;
 
 public class ABGameRenderer implements Renderer {
 
+
+    private final Random r = new Random();
+
     private final ABMap map = new ABMap();
-    
-    
+
+
     //private final ABGreenOgre achmed = new ABGreenOgre();
     private final ABRedMermaid achmed = new ABRedMermaid();
-    
+
     //private final ABAchmed achmed = new ABAchmed();
-    
+
     private final ABBomb bomb = new ABBomb();
     private final ABFire fire = new ABFire();
+
     //private final ABGreenRobot robot = new ABGreenRobot();
     //private final ABYellowRobot robot = new ABYellowRobot();
-    private final ABRedRobot robot = new ABRedRobot();
+    //private final ABRedRobot robot = new ABRedRobot();
+
+    private final int []  opt_robots = {0,1,2};
+
+    private final List<Robot>  robots =  new ArrayList<Robot>();
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-	Log.w("MYTAG", "onSurfaceChanged");
+
 
 	gl.glMatrixMode(GL10.GL_PROJECTION);
 	gl.glDepthRangef(1f, 0f);
@@ -73,7 +87,7 @@ public class ABGameRenderer implements Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig arg1) {
-	Log.w("MYTAG", "onSurfaceCreate");
+
 
 	gl.glEnable(GL10.GL_TEXTURE_2D);
 	gl.glClearDepthf(1.0f);
@@ -89,14 +103,13 @@ public class ABGameRenderer implements Renderer {
 	achmed.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 	bomb.loadTexture(gl, ABEngine.GAME_BOMB, ABEngine.context);
 	fire.loadTexture(gl, ABEngine.GAME_FIRE, ABEngine.context);
-	robot.loadTexture(gl, ABEngine.GAME_ROBOTS, ABEngine.context);
 
 
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-	Log.w("MYTAG", "onDrawFrame");
+
 	try {
 	    Thread.sleep(ABEngine.GAME_THREAD_FPS_SLEEP);
 	} catch (InterruptedException e) {
@@ -126,177 +139,24 @@ public class ABGameRenderer implements Renderer {
 	if(ABEngine.ROBOT_IS_DEAD[1])
 	    return;
 
-	float x = ABEngine.START_X;
-	float y = ABEngine.START_Y;
+	//	float x = ABEngine.START_X;
+	//	float y = ABEngine.START_Y;
 
-	gl.glMatrixMode(GL10.GL_MODELVIEW);
-	gl.glLoadIdentity();
-	gl.glPushMatrix();
-	gl.glScalef(.05f, .05f, 1f);
+	for(Robot r : robots){
+	    gl.glMatrixMode(GL10.GL_MODELVIEW);
+	    gl.glLoadIdentity();
+	    gl.glPushMatrix();
+	    gl.glScalef(.05f, .05f, 1f);
 
-	switch (ABEngine.GREEN_ROBOT_ACTION) {
+	    gl.glTranslatef(ABEngine.START_X,ABEngine.START_Y, 0.2f);
 
-	case ABEngine.PLAYER_LEFT : 
 
 
+	    r.move(gl); 
 
 
-
-	    float pos = ABEngine.GREEN_ROBOT_X - (100.f - ABEngine.ROBOT_SPEED * ABEngine.ROBOT_COUNTER);
-
-	    if(!ABEngine.detectColision(pos, ABEngine.GREEN_ROBOT_Y,ABEngine.GREEN_ROBOT_ACTION)) {
-
-		ABEngine.GREEN_ROBOT_X -= ABEngine.ROBOT_SPEED;
-
-		x +=  ABEngine.GREEN_ROBOT_X/100f;
-		y +=  ABEngine.GREEN_ROBOT_Y/100f;
-
-		gl.glTranslatef(x,y, 0.2f);
-
-	    } else {
-
-		x +=  ABEngine.GREEN_ROBOT_X/100f;
-		y +=  ABEngine.GREEN_ROBOT_Y/100f;
-
-		gl.glTranslatef(x,y, 0.2f);
-
-	    }
-
-
-
-	    robot.moveLeft(gl);
-
-
-
-	    ABEngine.ROBOT_COUNTER = (ABEngine.ROBOT_COUNTER + 1) % ABEngine.MAX_COUNTER;
-
-	    if(ABEngine.ROBOT_COUNTER == 0) {
-
-		ABEngine.ROBOT_COUNTER = 0;
-		robot.changeRobotAction();
-	    }
-
-	    break;
-
-	case ABEngine.PLAYER_RIGHT : 
-
-	    pos = ABEngine.GREEN_ROBOT_X + (100.f - ABEngine.ROBOT_SPEED * ABEngine.ROBOT_COUNTER);;
-
-
-	    if(!ABEngine.detectColision(pos, ABEngine.GREEN_ROBOT_Y, ABEngine.GREEN_ROBOT_ACTION)) {
-
-		ABEngine.GREEN_ROBOT_X += ABEngine.ROBOT_SPEED;
-
-		x +=  ABEngine.GREEN_ROBOT_X/100f;
-		y +=  ABEngine.GREEN_ROBOT_Y/100f;
-
-		gl.glTranslatef(x,y, 0.5f);
-
-	    } else {
-
-		x +=  ABEngine.GREEN_ROBOT_X/100f;
-		y +=  ABEngine.GREEN_ROBOT_Y/100f;
-		gl.glTranslatef(x,y, 0.5f);
-
-	    }
-
-
-
-
-
-	    robot.moveRight(gl);
-
-
-	    ABEngine.ROBOT_COUNTER = (ABEngine.ROBOT_COUNTER + 1) % ABEngine.MAX_COUNTER;
-
-	    if(ABEngine.ROBOT_COUNTER == 0) {
-
-		ABEngine.ROBOT_COUNTER = 0;
-		robot.changeRobotAction();
-	    }
-
-	    break;
-
-	case ABEngine.PLAYER_UP :
-
-	    pos = ABEngine.GREEN_ROBOT_Y + (100.f - ABEngine.ROBOT_SPEED * ABEngine.ROBOT_COUNTER);
-
-
-	    if(!ABEngine.detectColision(ABEngine.GREEN_ROBOT_X, pos,ABEngine.GREEN_ROBOT_ACTION)) {
-
-		ABEngine.GREEN_ROBOT_Y += ABEngine.ROBOT_SPEED;
-		x +=  ABEngine.GREEN_ROBOT_X/100f;
-		y +=  ABEngine.GREEN_ROBOT_Y/100f;
-
-		gl.glTranslatef(x,y, 0.5f);
-
-	    } else {
-
-		x +=  ABEngine.GREEN_ROBOT_X/100f;
-		y +=  ABEngine.GREEN_ROBOT_Y/100f;
-
-		gl.glTranslatef(x,y, 0.5f);
-
-	    }
-
-	    robot.moveUp(gl);
-
-	    ABEngine.ROBOT_COUNTER = (ABEngine.ROBOT_COUNTER + 1) % ABEngine.MAX_COUNTER;
-
-	    if(ABEngine.ROBOT_COUNTER == 0) {
-
-		ABEngine.ROBOT_COUNTER = 0;
-		robot.changeRobotAction();
-	    }
-
-	    break;
-
-	case ABEngine.PLAYER_DOWN : 
-
-	    pos = ABEngine.GREEN_ROBOT_Y - (100.f - ABEngine.ROBOT_SPEED * ABEngine.ROBOT_COUNTER);
-
-
-	    if(!ABEngine.detectColision(ABEngine.GREEN_ROBOT_X, pos,ABEngine.GREEN_ROBOT_ACTION)) {
-
-		ABEngine.GREEN_ROBOT_Y -= ABEngine.ROBOT_SPEED;
-
-		x +=  ABEngine.GREEN_ROBOT_X/100f;
-		y +=  ABEngine.GREEN_ROBOT_Y/100f;
-
-		gl.glTranslatef(x,y, 0.5f);
-
-	    } else {
-
-		x +=  ABEngine.GREEN_ROBOT_X/100f;
-		y +=  ABEngine.GREEN_ROBOT_Y/100f;
-
-		gl.glTranslatef(x,y, 0.5f);
-
-	    }
-
-
-
-	    robot.moveDown(gl);
-
-	    ABEngine.ROBOT_COUNTER = (ABEngine.ROBOT_COUNTER + 1) % ABEngine.MAX_COUNTER;
-
-	    if(ABEngine.ROBOT_COUNTER == 0) {
-
-		ABEngine.ROBOT_COUNTER = 0;
-		robot.changeRobotAction();
-	    }
-
-
-	    break;
-
+	    gl.glPopMatrix();
 	}
-
-	gl.glPopMatrix();
-
-	//Altera posicao do robot
-	int mtx_x = ABEngine.getXMatrixPosition(ABEngine.GREEN_ROBOT_X,ABEngine.GREEN_ROBOT_ACTION);
-	int mtx_y = ABEngine.getYMatrixPosition(ABEngine.GREEN_ROBOT_Y,ABEngine.GREEN_ROBOT_ACTION);
-	ABEngine.setObject(mtx_x,mtx_y,'R');
 
     }
 
@@ -372,7 +232,7 @@ public class ABGameRenderer implements Renderer {
 
 	switch (ABEngine.PLAYER_ACTION) {
 
-	case ABEngine.PLAYER_LEFT : 
+	case LEFT : 
 
 	    float pos = ABEngine.X_POSITION - (100.f - ABEngine.ACHMED_SPEED * ABEngine.ACHMED_COUNTER);
 
@@ -399,14 +259,14 @@ public class ABGameRenderer implements Renderer {
 	    if(ABEngine.ACHMED_COUNTER == 0 && ABEngine.STOP) {
 		ABEngine.STOPPED = true;
 		ABEngine.ACHMED_COUNTER = 0;
-		ABEngine.PLAYER_ACTION = ABEngine.PLAYER_LEFT_RELEASE;
+		ABEngine.PLAYER_ACTION = ACTION.LEFT_RELEASE;
 	    }
 
 
 
 	    break;
 
-	case ABEngine.PLAYER_RIGHT : 
+	case RIGHT : 
 
 	    pos = ABEngine.X_POSITION + (100.f - ABEngine.ACHMED_SPEED * ABEngine.ACHMED_COUNTER);
 
@@ -435,13 +295,13 @@ public class ABGameRenderer implements Renderer {
 	    if(ABEngine.ACHMED_COUNTER == 0 && ABEngine.STOP) {
 		ABEngine.STOPPED = true;
 		ABEngine.ACHMED_COUNTER = 0;
-		ABEngine.PLAYER_ACTION = ABEngine.PLAYER_RIGHT_RELEASE;
+		ABEngine.PLAYER_ACTION = ACTION.RIGHT_RELEASE;
 	    }
 
 
 	    break;
 
-	case ABEngine.PLAYER_UP :
+	case UP :
 
 	    pos = ABEngine.Y_POSITION + (100f - ABEngine.ACHMED_SPEED * ABEngine.ACHMED_COUNTER);
 
@@ -472,12 +332,12 @@ public class ABGameRenderer implements Renderer {
 	    if(ABEngine.ACHMED_COUNTER == 0 && ABEngine.STOP) {
 		ABEngine.STOPPED = true;
 		ABEngine.ACHMED_COUNTER = 0;
-		ABEngine.PLAYER_ACTION = ABEngine.PLAYER_UP_RELEASE;
+		ABEngine.PLAYER_ACTION = ACTION.UP_RELEASE;
 	    }
 
 	    break;
 
-	case ABEngine.PLAYER_DOWN : 
+	case DOWN : 
 
 	    pos = ABEngine.Y_POSITION - (100f - ABEngine.ACHMED_SPEED * ABEngine.ACHMED_COUNTER);
 
@@ -509,13 +369,13 @@ public class ABGameRenderer implements Renderer {
 	    if(ABEngine.ACHMED_COUNTER == 0 && ABEngine.STOP) {
 		ABEngine.STOPPED = true;
 		ABEngine.ACHMED_COUNTER = 0;
-		ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN_RELEASE;
+		ABEngine.PLAYER_ACTION = ACTION.DOWN_RELEASE;
 	    }
 
 
 	    break;
 
-	case ABEngine.PLAYER_LEFT_RELEASE :
+	case LEFT_RELEASE :
 
 	    x +=  ABEngine.X_POSITION/100f;
 	    y +=  ABEngine.Y_POSITION/100f;
@@ -525,7 +385,7 @@ public class ABGameRenderer implements Renderer {
 
 	    break; 
 
-	case ABEngine.PLAYER_RIGHT_RELEASE : 
+	case RIGHT_RELEASE : 
 
 
 	    x +=  ABEngine.X_POSITION/100f;
@@ -536,7 +396,7 @@ public class ABGameRenderer implements Renderer {
 
 	    break;
 
-	case ABEngine.PLAYER_UP_RELEASE :
+	case UP_RELEASE :
 
 
 	    x +=  ABEngine.X_POSITION/100f;
@@ -547,7 +407,7 @@ public class ABGameRenderer implements Renderer {
 
 	    break;
 
-	case ABEngine.PLAYER_DOWN_RELEASE :
+	case DOWN_RELEASE :
 
 	    x +=  ABEngine.X_POSITION/100f;
 	    y +=  ABEngine.Y_POSITION/100f;
@@ -648,9 +508,32 @@ public class ABGameRenderer implements Renderer {
 		    gl.glLoadIdentity();
 
 		    if(ABEngine.FIRST_MAP_DRAW) {
-			ABEngine.GREEN_ROBOT_X = x*100;
-			ABEngine.GREEN_ROBOT_Y = y*100;
+
+
+			int i = r.nextInt(3);
+			//int opt = opt_robots[i];
+
+			Robot robot = null;
+
+			if (i == 0){
+			robot = new ABGreenRobot(x*100, y*100);   
+			}
+			
+			if (i == 1){
+			    robot = new ABRedRobot(x*100, y*100);
+			}
+
+			if (i == 2) {
+			    robot = new ABYellowRobot(x*100, y*100);
+
+			}
+			
+
 			robot.changeRobotAction();
+			robot.loadTexture(gl, ABEngine.GAME_ROBOTS, ABEngine.context);
+			robots.add(robot);
+
+
 		    }
 
 		    break;

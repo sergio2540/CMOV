@@ -15,6 +15,13 @@ import android.opengl.GLUtils;
 
 public abstract class Player extends Character {
 
+
+    protected enum ACTION {
+	UP, DOWN, LEFT, RIGHT, UP_RELEASE, DOWN_RELEASE, LEFT_RELEASE, RIGHT_RELEASE
+    }
+    
+    protected ACTION playerAction = ACTION.LEFT;
+    
     private final int[] textures = new int[1];
 
     private final static float vertices[] = {

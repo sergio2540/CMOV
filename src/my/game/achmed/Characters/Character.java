@@ -1,25 +1,33 @@
 package my.game.achmed.Characters;
 
-import java.io.IOException;
-import java.io.InputStream;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.opengl.GLUtils;
 
 public abstract class Character {
 
+    protected float xpos;
+    protected float ypos;
 
-    protected enum ACTION {
-	UP, DOWN, LEFT, RIGHT
+    protected float getXPosition(){
+	return xpos;
     }
 
+    protected float getYPosition(){
+	return ypos;
+    }
+    
+    protected void setXPosition(float xpos ){
+	this.xpos = xpos;
+    }
+    
+    protected void setYPosition(float ypos){
+	this.ypos = ypos;
+    }
 
     private final FloatBuffer vertexBuffer;
 

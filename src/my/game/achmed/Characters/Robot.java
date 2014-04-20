@@ -18,6 +18,27 @@ import android.opengl.GLUtils;
 
 public abstract class Robot extends Character {
 
+
+
+    protected ACTION robotAction = ACTION.LEFT;
+
+
+    private int counter = 0;
+
+    private int getCounter(){
+	return counter;
+    }
+
+    private void setCounter(int counter){
+	this.counter = counter;
+    }
+
+    private final int speed = 10;
+
+    private int getSpeed() {
+	return speed;
+    }
+
     private final Random r = new Random();
 
     private final int[] textures = new int[1];
@@ -122,40 +143,41 @@ public abstract class Robot extends Character {
 
 	//int[] position = { ABEngine.PLAYER_LEFT, ABEngine.PLAYER_DOWN, ABEngine.PLAYER_RIGHT,
 	//	ABEngine.PLAYER_UP };
-	int leftRightDecision = 0;
-	int upDownDecision = 0;
+	ACTION leftRightDecision;
+	ACTION upDownDecision;
 
-	int correctDecision = 0;
-	int wrongDecision = 0;
+	ACTION correctDecision;
+	ACTION wrongDecision;
 
-	int[] wrongPositions = new int[3];
+	ACTION[] wrongPositions = new ACTION[3];
 
 
 	float xPlayerPosition = ABEngine.X_POSITION;
 	float yPlayerPosition = ABEngine.Y_POSITION;
-	float xRobotPosition = ABEngine.GREEN_ROBOT_X;
-	float yRobotPosition = ABEngine.GREEN_ROBOT_Y;
+	
+	float xRobotPosition = this.getXPosition();
+	float yRobotPosition = this.getYPosition();
 
 	//check if lefft or right
 	float xDistance = xRobotPosition - xPlayerPosition;
 	if(xDistance >= 0){
-	    leftRightDecision = ABEngine.PLAYER_LEFT;
-	    wrongPositions[0] = ABEngine.PLAYER_RIGHT;
+	    leftRightDecision = ACTION.LEFT;
+	    wrongPositions[0] = ACTION.RIGHT;
 	}
 	else {
-	    leftRightDecision = ABEngine.PLAYER_RIGHT;
-	    wrongPositions[0] = ABEngine.PLAYER_LEFT;
+	    leftRightDecision = ACTION.RIGHT;
+	    wrongPositions[0] = ACTION.LEFT;
 	}
 
 	//check if up or down.
 	float yDistance = yRobotPosition - yPlayerPosition;
 	if(yDistance >= 0){
-	    upDownDecision = ABEngine.PLAYER_DOWN;
-	    wrongPositions[1] = ABEngine.PLAYER_UP;
+	    upDownDecision = ACTION.DOWN;
+	    wrongPositions[1] = ACTION.UP;
 	}
 	else {
-	    upDownDecision = ABEngine.PLAYER_UP;
-	    wrongPositions[1] = ABEngine.PLAYER_DOWN;
+	    upDownDecision = ACTION.UP;
+	    wrongPositions[1] = ACTION.DOWN;
 	}
 
 	if (xDistance  == 0){
@@ -175,15 +197,15 @@ public abstract class Robot extends Character {
 	//if its equally far.
 	else{
 
-	    int[] possibleReturns = {leftRightDecision, upDownDecision};
+	    ACTION[] possibleReturns = {leftRightDecision, upDownDecision};
 	    correctDecision = possibleReturns[r.nextInt(1+1)];
 	}
 
 	if(r.nextInt(100) < 45){
-	    ABEngine.GREEN_ROBOT_ACTION = correctDecision;
+	    this.robotAction = correctDecision;
 	}else {
 	    wrongDecision = wrongPositions[r.nextInt(1+1)];
-	    ABEngine.GREEN_ROBOT_ACTION = wrongDecision;
+	   this.robotAction = wrongDecision;
 	}
 
 
@@ -198,4 +220,146 @@ public abstract class Robot extends Character {
     public abstract boolean moveLeft(GL10 gl);
     @Override
     public abstract boolean moveRight(GL10 gl);
+
+    public void move(GL10 gl) {
+
+	switch (this.robotAction) {
+	case LEFT : 
+
+	    float pos = this.getXPosition() - (100.f - this.getSpeed()*this.getCounter());
+
+	    if(!ABEngine.detectColision(pos,this.getYPosition(),this.robotAction)) {
+
+		this.setXPosition(this.getXPosition() - this.getSpeed());
+		this.translate(gl);
+
+	    } else {
+
+		this.translate(gl);
+
+	    }
+
+	    this.moveLeft(gl);
+
+
+
+	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+
+	    if(this.getCounter() == 0) {
+
+		this.setCounter(0);
+		changeRobotAction();
+	    }
+
+	    break;
+
+	case RIGHT : 
+
+	    pos = this.getXPosition() + (100.f - this.getSpeed()* this.getCounter());
+
+
+	    if(!ABEngine.detectColision(pos,this.getYPosition(),robotAction)) {
+
+		this.setXPosition(this.getXPosition() + this.getSpeed());
+
+		this.translate(gl);
+
+
+	    } else {
+
+		this.translate(gl);
+
+	    }
+	    
+	    this.moveRight(gl);
+
+	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+
+	    if(this.getCounter() == 0) {
+
+		this.setCounter(0);
+		changeRobotAction();
+	    }
+
+	    break;
+
+	case UP :
+
+	    pos = this.getYPosition() + (100.f - this.getSpeed() * this.getCounter());
+
+
+	    if(!ABEngine.detectColision(this.getXPosition(), pos,robotAction)) {
+
+		this.setYPosition(this.getYPosition() + this.getSpeed());
+
+		this.translate(gl);
+
+	    } else {
+
+		this.translate(gl);
+
+	    }
+
+	    this.moveUp(gl);
+
+	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+
+	    if(this.getCounter() == 0) {
+
+		this.setCounter(0);
+		changeRobotAction();
+	    }
+
+	    break;
+
+	case DOWN : 
+
+	    pos = this.getYPosition() - (100.f - this.getSpeed() * this.getCounter());
+
+	    if(!ABEngine.detectColision(this.getXPosition(), pos,robotAction)) {
+
+		this.setYPosition(this.getYPosition() - this.getSpeed());
+		this.translate(gl);
+
+	    } else {
+
+		this.translate(gl);
+
+	    }
+
+
+
+	    this.moveDown(gl);
+
+	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+
+	    if(this.getCounter() == 0) {
+
+		this.setCounter(0);
+		changeRobotAction();
+	    }
+
+
+	    break;
+	    
+	    default:
+		break;
+
+	}
+    }
+
+    private void translate(GL10 gl){
+
+	float x =  this.getXPosition()/100f;
+	float y =  this.getYPosition()/100f;
+	gl.glTranslatef(x,y, 0.5f);
+	
+	//Altera posicao do robot na matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
+	ABEngine.setObject(mtx_x,mtx_y,'R');
+
+    }
+
+
 }

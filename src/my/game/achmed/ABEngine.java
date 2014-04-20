@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import my.game.achmed.R;
+import my.game.achmed.Characters.ACTION;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 public class ABEngine {
 
@@ -61,7 +61,8 @@ public class ABEngine {
     public static final int DROP_BOMB = 1;
     public static final int BOMB_EXPLOSION = 2;
 
-    public static int PLAYER_ACTION = PLAYER_RIGHT_RELEASE;
+    public static ACTION PLAYER_ACTION = ACTION.RIGHT_RELEASE;
+    
     public static int BOMB_ACTION = NO_BOMB;
     public static int BOMB_TIME_TO_EXPLOSION = 2000;
 
@@ -102,14 +103,14 @@ public class ABEngine {
 
 	{'W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
-	{'W','-','-','O','-','-','-','-','-','-','O','-','-','-','-','-','-','-','-','W'},
+	{'W','-','-','O','-','-','-','-','-','-','O','-','R','-','-','-','-','R','-','W'},
 	{'W','-','O','O','O','-','-','O','-','-','-','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','O','-','-','-','-','-','W'},
-	{'W','-','-','O','-','-','-','-','O','-','-','-','-','-','-','-','-','-','-','W'},
+	{'W','-','-','O','-','R','-','-','O','-','-','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','O','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','O','-','-','-','O','O','O','-','W'},
 	{'W','O','O','O','-','O','O','O','O','O','-','-','-','-','-','-','O','-','-','W'},
-	{'W','-','O','-','-','-','-','-','-','O','-','-','O','O','-','-','-','-','-','W'},
+	{'W','-','O','-','-','R','-','-','-','O','-','-','O','O','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','O','-','-','-','-','-','-','O','-','-','W'},
 	{'W','-','-','-','-','O','O','O','O','O','-','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','O','-','-','-','R','-','-','W'},
@@ -117,7 +118,7 @@ public class ABEngine {
 	{'W','-','-','-','-','-','O','O','O','-','-','-','-','-','-','-','O','-','-','W'},
 	{'W','O','O','-','1','-','-','-','O','-','-','-','O','-','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','O','O','O','-','O','-','O','O','O','O','O','-','-','W'},
-	{'W','-','-','O','-','-','-','-','-','-','-','-','-','-','-','-','O','-','-','W'},
+	{'W','R','-','O','-','-','-','-','-','-','-','-','-','-','-','-','O','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 	{'W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W'},
 
@@ -161,36 +162,39 @@ public class ABEngine {
 	return (int) (y/100.f);
     }
 
-    public static int getXMatrixPosition(float x, int character){
+    public static int getXMatrixPosition(float x, ACTION action){
 
 	int matrix_x = 0;
 
 	x = x/100;
 
-	switch(character) {
+	switch(action) {
 
-	case ABEngine.PLAYER_UP: 
-
-	    matrix_x = Math.round(x);
-
-	    break;
-
-	case ABEngine.PLAYER_DOWN: 
+	case UP: 
 
 	    matrix_x = Math.round(x);
 
 	    break;
 
-	case ABEngine.PLAYER_LEFT:
+	case DOWN: 
+
+	    matrix_x = Math.round(x);
+
+	    break;
+
+	case LEFT:
 
 	    matrix_x = (int) Math.floor(x);
 
 	    break;
 
-	case ABEngine.PLAYER_RIGHT:
+	case RIGHT:
 
 	    matrix_x = (int) Math.ceil(x);
 
+	    break;
+	    
+	default:
 	    break;
 
 	}
@@ -198,7 +202,7 @@ public class ABEngine {
 	return matrix_x; 
     }	 
 
-    public static int getYMatrixPosition(float y, int character){
+    public static int getYMatrixPosition(float y, ACTION character){
 
 	int matrix_y = 0;
 
@@ -206,41 +210,44 @@ public class ABEngine {
 
 	switch(character) {
 
-	case ABEngine.PLAYER_UP: 
+	case UP: 
 
 	    matrix_y = (int) Math.ceil(y);
 
 	    break;
 
-	case ABEngine.PLAYER_DOWN: 
+	case DOWN: 
 
 	    matrix_y = (int) Math.floor(y);
 
 	    break;
 
-	case ABEngine.PLAYER_LEFT:
+	case LEFT:
 
 	    matrix_y = Math.round(y);
 
 	    break;
 
-	case ABEngine.PLAYER_RIGHT:
+	case RIGHT:
 
 
 	    matrix_y = Math.round(y);
 
 	    break;
 
+	default:
+	    break;
 	}
+
 
 	return matrix_y;
     }	 
 
-    public static boolean detectColision(float x, float y, int character) {
+    public static boolean detectColision(float x, float y, ACTION action) {
 
 
-	int mtx_x = getXMatrixPosition(x,character);
-	int mtx_y = getYMatrixPosition(y,character);
+	int mtx_x = getXMatrixPosition(x,action);
+	int mtx_y = getYMatrixPosition(y,action);
 
 	char pos = getObject(mtx_x,mtx_y);
 
@@ -286,15 +293,15 @@ public class ABEngine {
 
     }
 
-    
+
     public static void killPlayer(int numPlayer){
-	
-	
+
+
     }
-    
+
     public static void killRobot(int numRobot){
-	
-	
+
+
     }
 
 

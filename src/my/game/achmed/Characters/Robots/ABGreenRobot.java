@@ -5,11 +5,14 @@ import javax.microedition.khronos.opengles.GL10;
 import my.game.achmed.Characters.Robot;
 
 import android.content.Context;
+import android.util.Log;
 
 public class ABGreenRobot extends Robot {
 
-    public ABGreenRobot() {
+    public ABGreenRobot(float xpos, float ypos) {
 	super();
+	super.xpos = xpos;
+	super.ypos = ypos;
     }
 
     @Override
@@ -70,7 +73,14 @@ public class ABGreenRobot extends Robot {
 	gl.glScalef(1f, 1f, 1f);
 	gl.glTranslatef(0.08333f, 0.75f, 0f);
 	this.draw(gl);
+	Log.w("move", "Right");
 	return false;
     }
+    
+    @Override
+    public void move(GL10 gl){
+	super.move(gl);
+    }
+    
 
 }

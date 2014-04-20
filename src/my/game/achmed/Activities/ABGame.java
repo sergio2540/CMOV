@@ -5,6 +5,7 @@ import java.util.Date;
 
 import my.game.achmed.ABEngine;
 import my.game.achmed.R;
+import my.game.achmed.Characters.ACTION;
 import my.game.achmed.OpenGL.ABGameRenderer;
 import my.game.achmed.OpenGL.ABGameSurfaceView;
 import my.game.achmed.R.drawable;
@@ -29,7 +30,7 @@ public class ABGame extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-	Log.w("MYTAG", "onCreate ABGAME class");
+	
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.ab_game);
 	gameView = (ABGameSurfaceView)findViewById(R.id.game_frame);
@@ -55,7 +56,7 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
-			ABEngine.PLAYER_ACTION = ABEngine.PLAYER_LEFT;
+			ABEngine.PLAYER_ACTION = ACTION.LEFT;
 			setaEsquerda.setImageResource(R.drawable.arrow_left);
 		    }
 
@@ -82,7 +83,7 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
-			ABEngine.PLAYER_ACTION = ABEngine.PLAYER_RIGHT;
+			ABEngine.PLAYER_ACTION = ACTION.RIGHT;
 			setaDireita.setImageResource(R.drawable.arrow_right);
 		    }
 
@@ -110,7 +111,7 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
-			ABEngine.PLAYER_ACTION = ABEngine.PLAYER_UP;
+			ABEngine.PLAYER_ACTION = ACTION.UP;
 			setaCima.setImageResource(R.drawable.arrow_up);
 		    }
 		}
@@ -137,7 +138,7 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
-			ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN;
+			ABEngine.PLAYER_ACTION = ACTION.DOWN;
 			setaBaixo.setImageResource(R.drawable.arrow_down);
 		    }
 
@@ -162,27 +163,27 @@ public class ABGame extends Activity {
 
 		    switch (ABEngine.PLAYER_ACTION) {
 
-		    case ABEngine.PLAYER_UP:
+		    case UP:
 
-			ABEngine.PLAYER_ACTION = ABEngine.PLAYER_UP_RELEASE;
-
-			break;
-
-		    case ABEngine.PLAYER_DOWN:
-
-			ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN_RELEASE;
+			ABEngine.PLAYER_ACTION = ACTION.UP_RELEASE;
 
 			break;
 
-		    case ABEngine.PLAYER_LEFT:
+		    case DOWN:
 
-			ABEngine.PLAYER_ACTION = ABEngine.PLAYER_LEFT_RELEASE;
+			ABEngine.PLAYER_ACTION = ACTION.DOWN_RELEASE;
 
 			break;
 
-		    case ABEngine.PLAYER_RIGHT:
+		    case LEFT:
 
-			ABEngine.PLAYER_ACTION = ABEngine.PLAYER_RIGHT_RELEASE;
+			ABEngine.PLAYER_ACTION = ACTION.LEFT_RELEASE;
+
+			break;
+
+		    case RIGHT:
+
+			ABEngine.PLAYER_ACTION = ACTION.RIGHT_RELEASE;
 
 			break;
 		    }
