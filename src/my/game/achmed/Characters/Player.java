@@ -3,10 +3,14 @@ package my.game.achmed.Characters;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import my.game.achmed.ABEngine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,13 +19,32 @@ import android.opengl.GLUtils;
 
 public abstract class Player extends Character {
 
+    private final Random r = new Random();
 
-    protected enum ACTION {
-	UP, DOWN, LEFT, RIGHT, UP_RELEASE, DOWN_RELEASE, LEFT_RELEASE, RIGHT_RELEASE
+    private final char id;
+
+    protected ACTION playerAction = ACTION.LEFT_RELEASE;
+
+    public void setAction(ACTION playerAction) {
+	this.playerAction = playerAction;
     }
-    
-    protected ACTION playerAction = ACTION.LEFT;
-    
+
+    private int counter = 0;
+
+    public int getCounter() {
+	return counter;
+    }
+
+    private void setCounter(int counter) {
+	this.counter = counter;
+    }
+
+    private final float speed = 10;
+
+    private float getSpeed(){
+	return speed;
+    }
+
     private final int[] textures = new int[1];
 
     private final static float vertices[] = {
@@ -54,9 +77,9 @@ public abstract class Player extends Character {
 	return isDead;
     }
 
-    public Player() {
-
+    public Player(char id) {
 	super(vertices, texture,indices);
+	this.id = id;
     }
 
     public void draw(GL10 gl) {
@@ -122,5 +145,279 @@ public abstract class Player extends Character {
     public abstract boolean moveLeft(GL10 gl);
     @Override
     public abstract boolean moveRight(GL10 gl);
+
+
+    public void changePlayerAction() {
+
+
+	ACTION leftRightDecision;
+	ACTION upDownDecision;
+
+	ACTION correctDecision;
+	ACTION wrongDecision;
+
+	ACTION[] wrongPositions = new ACTION[3];
+
+	//Choose a random player do catch
+	List<Player> players = new ArrayList<Player>();
+	players.add(ABEngine.PLAYER);
+	players.addAll(ABEngine.PLAYERS);
+	//players.add(ABEngine.PLAYER);
+
+	int p = r.nextInt(players.size());
+	Player player = players.get(p);
+
+	float xPlayerPosition = player.getXPosition();
+	float yPlayerPosition = player.getYPosition();
+
+	float xRobotPosition = this.getXPosition();
+	float yRobotPosition = this.getYPosition();
+
+	//check if lefft or right
+	float xDistance = xRobotPosition - xPlayerPosition;
+	if(xDistance >= 0){
+	    leftRightDecision = ACTION.LEFT;
+	    wrongPositions[0] = ACTION.RIGHT;
+	}
+	else {
+	    leftRightDecision = ACTION.RIGHT;
+	    wrongPositions[0] = ACTION.LEFT;
+	}
+
+	//check if up or down.
+	float yDistance = yRobotPosition - yPlayerPosition;
+	if(yDistance >= 0){
+	    upDownDecision = ACTION.DOWN;
+	    wrongPositions[1] = ACTION.UP;
+	}
+	else {
+	    upDownDecision = ACTION.UP;
+	    wrongPositions[1] = ACTION.DOWN;
+	}
+
+	if (xDistance  == 0){
+	    correctDecision = upDownDecision;
+	}
+
+	else if (yDistance == 0){
+	    correctDecision = leftRightDecision;
+	}
+	else if(Math.abs(xDistance) < Math.abs(yDistance))
+	    correctDecision = leftRightDecision;
+
+	else if(Math.abs(xDistance) > Math.abs(yDistance))
+	    correctDecision= upDownDecision;
+
+
+	//if its equally far.
+	else{
+
+	    ACTION[] possibleReturns = {leftRightDecision, upDownDecision};
+	    correctDecision = possibleReturns[r.nextInt(1+1)];
+	}
+
+	if(r.nextInt(100) < 80){
+	    this.playerAction = correctDecision;
+	}else {
+	    wrongDecision = wrongPositions[r.nextInt(1+1)];
+	    this.playerAction = wrongDecision;
+	}
+
+
+
+    }
+
+    public void move(GL10 gl) {
+
+	switch (this.playerAction) {
+	case LEFT : 
+
+	    float pos = this.getXPosition() - (100.f - this.getSpeed()*this.getCounter());
+
+	    if(!ABEngine.detectColision(pos,this.getYPosition(),this.playerAction)) {
+
+		this.setXPosition(this.getXPosition() - this.getSpeed());
+		this.translate(gl);
+
+	    } else {
+
+		float x =  this.getXPosition()/100f;
+		float y =  this.getYPosition()/100f;
+		gl.glTranslatef(x,y, 0.5f);
+
+	    }
+
+	    this.moveLeft(gl);
+
+
+
+	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+
+	    if(this.getCounter() == 0) {
+
+		ABEngine.STOPPED = true;
+		this.setCounter(0);
+		playerAction = ACTION.LEFT_RELEASE;
+	    }
+
+	    break;
+
+	case RIGHT : 
+
+	    pos = this.getXPosition() + (100.f - this.getSpeed()* this.getCounter());
+
+
+	    if(!ABEngine.detectColision(pos,this.getYPosition(),playerAction)) {
+
+		this.setXPosition(this.getXPosition() + this.getSpeed());
+
+		this.translate(gl);
+
+
+	    } else {
+
+		float x =  this.getXPosition()/100f;
+		float y =  this.getYPosition()/100f;
+		gl.glTranslatef(x,y, 0.5f);
+
+	    }
+
+	    this.moveRight(gl);
+
+	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+
+	    if(this.getCounter() == 0) {
+
+		ABEngine.STOPPED = true;
+		this.setCounter(0);
+		playerAction = ACTION.RIGHT_RELEASE;
+
+	    }
+
+	    break;
+
+	case UP :
+
+	    pos = this.getYPosition() + (100.f - this.getSpeed() * this.getCounter());
+
+
+	    if(!ABEngine.detectColision(this.getXPosition(), pos,playerAction)) {
+
+		this.setYPosition(this.getYPosition() + this.getSpeed());
+
+		this.translate(gl);
+
+	    } else {
+
+		float x =  this.getXPosition()/100f;
+		float y =  this.getYPosition()/100f;
+		gl.glTranslatef(x,y, 0.5f);
+
+	    }
+
+	    this.moveUp(gl);
+
+	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+
+	    if(this.getCounter() == 0) {
+
+		ABEngine.STOPPED = true;
+		this.setCounter(0);
+		playerAction = ACTION.UP_RELEASE;
+
+	    }
+
+	    break;
+
+	case DOWN : 
+
+	    pos = this.getYPosition() - (100.f - this.getSpeed() * this.getCounter());
+
+	    if(!ABEngine.detectColision(this.getXPosition(), pos, playerAction)) {
+
+		this.setYPosition(this.getYPosition() - this.getSpeed());
+		this.translate(gl);
+
+	    } else {
+
+		float x =  this.getXPosition()/100f;
+		float y =  this.getYPosition()/100f;
+		gl.glTranslatef(x,y, 0.5f);
+
+	    }
+
+
+
+	    this.moveDown(gl);
+
+	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+
+	    if(this.getCounter() == 0) {
+		ABEngine.STOPPED = true;
+		this.setCounter(0);
+		playerAction = ACTION.DOWN_RELEASE;
+
+	    }
+
+
+	    break;
+
+	case LEFT_RELEASE:
+
+	    float x =  this.getXPosition()/100f;
+	    float y =  this.getYPosition()/100f;
+	    gl.glTranslatef(x,y, 0.5f);
+
+	    this.moveLeft(gl);
+
+	    break;
+	case RIGHT_RELEASE:
+
+	    x =  this.getXPosition()/100f;
+	    y =  this.getYPosition()/100f;
+	    gl.glTranslatef(x,y, 0.5f);
+
+	    this.moveRight(gl);
+
+	    break;
+	case UP_RELEASE:
+
+	    x =  this.getXPosition()/100f;
+	    y =  this.getYPosition()/100f;
+	    gl.glTranslatef(x,y, 0.5f);
+
+	    this.moveUp(gl);
+
+	    break;
+	case DOWN_RELEASE:
+	    x =  this.getXPosition()/100f;
+	    y =  this.getYPosition()/100f;
+	    gl.glTranslatef(x,y, 0.5f);
+
+	    this.moveDown(gl);
+
+	    break;
+
+	}
+    }
+
+    private void translate(GL10 gl){
+
+	//Altera antiga posicao do player na matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
+	ABEngine.setObject(mtx_x,mtx_y,'-');
+
+	float x =  this.getXPosition()/100f;
+	float y =  this.getYPosition()/100f;
+	gl.glTranslatef(x,y, 0.5f);
+
+	//Altera posicao do player na matriz
+	mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
+	mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
+	ABEngine.setObject(mtx_x,mtx_y,id);
+
+
+    }
 
 }

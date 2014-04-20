@@ -13,11 +13,11 @@ public abstract class Character {
     protected float xpos;
     protected float ypos;
 
-    protected float getXPosition(){
+    public float getXPosition(){
 	return xpos;
     }
 
-    protected float getYPosition(){
+    public float getYPosition(){
 	return ypos;
     }
     

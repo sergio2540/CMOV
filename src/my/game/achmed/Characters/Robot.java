@@ -3,22 +3,20 @@ package my.game.achmed.Characters;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import my.game.achmed.ABEngine;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
 public abstract class Robot extends Character {
-
-
 
     protected ACTION robotAction = ACTION.LEFT;
 
@@ -141,8 +139,7 @@ public abstract class Robot extends Character {
 
     public void changeRobotAction() {
 
-	//int[] position = { ABEngine.PLAYER_LEFT, ABEngine.PLAYER_DOWN, ABEngine.PLAYER_RIGHT,
-	//	ABEngine.PLAYER_UP };
+
 	ACTION leftRightDecision;
 	ACTION upDownDecision;
 
@@ -151,10 +148,18 @@ public abstract class Robot extends Character {
 
 	ACTION[] wrongPositions = new ACTION[3];
 
+	//Choose a random player do catch
+	List<Player> players = new ArrayList<Player>();
+	players.add(ABEngine.PLAYER);
+	players.addAll(ABEngine.PLAYERS);
+	//players.add(ABEngine.PLAYER);
 
-	float xPlayerPosition = ABEngine.X_POSITION;
-	float yPlayerPosition = ABEngine.Y_POSITION;
-	
+	int p = r.nextInt(players.size());
+	Player player = players.get(p);
+
+	float xPlayerPosition = player.getXPosition();
+	float yPlayerPosition = player.getYPosition();
+
 	float xRobotPosition = this.getXPosition();
 	float yRobotPosition = this.getYPosition();
 
@@ -201,11 +206,11 @@ public abstract class Robot extends Character {
 	    correctDecision = possibleReturns[r.nextInt(1+1)];
 	}
 
-	if(r.nextInt(100) < 45){
+	if(r.nextInt(100) < 80){
 	    this.robotAction = correctDecision;
 	}else {
 	    wrongDecision = wrongPositions[r.nextInt(1+1)];
-	   this.robotAction = wrongDecision;
+	    this.robotAction = wrongDecision;
 	}
 
 
@@ -235,7 +240,9 @@ public abstract class Robot extends Character {
 
 	    } else {
 
-		this.translate(gl);
+		float x =  this.getXPosition()/100f;
+		float y =  this.getYPosition()/100f;
+		gl.glTranslatef(x,y, 0.5f);
 
 	    }
 
@@ -267,10 +274,12 @@ public abstract class Robot extends Character {
 
 	    } else {
 
-		this.translate(gl);
+		float x =  this.getXPosition()/100f;
+		float y =  this.getYPosition()/100f;
+		gl.glTranslatef(x,y, 0.5f);
 
 	    }
-	    
+
 	    this.moveRight(gl);
 
 	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
@@ -296,7 +305,9 @@ public abstract class Robot extends Character {
 
 	    } else {
 
-		this.translate(gl);
+		float x =  this.getXPosition()/100f;
+		float y =  this.getYPosition()/100f;
+		gl.glTranslatef(x,y, 0.5f);
 
 	    }
 
@@ -323,7 +334,9 @@ public abstract class Robot extends Character {
 
 	    } else {
 
-		this.translate(gl);
+		float x =  this.getXPosition()/100f;
+		float y =  this.getYPosition()/100f;
+		gl.glTranslatef(x,y, 0.5f);
 
 	    }
 
@@ -341,22 +354,27 @@ public abstract class Robot extends Character {
 
 
 	    break;
-	    
-	    default:
-		break;
+
+	default:
+	    break;
 
 	}
     }
 
     private void translate(GL10 gl){
 
+	//Altera antiga posicao do player na matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
+	ABEngine.setObject(mtx_x,mtx_y,'-');
+
 	float x =  this.getXPosition()/100f;
 	float y =  this.getYPosition()/100f;
 	gl.glTranslatef(x,y, 0.5f);
-	
+
 	//Altera posicao do robot na matriz
-	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
-	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
+	mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
+	mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
 	ABEngine.setObject(mtx_x,mtx_y,'R');
 
     }

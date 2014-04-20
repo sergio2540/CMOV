@@ -7,12 +7,13 @@ import my.game.achmed.Characters.Player;
 import android.content.Context;
 
 public class ABGreenOgre extends Player {
-
-    private final float x_position = 0;
-    private final float y_position = 0;
-
-    public ABGreenOgre() {
-	super();
+    
+    //id == 2
+    public ABGreenOgre(float xpos, float ypos) {
+	super('2');
+	
+	super.xpos = xpos;
+	super.ypos = ypos;
     }
 
     @Override

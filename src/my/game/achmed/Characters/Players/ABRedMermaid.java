@@ -8,11 +8,11 @@ import android.content.Context;
 
 public class ABRedMermaid extends Player {
 
-    private final float x_position = 0;
-    private final float y_position = 0;
-
-    public ABRedMermaid() {
-	super();
+    //id == 1
+    public ABRedMermaid(float xpos, float ypos) {
+	super('1');
+	super.xpos = xpos;
+	super.ypos = ypos;
     }
 
     @Override

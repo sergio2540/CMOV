@@ -1,10 +1,15 @@
 package my.game.achmed;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 
 import my.game.achmed.R;
 import my.game.achmed.Characters.ACTION;
+import my.game.achmed.Characters.Player;
+import my.game.achmed.Characters.Robot;
 import android.util.Log;
 import android.view.View;
 
@@ -34,34 +39,13 @@ public class ABEngine {
     public static final int GAME_BOMB = R.raw.bombs;
     public static final int GAME_FIRE = R.raw.fireball;
     public static final int GAME_ROBOTS = R.raw.robots;
-
-    public static final int PLAYER_LEFT = 1;
-    public static final int PLAYER_UP = 4;
-    public static final int PLAYER_RIGHT = 2;
-    public static final int PLAYER_DOWN = 5;
-
-    public static final int PLAYER_LEFT_RELEASE = 11;
-    public static final int PLAYER_UP_RELEASE = 44;
-    public static final int PLAYER_RIGHT_RELEASE = 22;
-    public static final int PLAYER_DOWN_RELEASE = 55;
-
-    public static float X_POSITION = 0f;
-    public static float Y_POSITION = 0f;
-    public static final float ACHMED_SPEED = 10f;
+    
     public static final int PLAYER_ACHMED_FRAMES = 0;
     public static final int PLAYER_FRAMES_BETWEEN_ANI = 9;
-
-    //Suporte para 3 jogadores de 1 a 3
-    public static final boolean [] PLAYER_IS_DEAD ={false, false, false, false};
-
-    //Suporte para 3 robots de 1 a 3
-    public static final boolean [] ROBOT_IS_DEAD ={false, false, false, false};
 
     public static final int NO_BOMB = 0;
     public static final int DROP_BOMB = 1;
     public static final int BOMB_EXPLOSION = 2;
-
-    public static ACTION PLAYER_ACTION = ACTION.RIGHT_RELEASE;
     
     public static int BOMB_ACTION = NO_BOMB;
     public static int BOMB_TIME_TO_EXPLOSION = 2000;
@@ -73,30 +57,18 @@ public class ABEngine {
     public static float start_x;
     public static float start_y;
 
-
-
-
     public static boolean FIRST_MAP_DRAW = true;
 
-    public static int MAX_COUNTER = (int) (100f / ABEngine.ACHMED_SPEED);
-
-    public static int ACHMED_COUNTER = 0;
-
-    public static int ROBOT_COUNTER = 0;
+    public static int MAX_COUNTER = (int) (100f / 10f);
 
     public static boolean STOP = true;
     public static boolean STOPPED = true;
-
-
-    //GREEN ROBOT
-
-    public static int GREEN_ROBOT_ACTION = PLAYER_RIGHT;
-    public static float GREEN_ROBOT_X = 0f;
-    public static float GREEN_ROBOT_Y = 0f;
-    public static final float ROBOT_SPEED = 10f;
-
-    //BLUE ROBOT ETC...ETC
-
+    
+    
+    //State
+    public static Player PLAYER;
+    public static List<Player> PLAYERS = new ArrayList<Player>();
+    public static List<Robot> ROBOTS = new ArrayList<Robot>();
 
 
     public static char[][] game_map = {
@@ -104,17 +76,17 @@ public class ABEngine {
 	{'W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','O','-','-','-','-','-','-','O','-','R','-','-','-','-','R','-','W'},
-	{'W','-','O','O','O','-','-','O','-','-','-','-','-','-','-','-','-','-','-','W'},
+	{'W','2','O','O','O','-','-','O','-','-','-','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','O','-','-','-','-','-','W'},
 	{'W','-','-','O','-','R','-','-','O','-','-','-','-','-','-','-','-','-','-','W'},
-	{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','O','-','-','W'},
+	{'W','-','-','-','O','-','-','-','-','-','-','-','-','-','-','-','O','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','O','-','-','-','O','O','O','-','W'},
 	{'W','O','O','O','-','O','O','O','O','O','-','-','-','-','-','-','O','-','-','W'},
 	{'W','-','O','-','-','R','-','-','-','O','-','-','O','O','-','-','-','-','-','W'},
-	{'W','-','-','-','-','-','-','-','-','O','-','-','-','-','-','-','O','-','-','W'},
-	{'W','-','-','-','-','O','O','O','O','O','-','-','-','-','-','-','-','-','-','W'},
+	{'W','-','-','-','-','-','-','-','-','O','-','-','3','-','-','-','O','-','-','W'},
+	{'W','-','-','-','-','O','O','O','O','O','-','-','-','-','O','-','-','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','O','-','-','-','R','-','-','W'},
-	{'W','-','-','O','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
+	{'W','-','-','O','-','-','-','-','-','-','O','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','O','O','O','-','-','-','-','-','-','-','O','-','-','W'},
 	{'W','O','O','-','1','-','-','-','O','-','-','-','O','-','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','O','O','O','-','O','-','O','O','O','O','O','-','-','W'},
@@ -167,9 +139,9 @@ public class ABEngine {
 	int matrix_x = 0;
 
 	x = x/100;
-
+	
 	switch(action) {
-
+	
 	case UP: 
 
 	    matrix_x = Math.round(x);
@@ -251,7 +223,7 @@ public class ABEngine {
 
 	char pos = getObject(mtx_x,mtx_y);
 
-	if(pos == '-' || pos == '1' || pos == 'R') {
+	if(pos == '-' || pos == '1' || pos == '2' || pos == '3') {
 	    return false;
 	} else {
 	    return true;
@@ -276,11 +248,11 @@ public class ABEngine {
 	if (!(obj == 'W')) {
 
 	    if(obj == '1'){
-		PLAYER_IS_DEAD[1] = true;
+		//PLAYER_IS_DEAD[1] = true;
 	    }
 
 	    if (obj == 'R'){
-		ROBOT_IS_DEAD[1] = true;
+		//ROBOT_IS_DEAD[1] = true;
 	    }
 
 	    setObject(mtx_x,mtx_y,'-');

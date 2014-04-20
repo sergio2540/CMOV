@@ -8,11 +8,11 @@ import android.content.Context;
 
 public class ABAchmed extends Player {
 
-    private final float x_position = 0;
-    private final float y_position = 0;
-
-    public ABAchmed() {
-	super();
+    //id == 3
+    public ABAchmed(float xpos, float ypos) {
+	super('3');
+	super.xpos = xpos;
+	super.ypos = ypos;
     }
 
     @Override
