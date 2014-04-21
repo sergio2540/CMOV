@@ -25,7 +25,7 @@ public class Level {
 	private static int robotSpeedInCellPerSeconds;
 	private static int pointsPerRobotKilled;
 	private static int pointsPerOpponentKilled;
-	private static char[][] gridLayout;
+	private static char[][] gameLevelMatrix;
 	private static boolean verified = false;
 
 	public static String getName(){
@@ -60,8 +60,8 @@ public class Level {
 		return pointsPerOpponentKilled;
 	}
 
-	public static char[][] getGridLayout(){
-		return gridLayout;
+	public static char[][] getGameLevelMatrix(){
+		return gameLevelMatrix;
 	}
 
 	//TODO estas informaçoes explosionRange etc, etc... deviam estar no engine?
@@ -136,6 +136,7 @@ public class Level {
 		
 		if(verified) {
 			createMatrix(mat);
+			ABEngine.game_map = gameLevelMatrix;
 			return true;
 		} else {
 			return false;
@@ -161,12 +162,12 @@ public class Level {
 		int cols = mat.size();
 		int rows = mat.get(0).size();
 
-		gridLayout = new char[cols][rows];
+		gameLevelMatrix = new char[cols][rows];
 
 		for(int i = 0; i < mat.size(); i++) {
 			for(int j = 0; j < mat.get(i).size(); j++) {
 
-				gridLayout[i][j] = mat.get(i).get(j);
+				gameLevelMatrix[i][j] = mat.get(i).get(j);
 
 			}
 		}
@@ -198,11 +199,11 @@ public class Level {
 
 			bufferedWriter.write("GL: ");
 
-			for(int i = 0; i < gridLayout.length; i++) {
+			for(int i = 0; i < gameLevelMatrix.length; i++) {
 
-				for(int j = 0; j < gridLayout[i].length; j++) {
+				for(int j = 0; j < gameLevelMatrix[i].length; j++) {
 
-					bufferedWriter.write(gridLayout[i][j] + " ");
+					bufferedWriter.write(gameLevelMatrix[i][j] + " ");
 				}
 
 				bufferedWriter.newLine();
