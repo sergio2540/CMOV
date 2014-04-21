@@ -37,6 +37,9 @@
         
         <activity android:name="my.game.achmed.Activities.ABGameDialog" >
         </activity>
+        
+        <activity android:name="my.game.achmed.Activities.ABLevelMenu" >
+        </activity>
 
         <service android:name="ABMusic" >
         </service>

@@ -19,75 +19,71 @@ import android.widget.TextView;
 
 public class ABMainMenu extends Activity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-	setContentView(R.layout.ab_main_menu);
+		setContentView(R.layout.ab_main_menu);
 
-	TextView textView_single;
-	TextView textView_multiplayer;
-	TextView textView_settings;
-	TextView textView_about;
-	final TextView textView_exit;
-	
-	Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
+		TextView textView_single;
+		TextView textView_multiplayer;
+		TextView textView_settings;
+		TextView textView_about;
+		final TextView textView_exit;
 
-	textView_single =(TextView)findViewById(R.id.single);
-	textView_multiplayer =(TextView)findViewById(R.id.multiplayer);
-	textView_settings = (TextView)findViewById(R.id.settings);
-	textView_about = (TextView)findViewById(R.id.about);
-	textView_exit =(TextView)findViewById(R.id.exit);
-	
-	
-	textView_single.setTypeface(font);
-	textView_multiplayer.setTypeface(font);
-	textView_settings.setTypeface(font);
-	textView_about.setTypeface(font);
-	textView_exit.setTypeface(font);
-	
-	textView_single.setOnClickListener(new View.OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		
-		Intent mainMenu= new Intent(getApplicationContext(),
-			ABGame.class);
-			ABMainMenu.this.startActivity(mainMenu);
-			ABMainMenu.this.finish();
-			//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
-		    // setText() sets the string value of the TextView
-		    //textView_exit.setText("Clicked");
-		
-	    }
-	});
+		Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
 
-	Log.w("MYTAG", "initDisplay");
-	
-	WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-	Display display = wm.getDefaultDisplay();
+		textView_single =(TextView)findViewById(R.id.single);
+		textView_multiplayer =(TextView)findViewById(R.id.multiplayer);
+		textView_settings = (TextView)findViewById(R.id.settings);
+		textView_about = (TextView)findViewById(R.id.about);
+		textView_exit =(TextView)findViewById(R.id.exit);
 
-	Point point = new Point();
-	display.getRealSize(point);
 
-	ABEngine.displayWidth = point.x;
-	ABEngine.displayHeight = point.y;
-	
-	Log.w("MYTAG2", "Fim do display " + ABEngine.displayWidth + " : " + ABEngine.displayHeight);	
-	
-	ABEngine.musicThread = new Thread() {
-	    @Override
-	    public void run(){
+		textView_single.setTypeface(font);
+		textView_multiplayer.setTypeface(font);
+		textView_settings.setTypeface(font);
+		textView_about.setTypeface(font);
+		textView_exit.setTypeface(font);
 
-		Intent backGroundMusic = new
-			Intent(getApplicationContext(), ABMusic.class);
-		startService(backGroundMusic);
-		ABEngine.context = getApplicationContext();
+		textView_single.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-	    }
-	};
+				Intent levelMenu = new Intent(getApplicationContext(),
+						ABLevelMenu.class);
+				ABMainMenu.this.startActivity(levelMenu);
+				ABMainMenu.this.finish();
+				//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
+				// setText() sets the string value of the TextView
+				//textView_exit.setText("Clicked");
 
-	ABEngine.musicThread.start();
+			}
+		});
 
-    }
+		//	WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+		//	Display display = wm.getDefaultDisplay();
+		//
+		//	Point point = new Point();
+		//	display.getRealSize(point);
+		//
+		//	ABEngine.displayWidth = point.x;
+		//	ABEngine.displayHeight = point.y;
+
+		ABEngine.musicThread = new Thread() {
+			@Override
+			public void run(){
+
+				Intent backGroundMusic = new
+						Intent(getApplicationContext(), ABMusic.class);
+				startService(backGroundMusic);
+				ABEngine.context = getApplicationContext();
+
+			}
+		};
+
+		ABEngine.musicThread.start();
+
+	}
 
 }

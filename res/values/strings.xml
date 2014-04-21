@@ -3,15 +3,19 @@
 
     <string name="app_name">Achmed Bomber</string>
     <string name="action_settings">Settings</string>
-    
     <string name="splash_screen">splash_screen</string>
-       <!-- MENU -->
+    <!-- MENU -->
     <string name="single">SINGLE</string>
     <string name="multiplayer">MULTIPLAYER</string>
     <string name="settings">SETTINGS</string>
     <string name="about">ABOUT</string>
     <string name="exit">EXIT</string>
-    
 
-    
+    <!-- LEVELS -->
+
+    <string name="level1">LEVEL 1</string>
+    <string name="level2">LEVEL 2</string>
+    <string name="level3">LEVEL 3</string>
+    <string name="back">BACK</string>
+
 </resources>
