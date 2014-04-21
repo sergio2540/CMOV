@@ -70,7 +70,7 @@ public abstract class Player extends Character {
 
     };
 
-    private final boolean isDead = false;
+    private boolean isDead = false;
 
     @Override
     public boolean isDead(){
@@ -161,7 +161,7 @@ public abstract class Player extends Character {
 	//Choose a random player do catch
 	List<Player> players = new ArrayList<Player>();
 	players.add(ABEngine.PLAYER);
-	players.addAll(ABEngine.PLAYERS);
+	players.addAll(ABEngine.PLAYERS.values());
 	//players.add(ABEngine.PLAYER);
 
 	int p = r.nextInt(players.size());
@@ -229,28 +229,23 @@ public abstract class Player extends Character {
 
     public void move(GL10 gl) {
 
+	if(isDead())
+	    return;
+	
+	cleanFromMatrix();
+
 	switch (this.playerAction) {
 	case LEFT : 
 
 	    float pos = this.getXPosition() - (100.f - this.getSpeed()*this.getCounter());
 
 	    if(!ABEngine.detectColision(pos,this.getYPosition(),this.playerAction)) {
-
 		this.setXPosition(this.getXPosition() - this.getSpeed());
-		this.translate(gl);
-
-	    } else {
-
-		float x =  this.getXPosition()/100f;
-		float y =  this.getYPosition()/100f;
-		gl.glTranslatef(x,y, 0.5f);
-
 	    }
-
+	
+	    this.translate(gl);
 	    this.moveLeft(gl);
-
-
-
+	    
 	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
 
 	    if(this.getCounter() == 0) {
@@ -268,20 +263,10 @@ public abstract class Player extends Character {
 
 
 	    if(!ABEngine.detectColision(pos,this.getYPosition(),playerAction)) {
-
 		this.setXPosition(this.getXPosition() + this.getSpeed());
-
-		this.translate(gl);
-
-
-	    } else {
-
-		float x =  this.getXPosition()/100f;
-		float y =  this.getYPosition()/100f;
-		gl.glTranslatef(x,y, 0.5f);
-
 	    }
-
+	
+	    this.translate(gl);
 	    this.moveRight(gl);
 
 	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
@@ -302,19 +287,10 @@ public abstract class Player extends Character {
 
 
 	    if(!ABEngine.detectColision(this.getXPosition(), pos,playerAction)) {
-
 		this.setYPosition(this.getYPosition() + this.getSpeed());
-
-		this.translate(gl);
-
-	    } else {
-
-		float x =  this.getXPosition()/100f;
-		float y =  this.getYPosition()/100f;
-		gl.glTranslatef(x,y, 0.5f);
-
 	    }
-
+	
+	    this.translate(gl);
 	    this.moveUp(gl);
 
 	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
@@ -334,20 +310,10 @@ public abstract class Player extends Character {
 	    pos = this.getYPosition() - (100.f - this.getSpeed() * this.getCounter());
 
 	    if(!ABEngine.detectColision(this.getXPosition(), pos, playerAction)) {
-
 		this.setYPosition(this.getYPosition() - this.getSpeed());
-		this.translate(gl);
-
-	    } else {
-
-		float x =  this.getXPosition()/100f;
-		float y =  this.getYPosition()/100f;
-		gl.glTranslatef(x,y, 0.5f);
-
 	    }
-
-
-
+	    
+	    this.translate(gl);
 	    this.moveDown(gl);
 
 	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
@@ -364,60 +330,70 @@ public abstract class Player extends Character {
 
 	case LEFT_RELEASE:
 
-	    float x =  this.getXPosition()/100f;
-	    float y =  this.getYPosition()/100f;
-	    gl.glTranslatef(x,y, 0.5f);
-
+	    this.translate(gl);
 	    this.moveLeft(gl);
 
 	    break;
 	case RIGHT_RELEASE:
 
-	    x =  this.getXPosition()/100f;
-	    y =  this.getYPosition()/100f;
-	    gl.glTranslatef(x,y, 0.5f);
-
+	    this.translate(gl);
 	    this.moveRight(gl);
 
 	    break;
 	case UP_RELEASE:
 
-	    x =  this.getXPosition()/100f;
-	    y =  this.getYPosition()/100f;
-	    gl.glTranslatef(x,y, 0.5f);
-
+	    this.translate(gl);
 	    this.moveUp(gl);
 
 	    break;
 	case DOWN_RELEASE:
-	    x =  this.getXPosition()/100f;
-	    y =  this.getYPosition()/100f;
-	    gl.glTranslatef(x,y, 0.5f);
 
+	    this.translate(gl);
 	    this.moveDown(gl);
 
 	    break;
 
 	}
+
+	putInMatrix();
     }
 
-    private void translate(GL10 gl){
+
+    private void cleanFromMatrix(){
 
 	//Altera antiga posicao do player na matriz
 	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
 	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
 	ABEngine.setObject(mtx_x,mtx_y,'-');
 
+    }
+
+    private void putInMatrix(){
+
+	//Altera posicao do player na matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
+	ABEngine.setObject(mtx_x,mtx_y,id);
+
+    }
+
+
+
+    private void translate(GL10 gl){
+
 	float x =  this.getXPosition()/100f;
 	float y =  this.getYPosition()/100f;
 	gl.glTranslatef(x,y, 0.5f);
 
-	//Altera posicao do player na matriz
-	mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
-	mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
-	ABEngine.setObject(mtx_x,mtx_y,id);
+    }
+    
+    public void kill(){
+	cleanFromMatrix();
+	isDead = true;
+    }
 
-
+    public char getID() {
+	return id;
     }
 
 }
