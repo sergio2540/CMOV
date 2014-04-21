@@ -19,7 +19,7 @@ import android.util.Log;
 
 public abstract class Robot extends Character {
 
-    protected ACTION robotAction = ACTION.LEFT;
+    protected CHARACTER_ACTION robotAction = CHARACTER_ACTION.LEFT;
 
 
     private int counter = 0;
@@ -141,13 +141,13 @@ public abstract class Robot extends Character {
     public void changeRobotAction() {
 
 
-	ACTION leftRightDecision;
-	ACTION upDownDecision;
+	CHARACTER_ACTION leftRightDecision;
+	CHARACTER_ACTION upDownDecision;
 
-	ACTION correctDecision;
-	ACTION wrongDecision;
+	CHARACTER_ACTION correctDecision;
+	CHARACTER_ACTION wrongDecision;
 
-	ACTION[] wrongPositions = new ACTION[3];
+	CHARACTER_ACTION[] wrongPositions = new CHARACTER_ACTION[3];
 
 	//Choose a random player do catch
 	List<Player> players = new ArrayList<Player>();
@@ -167,23 +167,23 @@ public abstract class Robot extends Character {
 	//check if lefft or right
 	float xDistance = xRobotPosition - xPlayerPosition;
 	if(xDistance >= 0){
-	    leftRightDecision = ACTION.LEFT;
-	    wrongPositions[0] = ACTION.RIGHT;
+	    leftRightDecision = CHARACTER_ACTION.LEFT;
+	    wrongPositions[0] = CHARACTER_ACTION.RIGHT;
 	}
 	else {
-	    leftRightDecision = ACTION.RIGHT;
-	    wrongPositions[0] = ACTION.LEFT;
+	    leftRightDecision = CHARACTER_ACTION.RIGHT;
+	    wrongPositions[0] = CHARACTER_ACTION.LEFT;
 	}
 
 	//check if up or down.
 	float yDistance = yRobotPosition - yPlayerPosition;
 	if(yDistance >= 0){
-	    upDownDecision = ACTION.DOWN;
-	    wrongPositions[1] = ACTION.UP;
+	    upDownDecision = CHARACTER_ACTION.DOWN;
+	    wrongPositions[1] = CHARACTER_ACTION.UP;
 	}
 	else {
-	    upDownDecision = ACTION.UP;
-	    wrongPositions[1] = ACTION.DOWN;
+	    upDownDecision = CHARACTER_ACTION.UP;
+	    wrongPositions[1] = CHARACTER_ACTION.DOWN;
 	}
 
 	if (xDistance  == 0){
@@ -203,7 +203,7 @@ public abstract class Robot extends Character {
 	//if its equally far.
 	else{
 
-	    ACTION[] possibleReturns = {leftRightDecision, upDownDecision};
+	    CHARACTER_ACTION[] possibleReturns = {leftRightDecision, upDownDecision};
 	    correctDecision = possibleReturns[r.nextInt(1+1)];
 	}
 
@@ -218,13 +218,12 @@ public abstract class Robot extends Character {
 
     }
 
-    @Override
     public abstract boolean moveUp(GL10 gl);
-    @Override
+ 
     public abstract boolean moveDown(GL10 gl);
-    @Override
+ 
     public abstract boolean moveLeft(GL10 gl);
-    @Override
+ 
     public abstract boolean moveRight(GL10 gl);
 
     public void move(GL10 gl) {

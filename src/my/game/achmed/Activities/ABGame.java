@@ -5,17 +5,14 @@ import java.util.Date;
 
 import my.game.achmed.ABEngine;
 import my.game.achmed.R;
-import my.game.achmed.Characters.ACTION;
+import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.OpenGL.ABGameRenderer;
 import my.game.achmed.OpenGL.ABGameSurfaceView;
-import my.game.achmed.R.drawable;
-import my.game.achmed.R.id;
-import my.game.achmed.R.layout;
-import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,7 +52,7 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
-			ABEngine.PLAYER.setAction(ACTION.LEFT);
+			ABEngine.PLAYER.setAction(CHARACTER_ACTION.LEFT);
 			setaEsquerda.setImageResource(R.drawable.arrow_left);
 		    }
 
@@ -81,7 +78,7 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
-			ABEngine.PLAYER.setAction(ACTION.RIGHT);
+			ABEngine.PLAYER.setAction(CHARACTER_ACTION.RIGHT);
 			setaDireita.setImageResource(R.drawable.arrow_right);
 		    }
 
@@ -108,7 +105,7 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
-			ABEngine.PLAYER.setAction(ACTION.UP);
+			ABEngine.PLAYER.setAction(CHARACTER_ACTION.UP);
 			setaCima.setImageResource(R.drawable.arrow_up);
 		    }
 		}
@@ -136,7 +133,7 @@ public class ABGame extends Activity {
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
 			
-			ABEngine.PLAYER.setAction(ACTION.DOWN);
+			ABEngine.PLAYER.setAction(CHARACTER_ACTION.DOWN);
 			
 			setaBaixo.setImageResource(R.drawable.arrow_down);
 		    }
@@ -176,18 +173,17 @@ public class ABGame extends Activity {
 	    public boolean onTouch(View v, MotionEvent event) {
 
 		if(event.getAction() == (MotionEvent.ACTION_UP)){
-		    /*
-					createPalyer(Characters.)
-					player.Down();
-		     */
-
+		    
 		    //ABEngine.BOMB_ACTION = ABEngine.NO_BOMB;
 		    bombButton.setImageResource(R.drawable.bomb_button_normal);
 
 		}
 		else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-		    ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
+		   // ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
+		    
+		    ABEngine.PLAYER.getBomb().drop();
+		    
 		    bombButton.setImageResource(R.drawable.bomb_button_pressed);
 
 		}
@@ -253,6 +249,8 @@ public class ABGame extends Activity {
 
 	    }
 	}.start();
+	
+	ABEngine.GAME = ABGame.this;
 
     }
 

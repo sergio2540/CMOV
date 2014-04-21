@@ -9,10 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 
 import my.game.achmed.R;
-import my.game.achmed.Characters.ACTION;
+import my.game.achmed.Activities.ABGame;
+import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
 import android.view.View;
+import android.widget.TextView;
 
 public class ABEngine {
 
@@ -101,12 +103,14 @@ public class ABEngine {
     //Start do jogo
     public static float START_X;
     public static float START_Y;
+    
+    public static ABGame GAME;
 
     public static void setObject(int x, int y, char object){
 	game_map[game_map.length - 1 - y][x] = object;
     }
 
-    private static boolean isNotInMatrixRange(int mtx_x, int mtx_y){
+    public static boolean isNotInMatrixRange(int mtx_x, int mtx_y){
 	return !isInMatrixRange(mtx_x, mtx_y);
     }
 
@@ -135,7 +139,7 @@ public class ABEngine {
 	return (int) (y/100.f);
     }
 
-    public static int getXMatrixPosition(float x, ACTION action){
+    public static int getXMatrixPosition(float x, CHARACTER_ACTION action){
 
 	int matrix_x = 0;
 
@@ -175,7 +179,7 @@ public class ABEngine {
 	return matrix_x; 
     }	 
 
-    public static int getYMatrixPosition(float y, ACTION character){
+    public static int getYMatrixPosition(float y, CHARACTER_ACTION character){
 
 	int matrix_y = 0;
 
@@ -216,7 +220,7 @@ public class ABEngine {
 	return matrix_y;
     }	 
 
-    public static boolean detectColision(float x, float y, ACTION action) {
+    public static boolean detectColision(float x, float y, CHARACTER_ACTION action) {
 
 
 	int mtx_x = getXMatrixPosition(x,action);
@@ -231,55 +235,21 @@ public class ABEngine {
 	}
 
     }
-
-    //Remove objectos queimados
-    public static boolean burn(float x, float y) {
-
-	int mtx_x = getXMatrixPosition(x);
-	int mtx_y = getYMatrixPosition(y);
-
-	if(isNotInMatrixRange(mtx_x,mtx_y)){
-	    return false;
-	}
-
-	char obj = getObject(mtx_x,mtx_y);
-
-	//Log.w("BURN", "x:" + mtx_x + "y:" +mtx_y);
-
-	if (!(obj == 'W')) {
-
-
-	    if((obj == '1') || (obj == '2') || (obj == '3')) {
-		if(ABEngine.PLAYER.getID() == obj){
-		   ABEngine.PLAYER.kill();
-		}
-		else {
-		    Player p = ABEngine.PLAYERS.get(obj);
-		    if(p != null)
-			p.kill();
-		}
-
+    
+    
+    public static void updateScore(final float points){
+	
+	GAME.runOnUiThread(new Runnable() {
+	    @Override
+	    public void run() {
+		
+		String pts = points + "Points";
+		TextView t = (TextView) GAME.findViewById(R.id.score);    
+		t.setText(pts);
 	    }
-
-
-	    if (obj == 'R'){
-
-		for(Robot r : ABEngine.ROBOTS){
-		    if(r.isInRange(mtx_x,mtx_y)){
-			r.kill();
-		    }
-		}
-	    }
-
-	    setObject(mtx_x,mtx_y,'-');
-
-	    return true;
-
-	}else {
-	    return false;
-	}
-
+	});
     }
+
 
 
     public boolean onExit(View v) {

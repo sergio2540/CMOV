@@ -74,10 +74,4 @@ public abstract class Character {
 	indexBuffer.position(0);
     }
 
-    public abstract boolean moveUp(GL10 gl);
-    public abstract boolean moveDown(GL10 gl);
-    public abstract boolean moveLeft(GL10 gl);
-    public abstract boolean moveRight(GL10 gl);
-
-
 }

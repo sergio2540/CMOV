@@ -11,6 +11,9 @@ import java.util.Random;
 import javax.microedition.khronos.opengles.GL10;
 
 import my.game.achmed.ABEngine;
+import my.game.achmed.Characters.Players.ABAchmed;
+import my.game.achmed.Characters.Players.ABGreenOgre;
+import my.game.achmed.Characters.Players.ABRedMermaid;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -19,13 +22,38 @@ import android.opengl.GLUtils;
 
 public abstract class Player extends Character {
 
-    private final Random r = new Random();
-
     private final char id;
 
-    protected ACTION playerAction = ACTION.LEFT_RELEASE;
+    private ABBomb bomb;
 
-    public void setAction(ACTION playerAction) {
+    private void setBomb(ABBomb bomb){
+	this.bomb = bomb; 
+    }
+
+    private float score;
+
+    public float getScore(){
+	return score;
+    }
+
+    //Configuration
+    private final float pointsPerOpponentKilled = 10;
+
+    private final float pointsPerRobotKilled = 10;
+
+
+    private final float speed = 10;
+
+    private float getSpeed(){
+	return speed;
+    }
+
+
+    private final Random r = new Random();
+
+    protected CHARACTER_ACTION playerAction = CHARACTER_ACTION.LEFT_RELEASE;
+
+    public void setAction(CHARACTER_ACTION playerAction) {
 	this.playerAction = playerAction;
     }
 
@@ -37,12 +65,6 @@ public abstract class Player extends Character {
 
     private void setCounter(int counter) {
 	this.counter = counter;
-    }
-
-    private final float speed = 10;
-
-    private float getSpeed(){
-	return speed;
     }
 
     private final int[] textures = new int[1];
@@ -77,10 +99,36 @@ public abstract class Player extends Character {
 	return isDead;
     }
 
-    public Player(char id) {
+    protected Player(char id) {
+
 	super(vertices, texture,indices);
 	this.id = id;
+	this.bomb = null;
     }
+
+    public static Player create(char id, float x, float y) {
+
+	Player p;
+
+	if(id == '1'){
+
+	    p = new ABGreenOgre(x, y);
+
+	} else if (id == '2'){
+	    p = new ABRedMermaid(x, y);
+	}
+	else {
+
+	    p = new ABAchmed(x,y);  
+	}
+	
+	ABBomb b = new ABBomb(p);
+	p.setBomb(b);
+
+	return p;
+    }
+
+
 
     public void draw(GL10 gl) {
 
@@ -135,28 +183,32 @@ public abstract class Player extends Character {
 
 	bitmap.recycle();
 
+	bomb.loadTexture(gl, ABEngine.GAME_BOMB, ABEngine.context);
+
     }
 
-    @Override
+
     public abstract boolean moveUp(GL10 gl);
-    @Override
+
+
     public abstract boolean moveDown(GL10 gl);
-    @Override
+
     public abstract boolean moveLeft(GL10 gl);
-    @Override
+
+
     public abstract boolean moveRight(GL10 gl);
 
 
     public void changePlayerAction() {
 
 
-	ACTION leftRightDecision;
-	ACTION upDownDecision;
+	CHARACTER_ACTION leftRightDecision;
+	CHARACTER_ACTION upDownDecision;
 
-	ACTION correctDecision;
-	ACTION wrongDecision;
+	CHARACTER_ACTION correctDecision;
+	CHARACTER_ACTION wrongDecision;
 
-	ACTION[] wrongPositions = new ACTION[3];
+	CHARACTER_ACTION[] wrongPositions = new CHARACTER_ACTION[3];
 
 	//Choose a random player do catch
 	List<Player> players = new ArrayList<Player>();
@@ -176,23 +228,23 @@ public abstract class Player extends Character {
 	//check if lefft or right
 	float xDistance = xRobotPosition - xPlayerPosition;
 	if(xDistance >= 0){
-	    leftRightDecision = ACTION.LEFT;
-	    wrongPositions[0] = ACTION.RIGHT;
+	    leftRightDecision = CHARACTER_ACTION.LEFT;
+	    wrongPositions[0] = CHARACTER_ACTION.RIGHT;
 	}
 	else {
-	    leftRightDecision = ACTION.RIGHT;
-	    wrongPositions[0] = ACTION.LEFT;
+	    leftRightDecision = CHARACTER_ACTION.RIGHT;
+	    wrongPositions[0] = CHARACTER_ACTION.LEFT;
 	}
 
 	//check if up or down.
 	float yDistance = yRobotPosition - yPlayerPosition;
 	if(yDistance >= 0){
-	    upDownDecision = ACTION.DOWN;
-	    wrongPositions[1] = ACTION.UP;
+	    upDownDecision = CHARACTER_ACTION.DOWN;
+	    wrongPositions[1] = CHARACTER_ACTION.UP;
 	}
 	else {
-	    upDownDecision = ACTION.UP;
-	    wrongPositions[1] = ACTION.DOWN;
+	    upDownDecision = CHARACTER_ACTION.UP;
+	    wrongPositions[1] = CHARACTER_ACTION.DOWN;
 	}
 
 	if (xDistance  == 0){
@@ -212,7 +264,7 @@ public abstract class Player extends Character {
 	//if its equally far.
 	else{
 
-	    ACTION[] possibleReturns = {leftRightDecision, upDownDecision};
+	    CHARACTER_ACTION[] possibleReturns = {leftRightDecision, upDownDecision};
 	    correctDecision = possibleReturns[r.nextInt(1+1)];
 	}
 
@@ -221,6 +273,7 @@ public abstract class Player extends Character {
 	}else {
 	    wrongDecision = wrongPositions[r.nextInt(1+1)];
 	    this.playerAction = wrongDecision;
+	    this.getBomb().drop();
 	}
 
 
@@ -231,7 +284,7 @@ public abstract class Player extends Character {
 
 	if(isDead())
 	    return;
-	
+
 	cleanFromMatrix();
 
 	switch (this.playerAction) {
@@ -242,17 +295,17 @@ public abstract class Player extends Character {
 	    if(!ABEngine.detectColision(pos,this.getYPosition(),this.playerAction)) {
 		this.setXPosition(this.getXPosition() - this.getSpeed());
 	    }
-	
+
 	    this.translate(gl);
 	    this.moveLeft(gl);
-	    
+
 	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
 
 	    if(this.getCounter() == 0) {
 
 		ABEngine.STOPPED = true;
 		this.setCounter(0);
-		playerAction = ACTION.LEFT_RELEASE;
+		playerAction = CHARACTER_ACTION.LEFT_RELEASE;
 	    }
 
 	    break;
@@ -265,7 +318,7 @@ public abstract class Player extends Character {
 	    if(!ABEngine.detectColision(pos,this.getYPosition(),playerAction)) {
 		this.setXPosition(this.getXPosition() + this.getSpeed());
 	    }
-	
+
 	    this.translate(gl);
 	    this.moveRight(gl);
 
@@ -275,7 +328,7 @@ public abstract class Player extends Character {
 
 		ABEngine.STOPPED = true;
 		this.setCounter(0);
-		playerAction = ACTION.RIGHT_RELEASE;
+		playerAction = CHARACTER_ACTION.RIGHT_RELEASE;
 
 	    }
 
@@ -289,7 +342,7 @@ public abstract class Player extends Character {
 	    if(!ABEngine.detectColision(this.getXPosition(), pos,playerAction)) {
 		this.setYPosition(this.getYPosition() + this.getSpeed());
 	    }
-	
+
 	    this.translate(gl);
 	    this.moveUp(gl);
 
@@ -299,7 +352,7 @@ public abstract class Player extends Character {
 
 		ABEngine.STOPPED = true;
 		this.setCounter(0);
-		playerAction = ACTION.UP_RELEASE;
+		playerAction = CHARACTER_ACTION.UP_RELEASE;
 
 	    }
 
@@ -312,7 +365,7 @@ public abstract class Player extends Character {
 	    if(!ABEngine.detectColision(this.getXPosition(), pos, playerAction)) {
 		this.setYPosition(this.getYPosition() - this.getSpeed());
 	    }
-	    
+
 	    this.translate(gl);
 	    this.moveDown(gl);
 
@@ -321,7 +374,7 @@ public abstract class Player extends Character {
 	    if(this.getCounter() == 0) {
 		ABEngine.STOPPED = true;
 		this.setCounter(0);
-		playerAction = ACTION.DOWN_RELEASE;
+		playerAction = CHARACTER_ACTION.DOWN_RELEASE;
 
 	    }
 
@@ -356,6 +409,8 @@ public abstract class Player extends Character {
 	}
 
 	putInMatrix();
+
+	getBomb().draw(gl);
     }
 
 
@@ -386,14 +441,27 @@ public abstract class Player extends Character {
 	gl.glTranslatef(x,y, 0.5f);
 
     }
-    
+
     public void kill(){
 	cleanFromMatrix();
 	isDead = true;
+	score = 0;
+    }
+
+    public void opponentKilled(){
+	score = score + pointsPerOpponentKilled;
+    }
+
+    public void robotKilled(){
+	score = score + pointsPerRobotKilled;
     }
 
     public char getID() {
 	return id;
+    }
+
+    public ABBomb getBomb() {
+	return bomb;
     }
 
 }
