@@ -1,6 +1,8 @@
 package my.game.achmed.OpenGL;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -92,7 +94,7 @@ public class ABGameRenderer implements Renderer {
 	
 	if (ABEngine.PLAYER != null)
 	    ABEngine.PLAYER.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
-	for(Player p : ABEngine.PLAYERS){
+	for(Player p : ABEngine.PLAYERS.values()){
 	    p.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 	}
 	
@@ -119,9 +121,9 @@ public class ABGameRenderer implements Renderer {
 
 	//não trocar a ordem das linhas 
 	drawMap(gl, ABEngine.game_map);
-	dropBomb(gl);
 	movePlayer(gl);
 	movePlayers(gl);
+	dropBomb(gl);
 	explodeBomb(gl, ABEngine.game_map);
 	moveGreenRobot(gl, ABEngine.game_map);
 
@@ -129,13 +131,7 @@ public class ABGameRenderer implements Renderer {
     }
 
     private void moveGreenRobot(GL10 gl, char[][] game_map) {
-
-	//Esta morto nao faz nada
-	//if(ABEngine.ROBOT_IS_DEAD[1])
-	   // return;
-
 	
-
 	for(Robot r : ABEngine.ROBOTS){
 	    gl.glMatrixMode(GL10.GL_MODELVIEW);
 	    gl.glLoadIdentity();
@@ -170,7 +166,7 @@ public class ABGameRenderer implements Renderer {
 	    gl.glPushMatrix();
 	    gl.glScalef(.05f, .05f, 1f);
 	    
-	    gl.glTranslatef(ABEngine.START_X,ABEngine.START_Y, 0.3f);
+	    gl.glTranslatef(ABEngine.START_X,ABEngine.START_Y, 0.7f);
 	    
 	    
 	    if(!ABEngine.BOMB_DROPPED) {
@@ -178,7 +174,7 @@ public class ABGameRenderer implements Renderer {
 		bomb.y_position = ABEngine.PLAYER.getYPosition();
 	    }
 	    
-	    gl.glTranslatef( bomb.x_position/100f,bomb.y_position/100f, 0.3f);
+	    gl.glTranslatef( bomb.x_position/100f,bomb.y_position/100f, 0.7f);
 
 	    gl.glMatrixMode(GL10.GL_TEXTURE);
 	    gl.glLoadIdentity();
@@ -202,7 +198,7 @@ public class ABGameRenderer implements Renderer {
     public void movePlayers(GL10 gl) {
 
 	
-	for(Player p : ABEngine.PLAYERS){
+	for(Player p : ABEngine.PLAYERS.values()){
 	    gl.glMatrixMode(GL10.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 	    gl.glPushMatrix();
@@ -237,30 +233,33 @@ public class ABGameRenderer implements Renderer {
 	
 	ABEngine.START_X = (ABEngine.start_x/0.05f) - ABEngine.game_map[0].length/2.f;
 	ABEngine.START_Y = (ABEngine.start_y/0.05f) - ABEngine.game_map.length/2.f;
-
+	
+	List<String> rs = new ArrayList<String>();
+	List<String> ps = new ArrayList<String>();
+	
+	
+	
+	
+	
 	for(int x=0; x< game_matrix[0].length ; x++) {
 	    for(int y=0; y< game_matrix.length; y++) {
-
+		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
 		gl.glScalef(.05f, .05f, 1f);
-		gl.glTranslatef(ABEngine.START_X + x,ABEngine.START_Y +y, 0f);
-
-		gl.glMatrixMode(GL10.GL_TEXTURE);
-		gl.glLoadIdentity();
+		gl.glTranslatef(ABEngine.START_X,ABEngine.START_Y, 0f);
+		gl.glTranslatef(x, y, 0f);
 
 		switch(game_matrix[game_matrix.length - 1 - y][x]) {
 
 		case 'W':
-
+		    
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.9375f, 0.0625f, 0f);
 		    map.draw(gl);
-		    gl.glPopMatrix();
-		    gl.glLoadIdentity();
-
+		    
 		    break;
 
 		case 'O':
@@ -269,8 +268,6 @@ public class ABGameRenderer implements Renderer {
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.0625f, 0.0625f, 0f);
 		    map.draw(gl); 
-		    gl.glPopMatrix();
-		    gl.glLoadIdentity();
 
 		    break;
 
@@ -280,73 +277,63 @@ public class ABGameRenderer implements Renderer {
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
 		    map.draw(gl); 
-		    gl.glPopMatrix();
-		    gl.glLoadIdentity();
-
+		   
 		    break;
 
 		case '1':
 
-
+		    ps.add("1");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
 		    map.draw(gl); 
-		    gl.glPopMatrix();
-		    gl.glLoadIdentity();
 
 		    if(ABEngine.FIRST_MAP_DRAW) {
 			Player player = new ABRedMermaid(x*100,y*100);
 			player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
-			ABEngine.PLAYER = player;
+			ABEngine.PLAYERS.put('1',player);
 		    }
 
 		    break;
 		case '2':
 
-
+		    ps.add("2");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
 		    map.draw(gl); 
-		    gl.glPopMatrix();
-		    gl.glLoadIdentity();
 
 		    if(ABEngine.FIRST_MAP_DRAW) {
 			Player player = new ABGreenOgre(x*100,y*100);
 			player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
-			ABEngine.PLAYERS.add(player);
+			ABEngine.PLAYERS.put('2',player);
 		    }
 
 		    break;
 
 		case '3':
 
-
+		    ps.add("3");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
 		    map.draw(gl); 
-		    gl.glPopMatrix();
-		    gl.glLoadIdentity();
 
 		    if(ABEngine.FIRST_MAP_DRAW) {
 			Player player = new ABAchmed(x*100,y*100);
 			player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
-			ABEngine.PLAYERS.add(player);
+			ABEngine.PLAYERS.put('3',player);
 		    }
 
 		    break;
 
 
 		case 'R':
-
+		    rs.add("R");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
-		    map.draw(gl); 
-		    gl.glPopMatrix();
-		    gl.glLoadIdentity();
+		    map.draw(gl);
 
 		    if(ABEngine.FIRST_MAP_DRAW) {
 
@@ -383,7 +370,23 @@ public class ABGameRenderer implements Renderer {
 	    }
 
 	}
-
+	
+	gl.glPopMatrix();
+	
+//	Log.w("map","TRUE SIZE Robots"+ABEngine.ROBOTS.size());
+//	Log.w("map","SIZE Robots"+rs.size());
+//	Log.w("map","SIZE Players"+ps.size());
+	
+	//Choose random player
+	if (ABEngine.FIRST_MAP_DRAW){
+	    int i = 1 + r.nextInt(ABEngine.PLAYERS.values().size());
+	    
+	    char k = (char)(('0')+i);
+	    
+	    ABEngine.PLAYER = ABEngine.PLAYERS.get(k);
+	    ABEngine.PLAYERS.remove(k);
+	}
+	
 	ABEngine.FIRST_MAP_DRAW = false;
 
     }

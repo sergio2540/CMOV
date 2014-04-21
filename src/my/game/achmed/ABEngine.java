@@ -2,6 +2,8 @@ package my.game.achmed;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +12,6 @@ import my.game.achmed.R;
 import my.game.achmed.Characters.ACTION;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
-import android.util.Log;
 import android.view.View;
 
 public class ABEngine {
@@ -39,18 +40,18 @@ public class ABEngine {
     public static final int GAME_BOMB = R.raw.bombs;
     public static final int GAME_FIRE = R.raw.fireball;
     public static final int GAME_ROBOTS = R.raw.robots;
-    
+
     public static final int PLAYER_ACHMED_FRAMES = 0;
     public static final int PLAYER_FRAMES_BETWEEN_ANI = 9;
 
     public static final int NO_BOMB = 0;
     public static final int DROP_BOMB = 1;
     public static final int BOMB_EXPLOSION = 2;
-    
-    public static int BOMB_ACTION = NO_BOMB;
-    public static int BOMB_TIME_TO_EXPLOSION = 2000;
 
-    public static int EXPLOSION_RADIUS = 2;
+    public static int BOMB_ACTION = NO_BOMB;
+    public static int BOMB_TIME_TO_EXPLOSION = 4000;
+
+    public static int EXPLOSION_RADIUS = 1;
 
     public static boolean BOMB_DROPPED = false;
 
@@ -63,11 +64,11 @@ public class ABEngine {
 
     public static boolean STOP = true;
     public static boolean STOPPED = true;
-    
-    
+
+
     //State
     public static Player PLAYER;
-    public static List<Player> PLAYERS = new ArrayList<Player>();
+    public static Map<Character,Player> PLAYERS = new TreeMap<Character,Player>();
     public static List<Robot> ROBOTS = new ArrayList<Robot>();
 
 
@@ -76,19 +77,19 @@ public class ABEngine {
 	{'W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','O','-','-','-','-','-','-','O','-','R','-','-','-','-','R','-','W'},
-	{'W','2','O','O','O','-','-','O','-','-','-','-','-','-','-','-','-','-','-','W'},
+	{'W','2','O','O','O','-','O','O','-','-','-','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','O','-','-','-','-','-','W'},
 	{'W','-','-','O','-','R','-','-','O','-','-','-','-','-','-','-','-','-','-','W'},
 	{'W','-','-','-','O','-','-','-','-','-','-','-','-','-','-','-','O','-','-','W'},
-	{'W','-','-','-','-','-','-','-','-','-','-','O','-','-','-','O','O','O','-','W'},
+	{'W','-','-','-','-','-','-','-','R','-','-','O','-','-','O','O','O','O','-','W'},
 	{'W','O','O','O','-','O','O','O','O','O','-','-','-','-','-','-','O','-','-','W'},
 	{'W','-','O','-','-','R','-','-','-','O','-','-','O','O','-','-','-','-','-','W'},
-	{'W','-','-','-','-','-','-','-','-','O','-','-','3','-','-','-','O','-','-','W'},
-	{'W','-','-','-','-','O','O','O','O','O','-','-','-','-','O','-','-','-','-','W'},
-	{'W','-','-','-','-','-','-','-','-','-','-','-','O','-','-','-','R','-','-','W'},
-	{'W','-','-','O','-','-','-','-','-','-','O','-','-','-','-','-','-','-','-','W'},
-	{'W','-','-','-','-','-','O','O','O','-','-','-','-','-','-','-','O','-','-','W'},
-	{'W','O','O','-','1','-','-','-','O','-','-','-','O','-','-','-','-','-','-','W'},
+	{'W','-','-','-','-','-','-','-','-','O','-','-','3','-','-','O','O','-','-','W'},
+	{'W','-','-','-','-','O','O','O','O','O','-','R','-','-','O','-','-','-','-','W'},
+	{'W','-','-','-','-','-','-','-','-','-','-','-','O','-','O','-','R','-','-','W'},
+	{'W','-','-','O','-','-','-','-','-','-','O','-','-','-','O','-','-','-','-','W'},
+	{'W','-','-','-','-','-','O','O','O','-','-','-','-','-','O','-','O','-','-','W'},
+	{'W','O','O','-','1','-','-','-','O','R','-','-','O','-','O','-','-','-','-','W'},
 	{'W','-','-','-','-','-','O','O','O','-','O','-','O','O','O','O','O','-','-','W'},
 	{'W','R','-','O','-','-','-','-','-','-','-','-','-','-','-','-','O','-','-','W'},
 	{'W','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','W'},
@@ -113,7 +114,7 @@ public class ABEngine {
 	return mtx_x > 0 && mtx_x < getMaxX() && mtx_y > 0  &&  mtx_y < getMaxY();
     }
 
-    private static char getObject(int mtx_x, int mtx_y){
+    public static char getObject(int mtx_x, int mtx_y){
 	return game_map[game_map.length - 1 - mtx_y][mtx_x];
     }
 
@@ -139,9 +140,9 @@ public class ABEngine {
 	int matrix_x = 0;
 
 	x = x/100;
-	
+
 	switch(action) {
-	
+
 	case UP: 
 
 	    matrix_x = Math.round(x);
@@ -165,7 +166,7 @@ public class ABEngine {
 	    matrix_x = (int) Math.ceil(x);
 
 	    break;
-	    
+
 	default:
 	    break;
 
@@ -223,7 +224,7 @@ public class ABEngine {
 
 	char pos = getObject(mtx_x,mtx_y);
 
-	if(pos == '-' || pos == '1' || pos == '2' || pos == '3') {
+	if(pos == '-') {
 	    return false;
 	} else {
 	    return true;
@@ -243,16 +244,31 @@ public class ABEngine {
 
 	char obj = getObject(mtx_x,mtx_y);
 
-	Log.w("BURN", "x:" + mtx_x + "y:" +mtx_y);
+	//Log.w("BURN", "x:" + mtx_x + "y:" +mtx_y);
 
 	if (!(obj == 'W')) {
 
-	    if(obj == '1'){
-		//PLAYER_IS_DEAD[1] = true;
+
+	    if((obj == '1') || (obj == '2') || (obj == '3')) {
+		if(ABEngine.PLAYER.getID() == obj){
+		   ABEngine.PLAYER.kill();
+		}
+		else {
+		    Player p = ABEngine.PLAYERS.get(obj);
+		    if(p != null)
+			p.kill();
+		}
+
 	    }
 
+
 	    if (obj == 'R'){
-		//ROBOT_IS_DEAD[1] = true;
+
+		for(Robot r : ABEngine.ROBOTS){
+		    if(r.isInRange(mtx_x,mtx_y)){
+			r.kill();
+		    }
+		}
 	    }
 
 	    setObject(mtx_x,mtx_y,'-');
@@ -264,18 +280,6 @@ public class ABEngine {
 	}
 
     }
-
-
-    public static void killPlayer(int numPlayer){
-
-
-    }
-
-    public static void killRobot(int numRobot){
-
-
-    }
-
 
 
     public boolean onExit(View v) {
