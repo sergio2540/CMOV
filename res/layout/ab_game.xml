@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:gravity="start"
-            android:text="1000 Points"
+            android:text="0.0 Points"
             android:textColor="#FFFFFFFF" />
 
         <TextView

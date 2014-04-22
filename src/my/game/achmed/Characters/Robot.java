@@ -6,7 +6,9 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -23,7 +25,7 @@ public abstract class Robot extends Character {
 
 
     private int counter = 0;
-    private static int COUNTER_MAX = 20; 
+    private final static int COUNTER_MAX = 20; 
     private int getCounter(){
 	return counter;
     }
@@ -76,9 +78,11 @@ public abstract class Robot extends Character {
 	return isDead;
     }
 
-    public Robot() {
+    public Robot(float xpos, float ypos) {
 
 	super(vertices,texture,indices);
+	super.setXPosition(xpos);
+	super.setYPosition(ypos);
     }
 
     public void draw(GL10 gl) {
@@ -151,7 +155,8 @@ public abstract class Robot extends Character {
 
 	//Choose a random player do catch
 	List<Player> players = new ArrayList<Player>();
-	players.add(ABEngine.PLAYER);
+	if(ABEngine.PLAYER != null)
+	    players.add(ABEngine.PLAYER);
 	players.addAll(ABEngine.PLAYERS.values());
 	//players.add(ABEngine.PLAYER);
 
@@ -219,11 +224,11 @@ public abstract class Robot extends Character {
     }
 
     public abstract boolean moveUp(GL10 gl);
- 
+
     public abstract boolean moveDown(GL10 gl);
- 
+
     public abstract boolean moveLeft(GL10 gl);
- 
+
     public abstract boolean moveRight(GL10 gl);
 
     public void move(GL10 gl) {
@@ -313,52 +318,6 @@ public abstract class Robot extends Character {
 
     }
 
-    private void cleanFromMatrix(){
-
-
-	//Altera antiga posicao do player na matriz
-	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
-	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
-	char obj = ABEngine.getObject(mtx_x,mtx_y);
-
-	if(obj == '1' || obj == '2' || obj == '3'){
-	    if(ABEngine.PLAYER.getID() == obj){
-		ABEngine.PLAYER.kill();
-	    }
-	    else {
-		Player p = ABEngine.PLAYERS.get(obj);
-		if(p != null)
-		    p.kill();
-	    }
-	}
-	ABEngine.setObject(mtx_x,mtx_y,'-');
-
-    }
-
-
-    private void putInMatrix(){
-
-	//Altera antiga posicao do player na matriz
-	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
-	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
-	
-	char obj = ABEngine.getObject(mtx_x,mtx_y);
-
-	if(obj == '1' || obj == '2' || obj == '3'){
-	    if(ABEngine.PLAYER.getID() == obj){
-		ABEngine.PLAYER.kill();
-	    }
-	    else {
-		Player p = ABEngine.PLAYERS.get(obj);
-		if(p != null)
-		    p.kill();
-	    }
-	}
-
-	ABEngine.setObject(mtx_x,mtx_y,'R');
-
-    }
-
     private void translate(GL10 gl){
 
 	float x =  this.getXPosition()/100f;
@@ -369,7 +328,7 @@ public abstract class Robot extends Character {
 
     public boolean isInRange(float mtx_x, float mtx_y) {
 
-	//Altera antiga posicao do player na matriz
+
 	int r_mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
 	int r_mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
 
@@ -380,8 +339,63 @@ public abstract class Robot extends Character {
 	return false;
     }
 
+    protected void cleanFromMatrix(){
+
+	//Altera antiga posicao do player na matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(), robotAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(), robotAction);
+	char obj = ABEngine.getObject(mtx_x,mtx_y);
+
+	if(obj == '1' || obj == '2' || obj == '3'){
+	    this.killPlayer(mtx_x, mtx_y);
+	}
+
+	ABEngine.setObject(mtx_x,mtx_y,'-');
+
+    }
+
+
+    protected void putInMatrix(){
+
+	//Altera antiga posicao do player na matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
+
+	char obj = ABEngine.getObject(mtx_x,mtx_y);
+
+	if(obj == '1' || obj == '2' || obj == '3'){
+	    killPlayer(mtx_x,mtx_y);
+	}
+
+	ABEngine.setObject(mtx_x,mtx_y,'R');
+
+    }
+    
+    private void killPlayer(float mtx_x, float mtx_y) {
+	if(ABEngine.PLAYER.isInRange(mtx_x, mtx_y)){
+	    ABEngine.PLAYER.kill();
+	    ABEngine.PLAYER = null;
+	}
+	else {
+
+	    Map<java.lang.Character,Player> temp = new TreeMap<java.lang.Character,Player>();
+	    temp.putAll(ABEngine.PLAYERS);
+
+	    for(Player p : temp.values()){
+		if(p.isInRange(mtx_x, mtx_y)){
+		    p.kill();
+		    ABEngine.PLAYERS.remove(p.getID());
+
+		}
+	    }
+	}
+    }
+
     public void kill() {
-	cleanFromMatrix();
+	//Elimina da matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
+	ABEngine.setObject(mtx_x,mtx_y,'-');
 	isDead = true;
 
     }

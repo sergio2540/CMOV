@@ -10,10 +10,7 @@ public class ABGreenOgre extends Player {
     
     //id == 2
     public ABGreenOgre(float xpos, float ypos) {
-	super('2');
-	
-	super.xpos = xpos;
-	super.ypos = ypos;
+	super('2',xpos,ypos);
     }
 
     @Override

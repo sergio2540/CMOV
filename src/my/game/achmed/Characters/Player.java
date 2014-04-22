@@ -6,7 +6,9 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -22,6 +24,8 @@ import android.opengl.GLUtils;
 
 public abstract class Player extends Character {
 
+    private final static int COUNTER_MAX = 10; 
+
     private final char id;
 
     private ABBomb bomb;
@@ -34,6 +38,11 @@ public abstract class Player extends Character {
 
     public float getScore(){
 	return score;
+    }
+    public void setScore(float score){
+	this.score = score;
+	if(ABEngine.PLAYER.getID() == id)
+	    ABEngine.updateScore(ABEngine.PLAYER.getScore());
     }
 
     //Configuration
@@ -99,11 +108,15 @@ public abstract class Player extends Character {
 	return isDead;
     }
 
-    protected Player(char id) {
+    protected Player(char id, float xpos, float ypos) {
 
 	super(vertices, texture,indices);
+	super.setXPosition(xpos);
+	super.setYPosition(ypos);
+
 	this.id = id;
 	this.bomb = null;
+
     }
 
     public static Player create(char id, float x, float y) {
@@ -121,7 +134,7 @@ public abstract class Player extends Character {
 
 	    p = new ABAchmed(x,y);  
 	}
-	
+
 	ABBomb b = new ABBomb(p);
 	p.setBomb(b);
 
@@ -212,9 +225,10 @@ public abstract class Player extends Character {
 
 	//Choose a random player do catch
 	List<Player> players = new ArrayList<Player>();
-	players.add(ABEngine.PLAYER);
-	players.addAll(ABEngine.PLAYERS.values());
-	//players.add(ABEngine.PLAYER);
+	if(ABEngine.PLAYER != null)
+	    players.add(ABEngine.PLAYER);
+	//players.addAll(ABEngine.PLAYERS.values());
+	
 
 	int p = r.nextInt(players.size());
 	Player player = players.get(p);
@@ -268,7 +282,7 @@ public abstract class Player extends Character {
 	    correctDecision = possibleReturns[r.nextInt(1+1)];
 	}
 
-	if(r.nextInt(100) < 80){
+	if(r.nextInt(100) < 90){
 	    this.playerAction = correctDecision;
 	}else {
 	    wrongDecision = wrongPositions[r.nextInt(1+1)];
@@ -280,12 +294,20 @@ public abstract class Player extends Character {
 
     }
 
-    public void move(GL10 gl) {
+    public synchronized void move(GL10 gl) {
 
-	if(isDead())
+	if(isDead()){
 	    return;
+	}
 
-	cleanFromMatrix();
+	this.cleanFromMatrix();
+
+
+	gl.glMatrixMode(GL10.GL_MODELVIEW);
+	gl.glLoadIdentity();
+	gl.glPushMatrix();
+	gl.glScalef(.05f, .05f, 1f);
+	gl.glTranslatef(ABEngine.START_X, ABEngine.START_Y, 0.5f);
 
 	switch (this.playerAction) {
 	case LEFT : 
@@ -299,9 +321,9 @@ public abstract class Player extends Character {
 	    this.translate(gl);
 	    this.moveLeft(gl);
 
-	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+	    this.setCounter((this.getCounter() + 1) % COUNTER_MAX);
 
-	    if(this.getCounter() == 0) {
+	    if(this.getCounter() == 0 && ABEngine.STOP){
 
 		ABEngine.STOPPED = true;
 		this.setCounter(0);
@@ -322,9 +344,9 @@ public abstract class Player extends Character {
 	    this.translate(gl);
 	    this.moveRight(gl);
 
-	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+	    this.setCounter((this.getCounter() + 1) % COUNTER_MAX );
 
-	    if(this.getCounter() == 0) {
+	    if(this.getCounter() == 0 && ABEngine.STOP) {
 
 		ABEngine.STOPPED = true;
 		this.setCounter(0);
@@ -346,9 +368,9 @@ public abstract class Player extends Character {
 	    this.translate(gl);
 	    this.moveUp(gl);
 
-	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+	    this.setCounter((this.getCounter() + 1) % COUNTER_MAX );
 
-	    if(this.getCounter() == 0) {
+	    if(this.getCounter() == 0 && ABEngine.STOP) {
 
 		ABEngine.STOPPED = true;
 		this.setCounter(0);
@@ -369,9 +391,9 @@ public abstract class Player extends Character {
 	    this.translate(gl);
 	    this.moveDown(gl);
 
-	    this.setCounter((this.getCounter() + 1) % ABEngine.MAX_COUNTER);
+	    this.setCounter((this.getCounter() + 1) % COUNTER_MAX );
 
-	    if(this.getCounter() == 0) {
+	    if(this.getCounter() == 0 && ABEngine.STOP) {
 		ABEngine.STOPPED = true;
 		this.setCounter(0);
 		playerAction = CHARACTER_ACTION.DOWN_RELEASE;
@@ -408,28 +430,11 @@ public abstract class Player extends Character {
 
 	}
 
-	putInMatrix();
+	this.putInMatrix();
+	gl.glPopMatrix();
+
 
 	getBomb().draw(gl);
-    }
-
-
-    private void cleanFromMatrix(){
-
-	//Altera antiga posicao do player na matriz
-	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
-	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
-	ABEngine.setObject(mtx_x,mtx_y,'-');
-
-    }
-
-    private void putInMatrix(){
-
-	//Altera posicao do player na matriz
-	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
-	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
-	ABEngine.setObject(mtx_x,mtx_y,id);
-
     }
 
 
@@ -442,18 +447,112 @@ public abstract class Player extends Character {
 
     }
 
-    public void kill(){
-	cleanFromMatrix();
-	isDead = true;
-	score = 0;
+    public boolean isInRange(float mtx_x, float mtx_y) {
+
+	int r_mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(), playerAction);
+	int r_mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
+
+	if(mtx_x == r_mtx_x && mtx_y == r_mtx_y){
+	    return true;
+	}
+
+	return false;
     }
 
+    protected void cleanFromMatrix(){
+
+	//Altera antiga posicao do player na matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(), playerAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(), playerAction);
+//	char obj = ABEngine.getObject(mtx_x,mtx_y);
+//
+////	if(obj != id){
+////	    if(obj == '1' || obj == '2' || obj == '3'){
+////		this.killPlayer(mtx_x, mtx_y);
+////	    }
+////	}
+	
+	ABEngine.setObject(mtx_x,mtx_y,'-');
+
+    }
+
+
+    protected void putInMatrix(){
+
+	//Altera antiga posicao do player na matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
+
+	ABEngine.setObject(mtx_x,mtx_y,id);
+
+    }
+
+    public  void killRobot(float mtx_x, float mtx_y) {
+
+	int i = 0;
+	for(Robot r : ABEngine.ROBOTS){
+	    if(r.isInRange(mtx_x,mtx_y)){
+		r.kill();
+
+		if(ABEngine.PLAYER.getID() == id){
+		    robotKilled();
+		}
+
+		break;
+	    }
+	    i++;
+	}
+	ABEngine.ROBOTS.remove(i);
+
+    }
+
+    public void killPlayer(float mtx_x, float mtx_y) {
+	if(ABEngine.PLAYER.isInRange(mtx_x, mtx_y)){
+	    ABEngine.PLAYER.kill();
+	    ABEngine.PLAYER = null;
+	}
+	else {
+
+	    Map<java.lang.Character,Player> temp = new TreeMap<java.lang.Character,Player>();
+	    temp.putAll(ABEngine.PLAYERS);
+
+	    for(Player p : temp.values()){
+		if(p.isInRange(mtx_x, mtx_y)){
+		    p.kill();
+
+		    if(ABEngine.PLAYER.getID() == id){
+			opponentKilled();
+		    }
+
+		    ABEngine.PLAYERS.remove(p.getID());
+
+		}
+	    }
+	}
+    }
+
+
+    public void kill(){
+
+	//Elimina da matriz
+	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),playerAction);
+	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
+	ABEngine.setObject(mtx_x,mtx_y,'-');
+
+	isDead = true;
+	setScore(0);
+
+
+    }
+
+
+
     public void opponentKilled(){
-	score = score + pointsPerOpponentKilled;
+	setScore(score + pointsPerOpponentKilled);
     }
 
     public void robotKilled(){
-	score = score + pointsPerRobotKilled;
+	setScore(score = score + pointsPerRobotKilled);
     }
 
     public char getID() {

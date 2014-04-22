@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -41,6 +43,8 @@ public class ABBomb extends Character {
     private BOMB_ACTION bombAction;
 
     private final int[] textures = new int[1];
+    
+    
 
     private static final float vertices[] = {
 
@@ -66,14 +70,14 @@ public class ABBomb extends Character {
     };
 
     public ABBomb(Player player) {
-	
+
 	super(vertices, texture, indices);
-	
+
 	this.player = player; 
-	
+
 	this.fire = new ABFire(); 
 	this.bombAction = BOMB_ACTION.NO_BOMB;
-	
+
     }
 
     public void setTimerToBombExplosion(int delay) {
@@ -86,10 +90,18 @@ public class ABBomb extends Character {
 		    @Override
 		    public void run() {
 			explode();
+			
 		    }
 
 		}, delay);
 
+    }
+    
+    
+    boolean finish = true;
+    
+    private void done(){
+	finish = true;
     }
 
     public void drawTexture(GL10 gl) {
@@ -165,6 +177,7 @@ public class ABBomb extends Character {
 	    break;
 
 	case BOMB_DROP:
+	    
 	    gl.glMatrixMode(GL10.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 	    gl.glPushMatrix();
@@ -188,12 +201,14 @@ public class ABBomb extends Character {
 	    gl.glScalef(1f, 1f, 1f);
 	    gl.glTranslatef(0.250f, 0.835f , 0f);
 	    drawTexture(gl);
+	    gl.glPopMatrix();
 
 	    //o timer depende do nivel
 	    setTimerToBombExplosion(ABEngine.BOMB_TIME_TO_EXPLOSION);
-	    gl.glPopMatrix();
-
+	    
 	    isDropped = true;
+	   
+
 
 	    break;
 
@@ -229,15 +244,15 @@ public class ABBomb extends Character {
 		gl.glPushMatrix();
 		gl.glScalef(.05f, .05f, 1f);
 
-		gl.glTranslatef(ABEngine.START_X +  b_x/100f, ABEngine.START_Y + b_y/100f, 0.8f);
+		gl.glTranslatef(ABEngine.START_X +  b_x/100f, ABEngine.START_Y + b_y/100f, 0.7f);
 
 
 		gl.glMatrixMode(GL10.GL_TEXTURE);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0.666f, 0.75f, 0.3f);
+		gl.glTranslatef(0.666f, 0.75f, 0.0f);
 		fire.draw(gl);
 		gl.glPopMatrix();
-		gl.glLoadIdentity();
+		//gl.glLoadIdentity();
 	    }
 
 
@@ -266,13 +281,13 @@ public class ABBomb extends Character {
 
 	}
 
-
+	done();
 	setAction(BOMB_ACTION.NO_BOMB);
 
     }
 
     //Remove objectos queimados
-    public static boolean burn(float x, float y) {
+    public boolean burn(float x, float y) {
 
 	int mtx_x = ABEngine.getXMatrixPosition(x);
 	int mtx_y = ABEngine.getYMatrixPosition(y);
@@ -288,33 +303,11 @@ public class ABBomb extends Character {
 
 
 	    if((obj == '1') || (obj == '2') || (obj == '3')) {
-		if(ABEngine.PLAYER.getID() == obj){
-		    ABEngine.PLAYER.kill();
-		}
-		else {
-		    Player p = ABEngine.PLAYERS.get(obj);
-
-		    if(p != null){
-			p.kill();
-			ABEngine.PLAYER.opponentKilled();
-		    }
-		}
-
+		player.killPlayer(mtx_x,mtx_y);
 	    }
-
-
+	    
 	    if (obj == 'R'){
-
-		for(Robot r : ABEngine.ROBOTS){
-		    if(r.isInRange(mtx_x,mtx_y)){
-			r.kill();
-			ABEngine.PLAYER.robotKilled();
-		    }
-		}
-
-
-		ABEngine.updateScore(ABEngine.PLAYER.getScore());
-
+		player.killRobot(mtx_x, mtx_y);
 	    }
 
 	    ABEngine.setObject(mtx_x,mtx_y,'-');
@@ -327,10 +320,10 @@ public class ABBomb extends Character {
 	}
 
     }
-    
+
     private int[] getPosition() {
 	int [] pos = new int[1];
-	
+
 	pos[0] = ABEngine.getXMatrixPosition(player.getXPosition(),player.playerAction);
 	pos[1] = ABEngine.getYMatrixPosition(player.getYPosition(),player.playerAction);
 	/*
@@ -359,50 +352,50 @@ public class ABBomb extends Character {
 
 	case RIGHT : 
 
-	    
+
 
 	    break;
 
 	case UP :
 
-	    
+
 
 	    break;
 
 	case DOWN : 
 
-	    
 
-	   
+
+
 
 
 	    break;
 
 	case LEFT_RELEASE:
 
-	   
+
 
 	    break;
 	case RIGHT_RELEASE:
 
-	   
+
 
 	    break;
 	case UP_RELEASE:
 
-	   
+
 
 	    break;
 	case DOWN_RELEASE:
 
-	   
+
 
 	    break;
 
 	}
-	*/
+	 */
 	return pos;
-	
+
     }
 
     private void setAction(BOMB_ACTION action) {
@@ -410,11 +403,11 @@ public class ABBomb extends Character {
     }
 
     public void drop() {
-	setAction(BOMB_ACTION.BOMB_DROP);
+	if(finish)
+	    setAction(BOMB_ACTION.BOMB_DROP);
     }	
 
     private void explode() {
 	setAction(BOMB_ACTION.BOMB_EXPLOSION);
-
     }
 }

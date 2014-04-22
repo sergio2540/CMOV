@@ -10,9 +10,8 @@ import android.util.Log;
 public class ABGreenRobot extends Robot {
 
     public ABGreenRobot(float xpos, float ypos) {
-	super();
-	super.xpos = xpos;
-	super.ypos = ypos;
+	super(xpos,ypos);
+	
     }
 
     @Override

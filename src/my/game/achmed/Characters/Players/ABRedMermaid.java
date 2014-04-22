@@ -10,9 +10,7 @@ public class ABRedMermaid extends Player {
 
     //id == 1
     public ABRedMermaid(float xpos, float ypos) {
-	super('1');
-	super.xpos = xpos;
-	super.ypos = ypos;
+	super('1',xpos,ypos);	
     }
 
     @Override

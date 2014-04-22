@@ -53,8 +53,14 @@ public class ABGame extends Activity {
 
 		gameView = (ABGameSurfaceView)findViewById(R.id.game_frame);
 
-		//TODO se calhar uma boa opcao de desenho e passar isto para o constructor de ABGameSurfaceView
-		gameView.setRenderer(new ABGameRenderer());
+		    if(ABEngine.STOPPED) {
+			ABEngine.STOP = false;
+			
+			if (ABEngine.PLAYER != null)
+			ABEngine.PLAYER.setAction(CHARACTER_ACTION.LEFT);
+			
+			setaEsquerda.setImageResource(R.drawable.arrow_left);
+		    }
 
 		final ImageButton setaEsquerda = (ImageButton) findViewById(R.id.arrow_left);
 
@@ -71,11 +77,14 @@ public class ABGame extends Activity {
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-					if(ABEngine.STOPPED) {
-						ABEngine.STOP = false;
-						ABEngine.PLAYER.setAction(CHARACTER_ACTION.LEFT);
-						setaEsquerda.setImageResource(R.drawable.arrow_left);
-					}
+		    if(ABEngine.STOPPED) {
+			ABEngine.STOP = false;
+			
+			if (ABEngine.PLAYER != null)
+			ABEngine.PLAYER.setAction(CHARACTER_ACTION.RIGHT);
+			
+			setaDireita.setImageResource(R.drawable.arrow_right);
+		    }
 
 				}
 				return true;
@@ -97,11 +106,18 @@ public class ABGame extends Activity {
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-					if(ABEngine.STOPPED) {
-						ABEngine.STOP = false;
-						ABEngine.PLAYER.setAction(CHARACTER_ACTION.RIGHT);
-						setaDireita.setImageResource(R.drawable.arrow_right);
-					}
+		    if(ABEngine.STOPPED) {
+			ABEngine.STOP = false;
+			
+			if (ABEngine.PLAYER != null)
+			ABEngine.PLAYER.setAction(CHARACTER_ACTION.UP);
+			
+			setaCima.setImageResource(R.drawable.arrow_up);
+		    }
+		}
+		return true;
+	    }
+	});
 
 				}
 				return true;
@@ -121,8 +137,14 @@ public class ABGame extends Activity {
 					setaCima.setImageResource(R.drawable.arrow_up_normal);
 
 
-				}
-				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
+		    if(ABEngine.STOPPED) {
+			ABEngine.STOP = false;
+			
+			if (ABEngine.PLAYER != null)
+			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.DOWN);
+			
+			setaBaixo.setImageResource(R.drawable.arrow_down);
+		    }
 
 					if(ABEngine.STOPPED) {
 						ABEngine.STOP = false;
@@ -168,8 +190,12 @@ public class ABGame extends Activity {
 
 		dot.setOnTouchListener(new View.OnTouchListener() {
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+		   // ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
+		    
+		    if (ABEngine.PLAYER != null)
+			ABEngine.PLAYER.getBomb().drop();
+		    
+		    bombButton.setImageResource(R.drawable.bomb_button_pressed);
 
 				if(event.getAction() == (MotionEvent.ACTION_UP)){
 
