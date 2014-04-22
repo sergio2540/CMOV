@@ -60,6 +60,28 @@ public class ABMainMenu extends Activity {
 
 			}
 		});
+		
+		textView_settings.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent highscore = new Intent(getApplicationContext(), ABSingleRank.class);
+				ABMainMenu.this.startActivity(highscore);
+				ABMainMenu.this.finish();
+			}
+			
+		});
+		
+		textView_about.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent createSinlePlayer = new Intent(getApplicationContext(), ABCreateSinglePlayer.class);
+				ABMainMenu.this.startActivity(createSinlePlayer);
+				ABMainMenu.this.finish();
+			}
+			
+		});
 
 		//	WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
 		//	Display display = wm.getDefaultDisplay();
