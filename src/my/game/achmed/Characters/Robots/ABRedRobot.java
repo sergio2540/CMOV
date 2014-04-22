@@ -10,9 +10,7 @@ public class ABRedRobot extends Robot {
 
 
     public ABRedRobot(float xpos, float ypos){
-	super();
-	super.xpos = xpos;
-	super.ypos = ypos;
+	super(xpos,ypos);
     }
 
     @Override

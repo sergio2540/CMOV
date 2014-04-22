@@ -4,14 +4,18 @@ package my.game.achmed.Characters;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import my.game.achmed.ABEngine;
 
 
 public abstract class Character {
 
-    protected float xpos;
-    protected float ypos;
+    private float xpos;
+    private float ypos;
 
     public float getXPosition(){
 	return xpos;
@@ -20,14 +24,16 @@ public abstract class Character {
     public float getYPosition(){
 	return ypos;
     }
-    
+
     protected void setXPosition(float xpos ){
 	this.xpos = xpos;
     }
-    
+
     protected void setYPosition(float ypos){
 	this.ypos = ypos;
     }
+
+
 
     private final FloatBuffer vertexBuffer;
 
@@ -72,6 +78,5 @@ public abstract class Character {
 	indexBuffer = ByteBuffer.allocateDirect(indices.length);
 	indexBuffer.put(indices);
 	indexBuffer.position(0);
-    }
-
+    }    
 }

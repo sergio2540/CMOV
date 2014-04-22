@@ -52,7 +52,10 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
+			
+			if (ABEngine.PLAYER != null)
 			ABEngine.PLAYER.setAction(CHARACTER_ACTION.LEFT);
+			
 			setaEsquerda.setImageResource(R.drawable.arrow_left);
 		    }
 
@@ -78,7 +81,10 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
+			
+			if (ABEngine.PLAYER != null)
 			ABEngine.PLAYER.setAction(CHARACTER_ACTION.RIGHT);
+			
 			setaDireita.setImageResource(R.drawable.arrow_right);
 		    }
 
@@ -105,7 +111,10 @@ public class ABGame extends Activity {
 
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
+			
+			if (ABEngine.PLAYER != null)
 			ABEngine.PLAYER.setAction(CHARACTER_ACTION.UP);
+			
 			setaCima.setImageResource(R.drawable.arrow_up);
 		    }
 		}
@@ -133,7 +142,8 @@ public class ABGame extends Activity {
 		    if(ABEngine.STOPPED) {
 			ABEngine.STOP = false;
 			
-			ABEngine.PLAYER.setAction(CHARACTER_ACTION.DOWN);
+			if (ABEngine.PLAYER != null)
+			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.DOWN);
 			
 			setaBaixo.setImageResource(R.drawable.arrow_down);
 		    }
@@ -182,7 +192,8 @@ public class ABGame extends Activity {
 
 		   // ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
 		    
-		    ABEngine.PLAYER.getBomb().drop();
+		    if (ABEngine.PLAYER != null)
+			ABEngine.PLAYER.getBomb().drop();
 		    
 		    bombButton.setImageResource(R.drawable.bomb_button_pressed);
 

@@ -10,9 +10,7 @@ public class ABAchmed extends Player {
 
     //id == 3
     public ABAchmed(float xpos, float ypos) {
-	super('3');
-	super.xpos = xpos;
-	super.ypos = ypos;
+	super('3',xpos,ypos);
     }
 
     @Override

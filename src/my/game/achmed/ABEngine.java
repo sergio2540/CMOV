@@ -74,7 +74,7 @@ public class ABEngine {
     public static List<Robot> ROBOTS = new ArrayList<Robot>();
 
 
-    public static char[][] game_map;
+    private static char[][] game_map;
     
     //Start do jogo
     public static float START_X;
@@ -82,40 +82,42 @@ public class ABEngine {
     
     public static ABGame GAME;
 
-    public static void setObject(int x, int y, char object){
-	game_map[game_map.length - 1 - y][x] = object;
+    public static synchronized void setObject(int x, int y, char object){
+	if(getObject(x,y) != 'W'){
+	    game_map[game_map.length - 1 - y][x] = object;
+	}
     }
 
-    public static boolean isNotInMatrixRange(int mtx_x, int mtx_y){
+    public static synchronized boolean isNotInMatrixRange(int mtx_x, int mtx_y){
 	return !isInMatrixRange(mtx_x, mtx_y);
     }
 
-    private static boolean isInMatrixRange(int mtx_x, int mtx_y){
+    private static synchronized boolean isInMatrixRange(int mtx_x, int mtx_y){
 	return mtx_x > 0 && mtx_x < getMaxX() && mtx_y > 0  &&  mtx_y < getMaxY();
     }
 
-    public static char getObject(int mtx_x, int mtx_y){
+    public static synchronized char getObject(int mtx_x, int mtx_y){
 	return game_map[game_map.length - 1 - mtx_y][mtx_x];
     }
 
-    private static int getMaxX(){
+    public static int getMaxX(){
 	return game_map[0].length;
     }
 
-    private static int getMaxY(){
+    public static int getMaxY(){
 	return game_map.length;
     }
 
 
-    public static int getXMatrixPosition(float x){
+    public static synchronized int getXMatrixPosition(float x){
 	return (int) (x/100.f);
     }
 
-    public static int getYMatrixPosition(float y){
+    public static synchronized int getYMatrixPosition(float y){
 	return (int) (y/100.f);
     }
 
-    public static int getXMatrixPosition(float x, CHARACTER_ACTION action){
+    public static synchronized int getXMatrixPosition(float x, CHARACTER_ACTION action){
 
 	int matrix_x = 0;
 
@@ -155,7 +157,7 @@ public class ABEngine {
 	return matrix_x; 
     }	 
 
-    public static int getYMatrixPosition(float y, CHARACTER_ACTION character){
+    public static synchronized int getYMatrixPosition(float y, CHARACTER_ACTION character){
 
 	int matrix_y = 0;
 
@@ -196,7 +198,7 @@ public class ABEngine {
 	return matrix_y;
     }	 
 
-    public static boolean detectColision(float x, float y, CHARACTER_ACTION action) {
+    public static synchronized boolean detectColision(float x, float y, CHARACTER_ACTION action) {
 
 
 	int mtx_x = getXMatrixPosition(x,action);
@@ -213,7 +215,7 @@ public class ABEngine {
     }
     
     
-    public static void updateScore(final float points){
+    public static synchronized void updateScore(final float points){
 	
 	GAME.runOnUiThread(new Runnable() {
 	    @Override
@@ -241,6 +243,11 @@ public class ABEngine {
 	    return false;
 	}
 
+    }
+
+    public static synchronized void create_map(char[][] gameLevelMatrix) {
+	game_map = gameLevelMatrix;
+	
     }
 
 }

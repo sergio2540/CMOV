@@ -9,9 +9,8 @@ import android.content.Context;
 public class ABYellowRobot extends Robot {
 
     public ABYellowRobot(float xpos, float ypos) {
-	super();
-	super.xpos = xpos;
-	super.ypos = ypos;
+	super(xpos,ypos);
+	
     }
 
     @Override

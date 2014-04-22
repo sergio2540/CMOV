@@ -136,7 +136,7 @@ public class Level {
 		
 		if(verified) {
 			createMatrix(mat);
-			ABEngine.game_map = gameLevelMatrix;
+			ABEngine.create_map(gameLevelMatrix);
 			return true;
 		} else {
 			return false;
