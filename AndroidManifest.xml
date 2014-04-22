@@ -5,20 +5,20 @@
     android:versionName="1.0" >
 
     <uses-feature android:glEsVersion="0x00010000" />
-    
+
     <uses-sdk
         android:minSdkVersion="19"
         android:targetSdkVersion="19" />
-    
+
     <!-- Garante permissoes para Wifi-Direct -->
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-        
         <activity
             android:name="my.game.achmed.Activities.AchmedBomberActivity"
             android:label="@string/app_name" >
@@ -28,21 +28,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity android:name="my.game.achmed.Activities.ABMainMenu" >
-       	</activity>
-        
+        </activity>
         <activity android:name="my.game.achmed.Activities.ABGame" >
         </activity>
-        
         <activity android:name="my.game.achmed.Activities.ABGameDialog" >
         </activity>
-        
         <activity android:name="my.game.achmed.Activities.ABLevelMenu" >
         </activity>
 
-        <service android:name="ABMusic" >
+        <service android:name="my.game.achmed.ABMusic" >
         </service>
+
+        <activity android:name="my.game.achmed.Activities.ABSingleRank" >
+        </activity>
+        <activity
+            android:name="my.game.achmed.Activities.ABCreateSinglePlayer" >
+        </activity>
     </application>
 
 </manifest>
