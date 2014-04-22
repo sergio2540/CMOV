@@ -45,10 +45,8 @@ public abstract class Player extends Character {
 	    ABEngine.updateScore(ABEngine.PLAYER.getScore());
     }
 
-    //Configuration
-    private final float pointsPerOpponentKilled = 10;
-
-    private final float pointsPerRobotKilled = 10;
+    private final float pointsPerOpponentKilled;
+    private final float pointsPerRobotKilled;
 
 
     private final float speed = 10;
@@ -116,6 +114,9 @@ public abstract class Player extends Character {
 
 	this.id = id;
 	this.bomb = null;
+	
+	this.pointsPerOpponentKilled = ABEngine.LEVEL.getPointsPerOpponentKilled();
+	this.pointsPerRobotKilled = ABEngine.LEVEL.getPointsPerRobotKilled();
 
     }
 
@@ -227,7 +228,7 @@ public abstract class Player extends Character {
 	List<Player> players = new ArrayList<Player>();
 	if(ABEngine.PLAYER != null)
 	    players.add(ABEngine.PLAYER);
-	//players.addAll(ABEngine.PLAYERS.values());
+	players.addAll(ABEngine.PLAYERS.values());
 	
 
 	int p = r.nextInt(players.size());
@@ -464,13 +465,6 @@ public abstract class Player extends Character {
 	//Altera antiga posicao do player na matriz
 	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(), playerAction);
 	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(), playerAction);
-//	char obj = ABEngine.getObject(mtx_x,mtx_y);
-//
-////	if(obj != id){
-////	    if(obj == '1' || obj == '2' || obj == '3'){
-////		this.killPlayer(mtx_x, mtx_y);
-////	    }
-////	}
 	
 	ABEngine.setObject(mtx_x,mtx_y,'-');
 
@@ -509,7 +503,7 @@ public abstract class Player extends Character {
     public void killPlayer(float mtx_x, float mtx_y) {
 	if(ABEngine.PLAYER.isInRange(mtx_x, mtx_y)){
 	    ABEngine.PLAYER.kill();
-	    ABEngine.PLAYER = null;
+	   // ABEngine.PLAYER = null;
 	}
 	else {
 
@@ -517,6 +511,7 @@ public abstract class Player extends Character {
 	    temp.putAll(ABEngine.PLAYERS);
 
 	    for(Player p : temp.values()){
+		
 		if(p.isInRange(mtx_x, mtx_y)){
 		    p.kill();
 
@@ -524,7 +519,7 @@ public abstract class Player extends Character {
 			opponentKilled();
 		    }
 
-		    ABEngine.PLAYERS.remove(p.getID());
+		    //ABEngine.PLAYERS.remove(p.getID());
 
 		}
 	    }

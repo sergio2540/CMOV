@@ -1,39 +1,62 @@
 package my.game.achmed.Activities;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.TreeMap;
 
 import my.game.achmed.ABEngine;
 import my.game.achmed.R;
 import my.game.achmed.Characters.CHARACTER_ACTION;
+import my.game.achmed.Characters.Player;
+import my.game.achmed.Characters.Robot;
 import my.game.achmed.OpenGL.ABGameRenderer;
 import my.game.achmed.OpenGL.ABGameSurfaceView;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.view.LayoutInflater;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ABGame extends Activity {
 
     private ABGameSurfaceView gameView;
 
+    private Dialog backPopUp;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 	
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.ab_game);
+	
+	backPopUp = new Dialog(this);
+	
+	LinearLayout backgroundImg = (LinearLayout) ((LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.ab_game_dialog, null);
+	backPopUp.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+	backPopUp.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+	backgroundImg.setBackgroundColor(Color.TRANSPARENT);
+	backPopUp.setContentView(backgroundImg);
+	
 	gameView = (ABGameSurfaceView)findViewById(R.id.game_frame);
 
 	//TODO se calhar uma boa opcao de desenho e passar isto para o constructor de ABGameSurfaceView
 	gameView.setRenderer(new ABGameRenderer());
+	
 
 	final ImageButton setaEsquerda = (ImageButton) findViewById(R.id.arrow_left);
 
@@ -241,7 +264,7 @@ public class ABGame extends Activity {
 	//textView_namePlayer.setTypeface(font);
 
 	//TODO: Colocar em ABEngine
-	new CountDownTimer(ABEngine.GAME_DURATION, ABEngine.UPDATE_INTERVAL) {
+	new CountDownTimer(Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000), 1000) {
 
 	    private final Date date = new Date();
 	    private final SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
@@ -265,29 +288,26 @@ public class ABGame extends Activity {
 
     }
 
-    @Override
-    protected void onResume() {
-	super.onResume();
-	gameView.onResume();
-    }
+	@Override
+	public void onBackPressed() {
+		onPause();
+		backPopUp.show();
+	}
 
+	public void onClickResume(View v){
+		onResume();
+		backPopUp.cancel();
+	}
 
-    @Override
-    protected void onPause() {
-	Log.w("pause","paused");
-	super.onPause();
-	gameView.onPause();
-    }
-    
-    @Override
-    public void finish() {
-	super.finish();
-    }
+	public void onClickReload(View v){
+		Intent ab_game = new Intent(getApplicationContext(), ABGame.class);
+		startActivity(ab_game);
+		this.finish();
+	}
 
-    @Override
-    public void onBackPressed() {
-	Intent ab_dialog = new Intent(getApplicationContext(), ABGameDialog.class);
-	startActivity(ab_dialog);
-	onPause();
-    }
+	public void onClickQuit(View v){
+		Intent ab_main = new Intent(getApplicationContext(), ABMainMenu.class);
+		startActivity(ab_main);
+		this.finish();
+	}
 }

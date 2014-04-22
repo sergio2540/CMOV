@@ -16,8 +16,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 public class ABBomb extends Character {
+
+    private final float rangeOfExplosion;
+    private final float durationOfExplosionInSeconds;
+    private final float timeToExplodeInSeconds;
 
     private float xpos;
     private float ypos;
@@ -43,8 +48,8 @@ public class ABBomb extends Character {
     private BOMB_ACTION bombAction;
 
     private final int[] textures = new int[1];
-    
-    
+
+
 
     private static final float vertices[] = {
 
@@ -74,13 +79,19 @@ public class ABBomb extends Character {
 	super(vertices, texture, indices);
 
 	this.player = player; 
+	this.fire = new ABFire();
 
-	this.fire = new ABFire(); 
+	this.rangeOfExplosion = ABEngine.LEVEL.getExplosionRange();
+	this.timeToExplodeInSeconds = ABEngine.LEVEL.getExplosionTimeoutInSeconds();
+
+	this.durationOfExplosionInSeconds = ABEngine.LEVEL.getExplosionDurationInSeconds();
+
+
 	this.bombAction = BOMB_ACTION.NO_BOMB;
 
     }
 
-    public void setTimerToBombExplosion(int delay) {
+    public void setTimerToBombExplosion() {
 
 	Timer timer = new Timer();
 
@@ -90,16 +101,15 @@ public class ABBomb extends Character {
 		    @Override
 		    public void run() {
 			explode();
-			
 		    }
 
-		}, delay);
+		}, Math.round(this.timeToExplodeInSeconds*1000));
 
     }
-    
-    
+
+
     boolean finish = true;
-    
+
     private void done(){
 	finish = true;
     }
@@ -177,7 +187,7 @@ public class ABBomb extends Character {
 	    break;
 
 	case BOMB_DROP:
-	    
+
 	    gl.glMatrixMode(GL10.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 	    gl.glPushMatrix();
@@ -204,10 +214,10 @@ public class ABBomb extends Character {
 	    gl.glPopMatrix();
 
 	    //o timer depende do nivel
-	    setTimerToBombExplosion(ABEngine.BOMB_TIME_TO_EXPLOSION);
-	    
+	    setTimerToBombExplosion();
+
 	    isDropped = true;
-	   
+
 
 
 	    break;
@@ -230,7 +240,7 @@ public class ABBomb extends Character {
 
 
 
-	for(int i = 0; i < ABEngine.EXPLOSION_RADIUS * 4 + 1; i++) {
+	for(int i = 0; i < rangeOfExplosion*4 + 1; i++) {
 
 	    float b_x = getXPosition() + x;
 	    float b_y = getYPosition() + y;
@@ -282,8 +292,6 @@ public class ABBomb extends Character {
 	}
 
 	done();
-	setAction(BOMB_ACTION.NO_BOMB);
-
     }
 
     //Remove objectos queimados
@@ -303,9 +311,10 @@ public class ABBomb extends Character {
 
 
 	    if((obj == '1') || (obj == '2') || (obj == '3')) {
+		Log.w("kill", "player");
 		player.killPlayer(mtx_x,mtx_y);
 	    }
-	    
+
 	    if (obj == 'R'){
 		player.killRobot(mtx_x, mtx_y);
 	    }
@@ -409,5 +418,20 @@ public class ABBomb extends Character {
 
     private void explode() {
 	setAction(BOMB_ACTION.BOMB_EXPLOSION);
+
+	Timer timer = new Timer();
+
+	timer.schedule(
+
+		new TimerTask() {
+		    @Override
+		    public void run() {
+			setAction(BOMB_ACTION.NO_BOMB);
+		    }
+
+		}, Math.round(this.durationOfExplosionInSeconds*1000));
+
+
+
     }
 }

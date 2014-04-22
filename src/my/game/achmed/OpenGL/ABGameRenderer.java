@@ -14,9 +14,6 @@ import my.game.achmed.ABEngine;
 import my.game.achmed.Characters.ABMap;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
-import my.game.achmed.Characters.Players.ABAchmed;
-import my.game.achmed.Characters.Players.ABGreenOgre;
-import my.game.achmed.Characters.Players.ABRedMermaid;
 import my.game.achmed.Characters.Robots.ABGreenRobot;
 import my.game.achmed.Characters.Robots.ABRedRobot;
 import my.game.achmed.Characters.Robots.ABYellowRobot;
@@ -81,7 +78,7 @@ public class ABGameRenderer implements Renderer {
 	gl.glEnable(GL10.GL_ALPHA_TEST);
 	gl.glEnable(GL10.GL_BLEND);
 	gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
+	
 	//TEXTURES
 
 	map.loadTexture(gl, ABEngine.GAME_MAP, ABEngine.context);
@@ -105,10 +102,14 @@ public class ABGameRenderer implements Renderer {
 
 	//não trocar a ordem das linhas 
 	drawMap(gl);
-	moveRobots(gl);
 	
-	movePlayers(gl);
 	
+	if(ABEngine.ROBOTS.size() != 0)
+	    moveRobots(gl);
+
+	if(ABEngine.PLAYERS.size() != 0)
+	    movePlayers(gl);
+
 	if(ABEngine.PLAYER != null)
 	    movePlayer(gl);
 
@@ -180,6 +181,11 @@ public class ABGameRenderer implements Renderer {
 	ABEngine.START_X = (ABEngine.start_x/0.05f) - x_max/2.f;
 	ABEngine.START_Y = (ABEngine.start_y/0.05f) - y_max/2.f;
 
+
+	//List<Player> t = new ArrayList<Player>();
+	//t.addAll(ABEngine.PLAYERS.values());
+	//t.add(ABEngine.PLAYER);
+
 	List<String> rs = new ArrayList<String>();
 	List<String> ps = new ArrayList<String>();
 
@@ -228,12 +234,24 @@ public class ABGameRenderer implements Renderer {
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
-		    map.draw(gl); 
+		    map.draw(gl);
 
 		    if(ABEngine.FIRST_MAP_DRAW) {
 			Player player = Player.create('1',x*100,y*100);
 			player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 			ABEngine.PLAYERS.put('1',player);
+		    } else {
+
+//			boolean in = false;
+//			for(Player p : t){
+//			    if(p.getID() == '1'){
+//				in = true;
+//			    }
+//			}
+//
+//			if(!in){
+//			    ABEngine.setObject(x,y,'-');
+//			}
 		    }
 
 		    break;
@@ -249,6 +267,18 @@ public class ABGameRenderer implements Renderer {
 			Player player = Player.create('2',x*100,y*100);
 			player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 			ABEngine.PLAYERS.put('2',player);
+		    }else {
+
+//			boolean in = false;
+//			for(Player p : t){
+//			    if(p.getID() == '2'){
+//				in = true;
+//			    }
+//			}
+//
+//			if(!in){
+//			    ABEngine.setObject(x,y,'-');
+//			}
 		    }
 
 		    break;
@@ -265,6 +295,18 @@ public class ABGameRenderer implements Renderer {
 			Player player = Player.create('3', x*100,y*100);
 			player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 			ABEngine.PLAYERS.put('3',player);
+		    } else {
+
+//			boolean in = false;
+//			for(Player p : t){
+//			    if(p.getID() == '3'){
+//				in = true;
+//			    }
+//			}
+//
+//			if(!in){
+//			    ABEngine.setObject(x,y,'-');
+//			}
 		    }
 
 		    break;
@@ -278,26 +320,7 @@ public class ABGameRenderer implements Renderer {
 		    map.draw(gl);
 
 		    if(ABEngine.FIRST_MAP_DRAW) {
-
-
-			int i = r.nextInt(3);
-			//int opt = opt_robots[i];
-
-			Robot robot = null;
-
-			if (i == 0){
-			    robot = new ABGreenRobot(x*100, y*100);   
-			}
-
-			if (i == 1){
-			    robot = new ABRedRobot(x*100, y*100);
-			}
-
-			if (i == 2) {
-			    robot = new ABYellowRobot(x*100, y*100);
-
-			}
-
+			Robot robot = Robot.create(x*100, y*100);
 			robot.loadTexture(gl, ABEngine.GAME_ROBOTS, ABEngine.context);
 			ABEngine.ROBOTS.add(robot);
 
@@ -310,7 +333,7 @@ public class ABGameRenderer implements Renderer {
 
 		}
 
-		
+
 		//gl.glLoadIdentity();
 
 	    }
@@ -320,9 +343,9 @@ public class ABGameRenderer implements Renderer {
 
 
 
-	Log.w("map","TRUE SIZE Robots"+ABEngine.ROBOTS.size());
-	Log.w("map","SIZE Robots"+rs.size());
-	Log.w("map","SIZE Players"+ps.size());
+//	Log.w("map","TRUE SIZE Robots"+ABEngine.ROBOTS.size());
+//	Log.w("map","SIZE Robots"+rs.size());
+//	Log.w("map","SIZE Players"+ps.size());
 
 	//Choose random player
 	if (ABEngine.FIRST_MAP_DRAW){
@@ -333,8 +356,8 @@ public class ABGameRenderer implements Renderer {
 	    ABEngine.PLAYER = ABEngine.PLAYERS.get(k);
 	    ABEngine.PLAYERS.remove(k);
 	    Log.w("map", ""+k);
-	    
-	   //ABEngine.PLAYER =  Player.create('3', 4*100,4*100);
+
+	    //ABEngine.PLAYER =  Player.create('3', 4*100,4*100);
 	}
 
 	ABEngine.FIRST_MAP_DRAW = false;

@@ -15,219 +15,251 @@ import android.util.JsonReader;
 
 public class Level {
 
-	private Level() {}
+    private final String levelName;
+    private final float gameDurationInSeconds;
+    private final float explosionTimeoutInSeconds;
+    private final float explosionDurationInSeconds;
+    private final float explosionRange;
+    private final float robotSpeedInCellPerSeconds;
+    private final float pointsPerRobotKilled;
+    private final float pointsPerOpponentKilled;
+    private final char[][] gameLevelMatrix;
 
-	private static String name;
-	private static int gameDurationInSeconds;
-	private static int explosionTimeoutInSeconds;
-	private static int explosionDurationInSeconds;
-	private static int explosionRange;
-	private static int robotSpeedInCellPerSeconds;
-	private static int pointsPerRobotKilled;
-	private static int pointsPerOpponentKilled;
-	private static char[][] gameLevelMatrix;
-	private static boolean verified = false;
+    private static boolean verified = false;
 
-	public static String getName(){
-		return name;
-	}
 
-	public int getGameDurationInSeconds(){
-		return gameDurationInSeconds;
-	}
+    private Level(String ln, float gd, float et, float ed, float er, float rs, float pr, float po, char [][] gl) {
 
-	public static int getExplosionTimeoutInSeconds(){
-		return explosionTimeoutInSeconds;
-	}
+	this.levelName = ln;
+	this.gameDurationInSeconds = gd;
+	this.explosionTimeoutInSeconds = et;
+	this.explosionDurationInSeconds = ed;
+	this.explosionRange = er;
+	this.robotSpeedInCellPerSeconds = rs;
+	this.pointsPerRobotKilled = pr;
+	this.pointsPerOpponentKilled = po;
+	this.gameLevelMatrix = gl;
+    }
 
-	public static int getExplosionDurationInSeconds(){
-		return explosionDurationInSeconds;
-	}
 
-	public static int getExplosionRange(){
-		return explosionRange;
-	}
 
-	public static int getRobotSpeedInCellsPerSeconds(){
-		return robotSpeedInCellPerSeconds;
-	}
+    public String getLevelName(){
+	return levelName;
+    }
 
-	public static int getPointsPerRobotKilled(){
-		return pointsPerRobotKilled;
-	}
+    public float getGameDurationInSeconds(){
+	return gameDurationInSeconds;
+    }
 
-	public static int getPointsPerOpponentKilled(){
-		return pointsPerOpponentKilled;
-	}
+    public float getExplosionTimeoutInSeconds(){
+	return explosionTimeoutInSeconds;
+    }
 
-	public static char[][] getGameLevelMatrix(){
-		return gameLevelMatrix;
-	}
+    public float getExplosionDurationInSeconds(){
+	return explosionDurationInSeconds;
+    }
 
-	//TODO estas informaçoes explosionRange etc, etc... deviam estar no engine?
-	public static boolean load(String level){
+    public float getExplosionRange(){
+	return explosionRange;
+    }
 
-		JsonReader reader = null;
+    public float getRobotSpeedInCellsPerSeconds(){
+	return robotSpeedInCellPerSeconds;
+    }
 
-		ArrayList<ArrayList<Character>> mat = new ArrayList<ArrayList<Character>>();
+    public float getPointsPerRobotKilled(){
+	return pointsPerRobotKilled;
+    }
 
-		try {
+    public float getPointsPerOpponentKilled(){
+	return pointsPerOpponentKilled;
+    }
 
-			InputStream in = ABEngine.context.getAssets().open("levels/" + level + ".json");
-			reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+    public char[][] getGameLevelMatrix(){
+	return gameLevelMatrix;
+    }
 
-			reader.beginObject();
+    //TODO estas informaçoes explosionRange etc, etc... deviam estar no engine?
+    public static Level load(String level){
 
-			while (reader.hasNext()) {
-				String name = reader.nextName();
-				if (name.equals("LN")) {
-					name = reader.nextString();
-				} else if (name.equals("GD")) {
-					gameDurationInSeconds = reader.nextInt();
-				} else if (name.equals("ED")) {
-					explosionDurationInSeconds = reader.nextInt();
-				} else if (name.equals("ER")) {
-					explosionRange = reader.nextInt();
-				} else if (name.equals("RS")) {
-					robotSpeedInCellPerSeconds = reader.nextInt();
-				} else if (name.equals("PR")) {
-					pointsPerRobotKilled = reader.nextInt();
-				} else if (name.equals("PO")) {
-					pointsPerOpponentKilled = reader.nextInt();
-				} else if (name.equals("GL")) {
+	String ln = "";
+	float gd = 0;
+	float et = 0;
+	float ed = 0;
+	float er = 0;
+	float rs = 0;
+	float pr = 0;
+	float po = 0;
 
-					int x = 0, y = 0;
-					reader.beginArray();
-					while(reader.hasNext()) {
-						mat.add(new ArrayList<Character>());
-						reader.beginArray();
-						while(reader.hasNext()) {
-							String tile = reader.nextString();
-							mat.get(x).add(tile.charAt(0));
-							y++;
-						}
-						x++;
-						y=0;
-						reader.endArray();
-					}
-					x=0;
-					reader.endArray();
 
-				} else {
-					reader.skipValue();
-				}
+	JsonReader reader = null;
+
+	ArrayList<ArrayList<Character>> mat = new ArrayList<ArrayList<Character>>();
+
+	try {
+
+	    InputStream in = ABEngine.context.getAssets().open("levels/" + level + ".json");
+	    reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+
+	    reader.beginObject();
+
+	    while (reader.hasNext()) {
+		String name = reader.nextName();
+		if (name.equals("LN")) {
+		    ln = reader.nextString();
+		} else if (name.equals("GD")) {
+		    gd = (float) reader.nextDouble();
+		}else if (name.equals("ET")) {
+		    et = (float) reader.nextDouble();
+		} else if (name.equals("ED")) {
+		    ed = (float) reader.nextDouble();
+		} else if (name.equals("ER")) {
+		    er = (float) reader.nextDouble();
+		} else if (name.equals("RS")) {
+		    rs = (float) reader.nextDouble();
+		} else if (name.equals("PR")) {
+		    pr = (float) reader.nextDouble();
+		} else if (name.equals("PO")) {
+		    po = (float) reader.nextDouble();
+		} else if (name.equals("GL")) {
+
+		    int x = 0, y = 0;
+		    reader.beginArray();
+		    while(reader.hasNext()) {
+			mat.add(new ArrayList<Character>());
+			reader.beginArray();
+			while(reader.hasNext()) {
+			    String tile = reader.nextString();
+			    mat.get(x).add(tile.charAt(0));
+			    y++;
 			}
+			x++;
+			y=0;
+			reader.endArray();
+		    }
+		    x=0;
+		    reader.endArray();
 
-			reader.endObject();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} finally {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
-		}
-
-		verified = verifyMatrix(mat);	
-		
-		if(verified) {
-			createMatrix(mat);
-			ABEngine.create_map(gameLevelMatrix);
-			return true;
 		} else {
-			return false;
+		    reader.skipValue();
 		}
+	    }
 
+	    reader.endObject();
+
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    return null;
+	} finally {
+	    try {
+		reader.close();
+	    } catch (IOException e) {
+		e.printStackTrace();
+		return null;
+	    }
 	}
 
-	private static boolean verifyMatrix(ArrayList<ArrayList<Character>> mat) {
+	verified = verifyMatrix(mat);	
 
-		for(int i = 0; i < mat.size(); i++) {
-			int num = mat.get(i).size();
-			for(int j = 0; j < mat.size(); j++) {
-				if(num != mat.get(j).size()) {
-					return false;
-				}
-			}
-		}
-		return true;
+	if(verified) {
+	    
+	    char [][] gl = createMatrix(mat);
+	    Level l = new Level(ln, gd, et, ed, er, rs, pr, po, gl);
+	    ABEngine.FIRST_MAP_DRAW = true;
+	    
+	    return l;
+	} else {
+	    return null;
 	}
 
-	public static void createMatrix(ArrayList<ArrayList<Character>> mat) {
+    }
 
-		int cols = mat.size();
-		int rows = mat.get(0).size();
+    private static boolean verifyMatrix(ArrayList<ArrayList<Character>> mat) {
 
-		gameLevelMatrix = new char[cols][rows];
-
-		for(int i = 0; i < mat.size(); i++) {
-			for(int j = 0; j < mat.get(i).size(); j++) {
-
-				gameLevelMatrix[i][j] = mat.get(i).get(j);
-
-			}
+	for(int i = 0; i < mat.size(); i++) {
+	    int num = mat.get(i).size();
+	    for(int j = 0; j < mat.size(); j++) {
+		if(num != mat.get(j).size()) {
+		    return false;
 		}
+	    }
+	}
+	return true;
+    }
+
+    public static char [][] createMatrix(ArrayList<ArrayList<Character>> mat) {
+
+	int cols = mat.size();
+	int rows = mat.get(0).size();
+
+	char [][] gl = new char[cols][rows];
+
+	for(int i = 0; i < mat.size(); i++) {
+	    for(int j = 0; j < mat.get(i).size(); j++) {
+
+		gl[i][j] = mat.get(i).get(j);
+
+	    }
 	}
 
-	public void printLevel() {
+	return gl;
+    }
 
-		BufferedWriter bufferedWriter;
-		
-		try {
-			
-			bufferedWriter = new BufferedWriter(new FileWriter(new 
-					File(ABEngine.context.getFilesDir()+File.separator+"teste1.txt")));
-			
-			bufferedWriter.write("LN: " + name);
-			bufferedWriter.newLine();
-			bufferedWriter.write("GD: " + gameDurationInSeconds);
-			bufferedWriter.newLine();
-			bufferedWriter.write("ED: " + explosionDurationInSeconds);
-			bufferedWriter.newLine();
-			bufferedWriter.write("ER: " + explosionRange);
-			bufferedWriter.newLine();
-			bufferedWriter.write("RS: " + robotSpeedInCellPerSeconds);
-			bufferedWriter.newLine();
-			bufferedWriter.write("PR: " + pointsPerRobotKilled);
-			bufferedWriter.newLine();
-			bufferedWriter.write("PO: " + pointsPerOpponentKilled);
-			bufferedWriter.newLine();
+    public void printLevel() {
 
-			bufferedWriter.write("GL: ");
+	BufferedWriter bufferedWriter;
 
-			for(int i = 0; i < gameLevelMatrix.length; i++) {
+	try {
 
-				for(int j = 0; j < gameLevelMatrix[i].length; j++) {
+	    bufferedWriter = new BufferedWriter(new FileWriter(new 
+		    File(ABEngine.context.getFilesDir()+File.separator+"teste1.txt")));
 
-					bufferedWriter.write(gameLevelMatrix[i][j] + " ");
-				}
+	    bufferedWriter.write("LN: " + levelName);
+	    bufferedWriter.newLine();
+	    bufferedWriter.write("GD: " + gameDurationInSeconds);
+	    bufferedWriter.newLine();
+	    bufferedWriter.write("ED: " + explosionDurationInSeconds);
+	    bufferedWriter.newLine();
+	    bufferedWriter.write("ER: " + explosionRange);
+	    bufferedWriter.newLine();
+	    bufferedWriter.write("RS: " + robotSpeedInCellPerSeconds);
+	    bufferedWriter.newLine();
+	    bufferedWriter.write("PR: " + pointsPerRobotKilled);
+	    bufferedWriter.newLine();
+	    bufferedWriter.write("PO: " + pointsPerOpponentKilled);
+	    bufferedWriter.newLine();
 
-				bufferedWriter.newLine();
+	    bufferedWriter.write("GL: ");
 
-			}
+	    for(int i = 0; i < gameLevelMatrix.length; i++) {
 
-			if(this.verified) {
-				bufferedWriter.write("Verified");
-			} else {
-				bufferedWriter.write("Not Verified");
-			}
-			
-			bufferedWriter.newLine();
-			
-			bufferedWriter.close();
+		for(int j = 0; j < gameLevelMatrix[i].length; j++) {
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		    bufferedWriter.write(gameLevelMatrix[i][j] + " ");
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-		} 
-		
+
+		bufferedWriter.newLine();
+
+	    }
+
+	    if(this.verified) {
+		bufferedWriter.write("Verified");
+	    } else {
+		bufferedWriter.write("Not Verified");
+	    }
+
+	    bufferedWriter.newLine();
+
+	    bufferedWriter.close();
+
+	} catch (FileNotFoundException e) {
+	    e.printStackTrace();
+	} catch (UnsupportedEncodingException e) {
+	    e.printStackTrace();
 	}
+	catch (IOException e) {
+	    e.printStackTrace();
+	} 
+
+    }
 }

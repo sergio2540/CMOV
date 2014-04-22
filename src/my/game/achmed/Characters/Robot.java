@@ -13,6 +13,9 @@ import java.util.TreeMap;
 import javax.microedition.khronos.opengles.GL10;
 
 import my.game.achmed.ABEngine;
+import my.game.achmed.Characters.Robots.ABGreenRobot;
+import my.game.achmed.Characters.Robots.ABRedRobot;
+import my.game.achmed.Characters.Robots.ABYellowRobot;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,23 +27,24 @@ public abstract class Robot extends Character {
     protected CHARACTER_ACTION robotAction = CHARACTER_ACTION.LEFT;
 
 
-    private int counter = 0;
-    private final static int COUNTER_MAX = 20; 
-    private int getCounter(){
+    private float counter = 0;
+    private final float COUNTER_MAX; 
+    
+    private float getCounter(){
 	return counter;
     }
 
-    private void setCounter(int counter){
+    private void setCounter(float counter){
 	this.counter = counter;
     }
 
-    private final int speed = 5;
+    private final float speed;
 
-    private int getSpeed() {
+    private float getSpeed() {
 	return speed;
     }
 
-    private final Random r = new Random();
+    private final static Random r = new Random();
 
     private final int[] textures = new int[1];
 
@@ -78,12 +82,40 @@ public abstract class Robot extends Character {
 	return isDead;
     }
 
-    public Robot(float xpos, float ypos) {
+    protected Robot(float xpos, float ypos) {
 
 	super(vertices,texture,indices);
 	super.setXPosition(xpos);
 	super.setYPosition(ypos);
+	//this.speed = ABEngine.LEVEL.getRobotSpeedInCellsPerSeconds();
+	this.speed = (ABEngine.LEVEL.getRobotSpeedInCellsPerSeconds()*100)/ABEngine.GAME_FPS;
+	//Log.w("speed", "" +this.speed);
+	this.COUNTER_MAX = (100/this.speed);
     }
+    
+    
+    public static Robot create(float x, float y) {
+
+	Robot robot;
+
+	int i = r.nextInt(3);
+		
+	if(i == 0){
+
+	    robot = new ABGreenRobot(x, y);
+
+	} else if (i == 1){
+	    robot = new ABRedRobot(x, y);
+	}
+	else {
+
+	    robot = new ABYellowRobot(x,y);  
+	}
+
+	return robot;
+    }
+    
+    
 
     public void draw(GL10 gl) {
 
@@ -212,7 +244,7 @@ public abstract class Robot extends Character {
 	    correctDecision = possibleReturns[r.nextInt(1+1)];
 	}
 
-	if(r.nextInt(100) < 95){
+	if(r.nextInt(100) < 65){
 	    this.robotAction = correctDecision;
 	}else {
 	    wrongDecision = wrongPositions[r.nextInt(1+1)];
@@ -243,6 +275,8 @@ public abstract class Robot extends Character {
 
 	    float pos = this.getXPosition() - (100.f - this.getSpeed()*this.getCounter());
 
+	    tryKill(pos,this.getYPosition());
+
 	    if(!ABEngine.detectColision(pos,this.getYPosition(),this.robotAction)) {
 		this.setXPosition(this.getXPosition() - this.getSpeed());
 	    } 
@@ -255,6 +289,8 @@ public abstract class Robot extends Character {
 	case RIGHT : 
 
 	    pos = this.getXPosition() + (100.f - this.getSpeed()* this.getCounter());
+
+	    tryKill(pos,this.getYPosition());
 
 	    if(!ABEngine.detectColision(pos,this.getYPosition(),robotAction)) {
 		this.setXPosition(this.getXPosition() + this.getSpeed());
@@ -271,6 +307,8 @@ public abstract class Robot extends Character {
 	    pos = this.getYPosition() + (100.f - this.getSpeed() * this.getCounter());
 
 
+	    tryKill(this.getXPosition(),pos);
+
 	    if(!ABEngine.detectColision(this.getXPosition(), pos,robotAction)) {
 
 
@@ -285,6 +323,8 @@ public abstract class Robot extends Character {
 	case DOWN : 
 
 	    pos = this.getYPosition() - (100.f - this.getSpeed() * this.getCounter());
+
+	    tryKill(this.getXPosition(),pos);
 
 	    if(!ABEngine.detectColision(this.getXPosition(), pos,robotAction)) {
 		this.setYPosition(this.getYPosition() - this.getSpeed());
@@ -344,14 +384,21 @@ public abstract class Robot extends Character {
 	//Altera antiga posicao do player na matriz
 	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(), robotAction);
 	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(), robotAction);
+	ABEngine.setObject(mtx_x,mtx_y,'-');
+
+    }
+
+    protected void tryKill(float x, float y){
+
+	//tenta matar
+	int mtx_x = ABEngine.getXMatrixPosition(x, robotAction);
+	int mtx_y = ABEngine.getYMatrixPosition(y, robotAction);
+
 	char obj = ABEngine.getObject(mtx_x,mtx_y);
 
 	if(obj == '1' || obj == '2' || obj == '3'){
 	    this.killPlayer(mtx_x, mtx_y);
 	}
-
-	ABEngine.setObject(mtx_x,mtx_y,'-');
-
     }
 
 
@@ -360,21 +407,18 @@ public abstract class Robot extends Character {
 	//Altera antiga posicao do player na matriz
 	int mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(),robotAction);
 	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
-
-	char obj = ABEngine.getObject(mtx_x,mtx_y);
-
-	if(obj == '1' || obj == '2' || obj == '3'){
-	    killPlayer(mtx_x,mtx_y);
-	}
-
 	ABEngine.setObject(mtx_x,mtx_y,'R');
 
     }
-    
+
     private void killPlayer(float mtx_x, float mtx_y) {
+
+
+
 	if(ABEngine.PLAYER.isInRange(mtx_x, mtx_y)){
 	    ABEngine.PLAYER.kill();
-	    ABEngine.PLAYER = null;
+	   // ABEngine.PLAYER = null;
+
 	}
 	else {
 
@@ -384,11 +428,13 @@ public abstract class Robot extends Character {
 	    for(Player p : temp.values()){
 		if(p.isInRange(mtx_x, mtx_y)){
 		    p.kill();
-		    ABEngine.PLAYERS.remove(p.getID());
+		    //ABEngine.PLAYERS.remove(p.getID());
 
 		}
 	    }
 	}
+
+
     }
 
     public void kill() {
