@@ -44,8 +44,8 @@ public class ABEngine {
 
     public static final int PLAYER_ACHMED_FRAMES = 0;
     public static final int PLAYER_FRAMES_BETWEEN_ANI = 9;
-    
-    
+
+
     //public static int BOMB_TIME_TO_EXPLOSION = 4000;
 
     //public static int EXPLOSION_RADIUS = 1;
@@ -67,11 +67,11 @@ public class ABEngine {
     public static Player PLAYER;
     public static Map<Character,Player> PLAYERS = new TreeMap<Character,Player>();
     public static List<Robot> ROBOTS = new ArrayList<Robot>();
-    
+
     //Start do jogo
     public static float START_X;
     public static float START_Y;
-    
+
     public static ABGame GAME;
     public static Level LEVEL;
 
@@ -210,14 +210,14 @@ public class ABEngine {
 	}
 
     }
-    
-    
+
+
     public static synchronized void updateScore(final float points){
-	
+
 	GAME.runOnUiThread(new Runnable() {
 	    @Override
 	    public void run() {
-		
+
 		String pts = points + "Points";
 		TextView t = (TextView) GAME.findViewById(R.id.score);    
 		t.setText(pts);
@@ -240,6 +240,18 @@ public class ABEngine {
 	    return false;
 	}
 
+    }
+
+    public static void create_map(char[][] gameLevelMatrix) {
+	for(int i = 0; i < gameLevelMatrix.length; i++) {
+
+	    for(int j = 0; j < gameLevelMatrix[i].length; j++) {
+
+		MAP[i][j] = gameLevelMatrix[i][j];
+	    }
+	}
+	
+	FIRST_MAP_DRAW = true;
     }
 
 }

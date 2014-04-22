@@ -165,7 +165,6 @@ public class Level {
 	    
 	    char [][] gl = createMatrix(mat);
 	    Level l = new Level(ln, gd, et, ed, er, rs, pr, po, gl);
-	    ABEngine.FIRST_MAP_DRAW = true;
 	    
 	    return l;
 	} else {
