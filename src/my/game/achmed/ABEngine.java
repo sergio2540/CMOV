@@ -243,6 +243,9 @@ public class ABEngine {
     }
 
     public static void create_map(char[][] gameLevelMatrix) {
+	
+	MAP = new char[gameLevelMatrix.length][gameLevelMatrix[0].length];
+	
 	for(int i = 0; i < gameLevelMatrix.length; i++) {
 
 	    for(int j = 0; j < gameLevelMatrix[i].length; j++) {
