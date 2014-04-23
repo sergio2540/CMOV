@@ -21,7 +21,7 @@
 
         <TextView
             android:id="@+id/score"
-            style="@style/MenuFont"
+            android:textSize="20dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/time"
-            style="@style/MenuFont"
+            android:textSize="20dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
@@ -141,7 +141,7 @@
 
         <TextView
             android:id="@+id/numPlayers"
-            style="@style/MenuFont"
+            android:textSize="20dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
