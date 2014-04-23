@@ -70,6 +70,15 @@ public class ABGame extends Activity {
 	//TODO se calhar uma boa opcao de desenho e passar isto para o constructor de ABGameSurfaceView
 	gameView.setRenderer(new ABGameRenderer());
 
+	
+	ABEngine.PLAYER = null;
+	ABEngine.PLAYERS = new TreeMap<Character,Player>();
+	ABEngine.ROBOTS = new ArrayList<Robot>();
+
+	ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
+
+	c = counter(Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000));
+	c.start();
 
 	final ImageButton setaEsquerda = (ImageButton) findViewById(R.id.arrow_left);
 
