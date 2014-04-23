@@ -8,6 +8,7 @@ import my.game.achmed.R.layout;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class ABMainMenu extends Activity {
 
 		textView_single =(TextView)findViewById(R.id.single);
 		textView_multiplayer =(TextView)findViewById(R.id.multiplayer);
-		textView_settings = (TextView)findViewById(R.id.settings);
+		textView_settings = (TextView)findViewById(R.id.highscore);
 		textView_about = (TextView)findViewById(R.id.about);
 		textView_exit =(TextView)findViewById(R.id.exit);
 
@@ -45,6 +46,12 @@ public class ABMainMenu extends Activity {
 		textView_settings.setTypeface(font);
 		textView_about.setTypeface(font);
 		textView_exit.setTypeface(font);
+		
+		textView_single.setTextColor(Color.WHITE);
+		textView_multiplayer.setTextColor(Color.WHITE);
+		textView_settings.setTextColor(Color.WHITE);
+		textView_about.setTextColor(Color.WHITE);
+		textView_exit.setTextColor(Color.RED);
 
 		textView_single.setOnClickListener(new View.OnClickListener() {
 			@Override

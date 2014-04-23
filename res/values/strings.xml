@@ -7,7 +7,7 @@
     <!-- MENU -->
     <string name="single">SINGLE</string>
     <string name="multiplayer">MULTIPLAYER</string>
-    <string name="settings">SETTINGS</string>
+    <string name="highscore">HIGH SCORES</string>
     <string name="about">ABOUT</string>
     <string name="exit">EXIT</string>
 
@@ -18,9 +18,6 @@
     <string name="level3">LEVEL 3</string>
     <string name="back">BACK</string>
 
-    <!-- RANKS -->
-
-    <string name="highscore">High Score</string>
     
     <!-- PLAYER NAME -->
     

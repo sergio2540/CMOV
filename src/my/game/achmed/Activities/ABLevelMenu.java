@@ -5,6 +5,7 @@ import my.game.achmed.Level;
 import my.game.achmed.R;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +36,12 @@ public class ABLevelMenu extends Activity {
 	textView_level2.setTypeface(font);
 	textView_level3.setTypeface(font);
 	textView_back.setTypeface(font);
+	
+	textView_level1.setTextColor(Color.WHITE);
+	textView_level2.setTextColor(Color.WHITE);
+	textView_level3.setTextColor(Color.WHITE);
+	textView_back.setTextColor(Color.RED);
+
 
 	final AsyncTask<Integer, Boolean, Boolean> loadLevel = new AsyncTask<Integer, Boolean, Boolean>() {
 

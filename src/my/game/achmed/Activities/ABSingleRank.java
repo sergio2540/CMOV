@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -50,25 +52,25 @@ public class ABSingleRank extends Activity {
 		List<Rank> singleRanks = singleRankDataSource.getSingleHighScoreTable(level);
 
 		TextView highscore = (TextView) findViewById(R.id.highscore);
-		
+
 		final Typeface font = Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
 		highscore.setTypeface(font);
-		highscore.setText("HIGH SCORE");
+		highscore.setText(R.string.highscore);
 		highscore.setTextColor(Color.BLUE);
 
 		ListView ranks = (ListView) findViewById(R.id.ranklist);
-
+		
 		ArrayAdapter<Rank> adapter = new ArrayAdapter<Rank>(this,
 				android.R.layout.simple_list_item_1, singleRanks) {
-			
+
 			@Override public View getView(int position, View convertView, ViewGroup parent) {
-		        View view = super.getView(position, convertView, parent);
-		        TextView textview = (TextView) view;
-		        textview.setTypeface(font);
-		        textview.setGravity(Gravity.CENTER);
-		        return textview;
-		    }
-			
+				View view = super.getView(position, convertView, parent);
+				TextView textview = (TextView) view;
+				textview.setTypeface(font);
+				textview.setGravity(Gravity.CENTER);
+				return textview;
+			}
+
 		};
 
 		ranks.setAdapter(adapter);
@@ -77,4 +79,36 @@ public class ABSingleRank extends Activity {
 
 	}
 
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+
+		// get pointer index from the event object
+		int pointerIndex = event.getActionIndex();
+
+		// get pointer ID
+		int pointerId = event.getPointerId(pointerIndex);
+
+		// get masked (not specific to a pointer) action
+		int maskedAction = event.getActionMasked();
+
+		switch (maskedAction) {
+
+		case MotionEvent.ACTION_DOWN:
+		case MotionEvent.ACTION_POINTER_DOWN: {
+
+			Intent mainMenu = new Intent(getApplicationContext(),
+					ABMainMenu.class);
+
+			ABSingleRank.this.startActivity(mainMenu);
+			ABSingleRank.this.finish();
+
+			break;
+		}
+
+		} 
+		return true;
+
+	}
+
 }
+
