@@ -119,6 +119,16 @@ public class ABMainMenu extends Activity {
 				return true;
 			}
 		});
+		
+		textView_exit.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+			    	stopGameMusic();
+				ABMainMenu.this.finish();
+			}
+
+		});
 
 	}
 
