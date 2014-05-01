@@ -45,6 +45,8 @@ public class ABEngine {
 
 	public static final int PLAYER_ACHMED_FRAMES = 0;
 	public static final int PLAYER_FRAMES_BETWEEN_ANI = 9;
+	
+	public static boolean isOnMultiplayer = false;
 
 
 	//public static int BOMB_TIME_TO_EXPLOSION = 4000;

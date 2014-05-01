@@ -56,6 +56,27 @@ public class ABMainMenu extends Activity {
 
 				Intent levelMenu = new Intent(getApplicationContext(),
 						ABLevelMenu.class);
+				
+				ABEngine.isOnMultiplayer = false;
+				
+				ABMainMenu.this.startActivity(levelMenu);
+				ABMainMenu.this.finish();
+				//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
+				//setText() sets the string value of the TextView
+				//textView_exit.setText("Clicked");
+
+			}
+		});
+		
+		textView_multiplayer.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Intent levelMenu = new Intent(getApplicationContext(),
+						ABLevelMenu.class);
+				
+				ABEngine.isOnMultiplayer = true;
+				
 				ABMainMenu.this.startActivity(levelMenu);
 				ABMainMenu.this.finish();
 				//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);

@@ -12,23 +12,25 @@ import my.game.achmed.R;
 import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
+import my.game.achmed.Multiplayer.WiFiDirectBroadcastReceiver;
 import my.game.achmed.OpenGL.ABGameRenderer;
 import my.game.achmed.OpenGL.ABGameSurfaceView;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.view.LayoutInflater;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -38,16 +40,45 @@ import android.widget.TextView;
 public class ABGame extends Activity {
 
     private ABGameSurfaceView gameView;
+
     private Dialog backPopUp;
     private Dialog wonOrLostPopUp;
+
     private CountDownTimer c;
     private long millisUntilFinished;
+
+    private WifiP2pManager mManager;
+
+    private Channel mChannel;
+
+    private WiFiDirectBroadcastReceiver mReceiver;
+
+    private IntentFilter mIntentFilter;
+
+    private boolean mBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.ab_game);
+
+	if(ABEngine.isOnMultiplayer){
+	    //Set up multiplayer
+	    mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+	    mChannel = mManager.initialize(this, getMainLooper(), null);
+	    mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+
+	    // register broadcast receiver
+	    mIntentFilter = new IntentFilter();
+	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+	    registerReceiver(mReceiver, mIntentFilter);
+	    mBound = true;
+	}
 
 	backPopUp = new Dialog(this);
 
@@ -70,7 +101,7 @@ public class ABGame extends Activity {
 	//TODO se calhar uma boa opcao de desenho e passar isto para o constructor de ABGameSurfaceView
 	gameView.setRenderer(new ABGameRenderer());
 
-	
+
 	ABEngine.PLAYER = null;
 	ABEngine.PLAYERS = new TreeMap<Character,Player>();
 	ABEngine.ROBOTS = new ArrayList<Robot>();
@@ -268,7 +299,7 @@ public class ABGame extends Activity {
 		    c = counter(millisUntilFinished);
 		    c.start();
 		    onResume();
-		  
+
 		}
 
 	    }
