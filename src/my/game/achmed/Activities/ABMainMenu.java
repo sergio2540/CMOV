@@ -15,154 +15,166 @@ import android.widget.TextView;
 
 public class ABMainMenu extends Activity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.ab_main_menu);
+	setContentView(R.layout.ab_main_menu);
 
-		startGameMusic();
-		
-		TextView textView_single;
-		TextView textView_multiplayer;
-		TextView textView_settings;
-		TextView textView_about;
-		final TextView textView_exit;
+	initGameMusic();
 
-		Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
+	TextView textView_single;
+	TextView textView_multiplayer;
+	TextView textView_settings;
+	TextView textView_about;
+	final TextView textView_exit;
 
-		textView_single =(TextView)findViewById(R.id.single);
-		textView_multiplayer =(TextView)findViewById(R.id.multiplayer);
-		textView_settings = (TextView)findViewById(R.id.highscore);
-		textView_about = (TextView)findViewById(R.id.about);
-		textView_exit =(TextView)findViewById(R.id.exit);
+	Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
+
+	textView_single =(TextView)findViewById(R.id.single);
+	textView_multiplayer =(TextView)findViewById(R.id.multiplayer);
+	textView_settings = (TextView)findViewById(R.id.highscore);
+	textView_about = (TextView)findViewById(R.id.about);
+	textView_exit =(TextView)findViewById(R.id.exit);
 
 
-		textView_single.setTypeface(font);
-		textView_multiplayer.setTypeface(font);
-		textView_settings.setTypeface(font);
-		textView_about.setTypeface(font);
-		textView_exit.setTypeface(font);
+	textView_single.setTypeface(font);
+	textView_multiplayer.setTypeface(font);
+	textView_settings.setTypeface(font);
+	textView_about.setTypeface(font);
+	textView_exit.setTypeface(font);
 
-		textView_single.setTextColor(Color.WHITE);
-		textView_multiplayer.setTextColor(Color.WHITE);
-		textView_settings.setTextColor(Color.WHITE);
-		textView_about.setTextColor(Color.WHITE);
-		textView_exit.setTextColor(Color.RED);
+	textView_single.setTextColor(Color.WHITE);
+	textView_multiplayer.setTextColor(Color.WHITE);
+	textView_settings.setTextColor(Color.WHITE);
+	textView_about.setTextColor(Color.WHITE);
+	textView_exit.setTextColor(Color.RED);
 
-		textView_single.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+	textView_single.setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
 
-				Intent levelMenu = new Intent(getApplicationContext(),
-						ABLevelMenu.class);
-				
-				ABEngine.isOnMultiplayer = false;
-				
-				ABMainMenu.this.startActivity(levelMenu);
-				ABMainMenu.this.finish();
-				//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
-				//setText() sets the string value of the TextView
-				//textView_exit.setText("Clicked");
+		Intent levelMenu = new Intent(getApplicationContext(),
+			ABLevelMenu.class);
 
-			}
-		});
-		
-		textView_multiplayer.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+		ABEngine.isOnMultiplayer = false;
 
-				Intent levelMenu = new Intent(getApplicationContext(),
-						ABLevelMenu.class);
-				
-				ABEngine.isOnMultiplayer = true;
-				
-				ABMainMenu.this.startActivity(levelMenu);
-				ABMainMenu.this.finish();
-				//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
-				//setText() sets the string value of the TextView
-				//textView_exit.setText("Clicked");
+		ABMainMenu.this.startActivity(levelMenu);
+		ABMainMenu.this.finish();
+		//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
+		//setText() sets the string value of the TextView
+		//textView_exit.setText("Clicked");
 
-			}
-		});
+	    }
+	});
 
-		textView_settings.setOnClickListener(new View.OnClickListener() {
+	textView_multiplayer.setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
 
-			@Override
-			public void onClick(View v) {
-				Intent highscore = new Intent(getApplicationContext(), ABSingleRank.class);
-				ABMainMenu.this.startActivity(highscore);
-				ABMainMenu.this.finish();
-			}
+		Intent levelMenu = new Intent(getApplicationContext(),
+			ABLevelMenu.class);
 
-		});
+		ABEngine.isOnMultiplayer = true;
 
-		textView_about.setOnClickListener(new View.OnClickListener() {
+		ABMainMenu.this.startActivity(levelMenu);
+		ABMainMenu.this.finish();
+		//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
+		//setText() sets the string value of the TextView
+		//textView_exit.setText("Clicked");
 
-			@Override
-			public void onClick(View v) {
-				Intent createSinlePlayer = new Intent(getApplicationContext(), ABCreateSinglePlayer.class);
-				ABMainMenu.this.startActivity(createSinlePlayer);
-				ABMainMenu.this.finish();
-			}
+	    }
+	});
 
-		});
+	textView_settings.setOnClickListener(new View.OnClickListener() {
 
-		//	WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-		//	Display display = wm.getDefaultDisplay();
-		//
-		//	Point point = new Point();
-		//	display.getRealSize(point);
-		//
-		//	ABEngine.displayWidth = point.x;
-		//	ABEngine.displayHeight = point.y;
+	    @Override
+	    public void onClick(View v) {
+		Intent highscore = new Intent(getApplicationContext(), ABSingleRank.class);
+		ABMainMenu.this.startActivity(highscore);
+		ABMainMenu.this.finish();
+	    }
 
-		ABEngine.context = getApplicationContext();
+	});
 
-		final ImageButton sound = (ImageButton) findViewById(R.id.soundon);
+	textView_about.setOnClickListener(new View.OnClickListener() {
 
-		sound.setOnTouchListener(new View.OnTouchListener() {
+	    @Override
+	    public void onClick(View v) {
+		Intent createSinlePlayer = new Intent(getApplicationContext(), ABCreateSinglePlayer.class);
+		ABMainMenu.this.startActivity(createSinlePlayer);
+		ABMainMenu.this.finish();
+	    }
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+	});
 
-				if(event.getAction() == (MotionEvent.ACTION_UP)){
-					if(ABEngine.GAME_MUSIC_SOUND) {
-						stopGameMusic();
-						sound.setImageResource(R.raw.soundoff);
-						ABEngine.GAME_MUSIC_SOUND = false;
-					} else {
-						startGameMusic();
-						sound.setImageResource(R.raw.soundon);
-						ABEngine.GAME_MUSIC_SOUND = true;
-					}
-				}
-				return true;
-			}
-		});
-		
-		textView_exit.setOnClickListener(new View.OnClickListener() {
+	//	WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+	//	Display display = wm.getDefaultDisplay();
+	//
+	//	Point point = new Point();
+	//	display.getRealSize(point);
+	//
+	//	ABEngine.displayWidth = point.x;
+	//	ABEngine.displayHeight = point.y;
 
-			@Override
-			public void onClick(View v) {
-			    	stopGameMusic();
-				ABMainMenu.this.finish();
-			}
+	ABEngine.context = getApplicationContext();
 
-		});
+	final ImageButton sound = (ImageButton) findViewById(R.id.soundon);
 
+	sound.setOnTouchListener(new View.OnTouchListener() {
+
+	    @Override
+	    public boolean onTouch(View v, MotionEvent event) {
+
+		if(event.getAction() == (MotionEvent.ACTION_UP)){
+		    if(ABEngine.GAME_MUSIC_SOUND) {
+			stopGameMusic();
+			sound.setImageResource(R.raw.soundoff);
+			ABEngine.GAME_MUSIC_SOUND = false;
+		    } else {
+			startGameMusic();
+			sound.setImageResource(R.raw.soundon);
+			ABEngine.GAME_MUSIC_SOUND = true;
+		    }
+		}
+		return true;
+	    }
+	});
+
+	textView_exit.setOnClickListener(new View.OnClickListener() {
+
+	    @Override
+	    public void onClick(View v) {
+		stopGameMusic();
+		ABMainMenu.this.finish();
+	    }
+
+	});
+
+    }
+
+
+    public void initGameMusic(){
+	
+	final ImageButton sound = (ImageButton) findViewById(R.id.soundon);
+	if(ABEngine.GAME_MUSIC_SOUND){
+	    startGameMusic();
+	    sound.setImageResource(R.raw.soundon);
+	}else {
+	    sound.setImageResource(R.raw.soundoff);
 	}
+    }
 
-	public void startGameMusic() {
+    public void startGameMusic() {
 
-		Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
-		startService(backMusic);
+	Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
+	startService(backMusic);
 
-	}
+    }
 
-	public void stopGameMusic() {
-		Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
-		stopService(backMusic);
-	}
+    public void stopGameMusic() {
+	Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
+	stopService(backMusic);
+    }
 
 }
