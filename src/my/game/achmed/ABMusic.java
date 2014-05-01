@@ -60,21 +60,11 @@ public class ABMusic extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-
 		player.start();
-
-	}
-
-	public void onStop() {
-		//isRunning = false;
 	}
 
 	public IBinder onUnBind(Intent intent) {
 		return null;
-	}
-
-	public void onPause() {
-		
 	}
 
 }

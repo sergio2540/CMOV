@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:contentDescription="Menu"
+        android:contentDescription="@string/menu"
         android:src="@drawable/background" />
 
     <LinearLayout
@@ -20,8 +20,7 @@
         <TextView
             android:id="@+id/single"
             style="@style/MenuFont"
-            android:text="@string/single"
-             />
+            android:text="@string/single" />
 
         <TextView
             android:id="@+id/multiplayer"
@@ -38,10 +37,30 @@
             style="@style/MenuFont"
             android:text="@string/about" />
 
-        <TextView
-            android:id="@+id/exit"
-            style="@style/ExitFont"
-            android:text="@string/exit" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="5" >
+
+            <ImageButton
+                android:id="@+id/soundon"
+                android:contentDescription="@string/soundonoff"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@raw/soundon" />
+
+            <TextView
+                android:id="@+id/exit"
+                style="@style/ExitFont"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="@string/exit" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
