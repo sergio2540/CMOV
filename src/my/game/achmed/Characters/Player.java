@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.microedition.khronos.opengles.GL10;
+
 
 import my.game.achmed.ABEngine;
 import my.game.achmed.Characters.Players.ABAchmed;
@@ -568,6 +571,27 @@ public abstract class Player extends Character {
 
 	public ABBomb getBomb() {
 		return bomb;
+	}
+	
+	public static Player create(int x, int y) {
+	    
+	    Set<java.lang.Character> options = new TreeSet<java.lang.Character>();
+	    options.add('1');
+	    options.add('2');
+	    options.add('3');
+	    
+	    Set<java.lang.Character> players = ABEngine.PLAYERS.keySet();
+	    
+	    options.removeAll(players);
+	    
+	    //Mais de 3 players!!!
+	    if(options.size() == 0){
+		return null;
+	    }
+	    
+	    char id = (java.lang.Character) options.toArray()[0];
+	    
+	    return create(id, x, y);
 	}
 
 }

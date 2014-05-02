@@ -415,7 +415,7 @@ public class ABBomb extends Character {
 
     }
 
-    private void setAction(BOMB_ACTION action) {
+    public void setAction(BOMB_ACTION action) {
 	bombAction = action;
     }
 
