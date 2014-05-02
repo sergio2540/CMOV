@@ -23,6 +23,7 @@ public class ABEngine {
 	public static int displayWidth = 0;
 	public static int displayHeight = 0;
 
+	public static String PLAYER_NICK = "";
 	public static boolean GAME_MUSIC_SOUND = true;
 	public static final int SPLASH_SCREEN_MUSIC = R.raw.achmed;
 	public static final int R_VOLUME = 100;

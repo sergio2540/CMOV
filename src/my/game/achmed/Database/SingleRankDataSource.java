@@ -35,8 +35,6 @@ public class SingleRankDataSource {
 		List<Rank> ranks = new ArrayList<Rank>();
 		Rank rank;
 
-		//Log.w("CURSOR", "" + cursor.getCount());
-		
 		while(cursor.moveToNext()) {
 			
 			String name = cursor.getString(1);
@@ -59,8 +57,6 @@ public class SingleRankDataSource {
 		Cursor cursor = database.query(DatabaseHelper.TABLE_SINGLE_RANKS, null, DatabaseHelper.COLUMN_NAME + " = " + "\"" + name + "\"", 
 				null, null, null, null);
 		
-		Log.w("COUNT NAME", "" + cursor.getCount() );
-		
 		if(cursor.getCount() != 0) {
 			return false;
 		}
@@ -81,6 +77,25 @@ public class SingleRankDataSource {
 		
 		
 	}
+	
+	public List<String> getPlayerNamesList() {
+		
+		Cursor cursor = database.query(DatabaseHelper.TABLE_SINGLE_RANKS, null, null, 
+				null, null, null, 
+				DatabaseHelper.COLUMN_HIGHSCORE + " DESC");
+		
+		List<String> playersNames = new ArrayList<String>();
+
+		while(cursor.moveToNext()) {
+			
+			String playerName = cursor.getString(1);
+			playersNames.add(playerName);
+			
+		}
+		
+		return playersNames;
+		
+	} 
 	
 	public void open() throws SQLException {
 		database = dbHelper.getWritableDatabase();

@@ -26,6 +26,6 @@
     
     <!-- PLAYER NAME -->
     
-    <string name="buttonCreatePlayer"> Create </string>
+    <string name="buttonCreatePlayer">Let\'s GO!</string>
 
 </resources>
