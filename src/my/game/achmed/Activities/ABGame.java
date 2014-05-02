@@ -315,16 +315,17 @@ public class ABGame extends Activity {
 	Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
 
 	TextView textView_score  =(TextView)findViewById(R.id.score);
-	TextView textView_numPlayers =(TextView)findViewById(R.id.numPlayers);
+	//TextView textView_numPlayers =(TextView)findViewById(R.id.numPlayers);
 	final TextView textView_time = (TextView)findViewById(R.id.time);
-	//TextView textView_namePlayer = (TextView)findViewById(R.id.namePlayer);
+	TextView textView_namePlayer = (TextView)findViewById(R.id.namePlayer);
 
 	textView_score.setTypeface(font);
-	textView_numPlayers.setTypeface(font);
+	//textView_numPlayers.setTypeface(font);
 	textView_time.setTypeface(font);
-	//textView_namePlayer.setTypeface(font);
+	textView_namePlayer.setTypeface(font);
 
-
+	textView_namePlayer.setText(ABEngine.PLAYER_NICK);
+	
 	millisUntilFinished = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
 	c = counter(millisUntilFinished);
 	c.start();
@@ -370,9 +371,11 @@ public class ABGame extends Activity {
 
 	super.onResume();
 	gameView.onResume();
-
-	Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
-	startService(backMusic);
+	
+	if(ABEngine.GAME_MUSIC_SOUND){
+        	Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
+        	startService(backMusic);
+	}
 
     }
 
