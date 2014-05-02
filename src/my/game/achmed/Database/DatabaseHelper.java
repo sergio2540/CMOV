@@ -22,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			"CREATE TABLE " + TABLE_SINGLE_RANKS + " (" + 
 					COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 					COLUMN_NAME + " TEXT, " +
-					COLUMN_LEVEL + " INTEGER, " +
+					COLUMN_LEVEL + " TEXT, " +
 					COLUMN_HIGHSCORE + " REAL, " +
 					COLUMN_LASTSCORE + " REAL);";
 	

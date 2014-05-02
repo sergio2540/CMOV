@@ -3,12 +3,12 @@ package my.game.achmed.Rank;
 public class Rank {
 	
 	private String name; 
-	private int level; 
+	private String level; 
 	private float highscore;
 	private float lastscore;
 	
 	
-	public Rank(String name, int level, float highscore, float lastscore) {
+	public Rank(String name, String level, float highscore, float lastscore) {
 		this.name = name;
 		this.level = level;
 		this.highscore = highscore;
@@ -23,11 +23,11 @@ public class Rank {
 		this.name = name;
 	} 
 
-	public int getLevel() {
+	public String getLevel() {
 		return level;
 	}
 
-	public void setLevel(int level) {
+	public void setLevel(String level) {
 		this.level = level;
 	}
 

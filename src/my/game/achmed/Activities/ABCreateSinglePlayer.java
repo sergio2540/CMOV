@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -75,6 +76,8 @@ public class ABCreateSinglePlayer extends Activity {
 					int position, long id) {
 				ABEngine.PLAYER_NICK = 
 						(String) playerNamesList.getItemAtPosition(position);
+				
+				Log.w("NICK", ABEngine.PLAYER_NICK + " " + "click da lista");
 
 				Intent mainMenu = new Intent(getApplicationContext(), ABMainMenu.class);
 
@@ -109,6 +112,7 @@ public class ABCreateSinglePlayer extends Activity {
 
 					if(playerAdded) {
 						ABEngine.PLAYER_NICK = name;
+						Log.w("NICK", ABEngine.PLAYER_NICK + " " + "click da lista");
 						Intent mainMenu = new Intent(getApplicationContext(), ABMainMenu.class);
 						ABCreateSinglePlayer.this.startActivity(mainMenu);
 						ABCreateSinglePlayer.this.finish();

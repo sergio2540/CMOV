@@ -78,6 +78,7 @@ public class ABEngine {
 
 	public static ABGame GAME;
 	public static Level LEVEL;
+	public static int NUM_LEVEL;
 
 	public static char[][] MAP;
 

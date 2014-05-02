@@ -2,6 +2,7 @@ package my.game.achmed.Activities;
 
 import java.util.List;
 
+import my.game.achmed.ABEngine;
 import my.game.achmed.R;
 import my.game.achmed.R.id;
 import my.game.achmed.R.layout;
@@ -40,9 +41,6 @@ public class ABSingleRank extends Activity {
      * passar na intent para actualizar primeiro o registo do nome com o novo rank
      * 
      * */
-    int level = 1; 
-    String name = "João";
-    int score = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +67,7 @@ public class ABSingleRank extends Activity {
 
 	singleRankDataSource.open();
 
-	List<Rank> singleRanks = singleRankDataSource.getSingleHighScoreTable(level);
+	List<Rank> singleRanks = singleRankDataSource.getSingleHighScoreTable(ABEngine.LEVEL.getLevelName());
 
 	TextView highscore = (TextView) findViewById(R.id.highscore);
 
