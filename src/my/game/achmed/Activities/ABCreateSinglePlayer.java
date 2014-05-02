@@ -75,7 +75,6 @@ public class ABCreateSinglePlayer extends Activity {
 					int position, long id) {
 				ABEngine.PLAYER_NICK = 
 						(String) playerNamesList.getItemAtPosition(position);
-				//Toast.makeText(ABEngine.context, ABEngine.PLAYER_NICK, Toast.LENGTH_LONG).show();
 
 				Intent mainMenu = new Intent(getApplicationContext(), ABMainMenu.class);
 

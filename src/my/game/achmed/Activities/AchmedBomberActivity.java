@@ -22,9 +22,9 @@ public class AchmedBomberActivity extends Activity {
 			@Override
 			public void run() {
 
-				Intent mainMenu= new Intent(AchmedBomberActivity.this,
-						ABMainMenu.class);
-				AchmedBomberActivity.this.startActivity(mainMenu);
+				Intent createSP = new Intent(AchmedBomberActivity.this,
+						ABCreateSinglePlayer.class);
+				AchmedBomberActivity.this.startActivity(createSP);
 				AchmedBomberActivity.this.finish();
 				overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
 
