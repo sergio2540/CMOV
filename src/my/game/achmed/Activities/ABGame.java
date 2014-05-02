@@ -90,7 +90,13 @@ public class ABGame extends Activity {
 	backgroundImg.setBackgroundColor(Color.TRANSPARENT);
 	backPopUp.setContentView(backgroundImg);
 
-	wonOrLostPopUp = new Dialog(this);
+	wonOrLostPopUp = new Dialog(this){
+	    @Override
+	    public boolean dispatchTouchEvent(MotionEvent ev) {
+		showRanks();
+	        return super.dispatchTouchEvent(ev);
+	    }
+	};
 
 	LinearLayout backgroundImg2 = (LinearLayout) ((LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.ab_wonorlost_popup, null);
 	wonOrLostPopUp.requestWindowFeature(Window.FEATURE_NO_TITLE); 
@@ -325,7 +331,7 @@ public class ABGame extends Activity {
 	textView_namePlayer.setTypeface(font);
 
 	textView_namePlayer.setText(ABEngine.PLAYER_NICK);
-	
+
 	millisUntilFinished = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
 	c = counter(millisUntilFinished);
 	c.start();
@@ -371,10 +377,10 @@ public class ABGame extends Activity {
 
 	super.onResume();
 	gameView.onResume();
-	
+
 	if(ABEngine.GAME_MUSIC_SOUND){
-        	Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
-        	startService(backMusic);
+	    Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
+	    startService(backMusic);
 	}
 
     }
@@ -423,9 +429,9 @@ public class ABGame extends Activity {
     @Override
     protected void onStart() {
 	super.onStart();
-//	c = counter(millisUntilFinished);
-//	c.start();
-//	onResume();
+	//	c = counter(millisUntilFinished);
+	//	c.start();
+	//	onResume();
     }
 
     @Override
@@ -481,29 +487,40 @@ public class ABGame extends Activity {
 	    textView.setText("YOU LOST !!!");
 
 	}
-
+	
 	wonOrLostPopUp.show();
 
-	Timer timer = new Timer();
-
-	timer.schedule(
-
-		new TimerTask() {
-		    @Override
-		    public void run() {
-			//			    	wonOrLostPopUp.cancel();
-
-			Intent highscore = new Intent(getApplicationContext(),
-				ABSingleRank.class);
-
-			ABGame.this.startActivity(highscore);
-			ABGame.this.finish();
-		    }
-
-		}, 4000);
+//	Timer timer = new Timer();
+//
+//	timer.schedule(
+//
+//		new TimerTask() {
+//		    @Override
+//		    public void run() {
+//			//			    	wonOrLostPopUp.cancel();
+//
+//			Intent highscore = new Intent(getApplicationContext(),
+//				ABSingleRank.class);
+//
+//			ABGame.this.startActivity(highscore);
+//			ABGame.this.finish();
+//		    }
+//
+//		}, 4000);
 
     }
 
+
+    
+    public void showRanks() {
+	Intent highscore = new Intent(getApplicationContext(),
+		ABSingleRank.class);
+
+	ABGame.this.startActivity(highscore);
+	ABGame.this.finish();
+    }
+
+    
     public void onClickQuit(View v) {
 	Intent ab_main = new Intent(getApplicationContext(), ABMainMenu.class);
 	startActivity(ab_main);

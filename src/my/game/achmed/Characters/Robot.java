@@ -52,6 +52,7 @@ public abstract class Robot extends Character {
 	return textures;
     }
 
+  
     private final static float vertices[] = {
 
 	0.0f, 0.0f, 0.0f,
@@ -155,7 +156,17 @@ public abstract class Robot extends Character {
 	    } catch (IOException e) {
 	    }
 	}
+	
+	int w = bitmap.getWidth();
+	int h = bitmap.getHeight();
+	
+	int w2 = (int) Math.pow(2,Math.ceil(Math.log(w)/Math.log(2.0)));
+	int h2 = (int) Math.pow(2,Math.ceil(Math.log(h)/Math.log(2.0)));
 
+	bitmap =  Bitmap.createScaledBitmap(bitmap,w2,h2,true);
+	
+	
+		
 	gl.glGenTextures(1, textures, 0);
 	gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
