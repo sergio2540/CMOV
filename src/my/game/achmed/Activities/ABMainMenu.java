@@ -1,5 +1,6 @@
 package my.game.achmed.Activities;
 
+import my.game.achmed.ABAboutMenu;
 import my.game.achmed.ABEngine;
 import my.game.achmed.ABMusic;
 import my.game.achmed.R;
@@ -101,8 +102,8 @@ public class ABMainMenu extends Activity {
 
 	    @Override
 	    public void onClick(View v) {
-		Intent createSinlePlayer = new Intent(getApplicationContext(), ABCreateSinglePlayer.class);
-		ABMainMenu.this.startActivity(createSinlePlayer);
+		Intent about = new Intent(getApplicationContext(), ABAboutMenu.class);
+		ABMainMenu.this.startActivity(about);
 		ABMainMenu.this.finish();
 	    }
 

@@ -11,10 +11,9 @@
     <string name="about">ABOUT</string>
     <string name="exit">EXIT</string>
 
-     <!-- MENU (descriptions para remover os warnings)-->
-	 <string name="soundonoff">sound on/off</string>
-	 <string name="menu">Menu</string>
-
+    <!-- MENU (descriptions para remover os warnings) -->
+    <string name="soundonoff">sound on/off</string>
+    <string name="menu">Menu</string>
 
     <!-- LEVELS -->
 
@@ -23,9 +22,17 @@
     <string name="level3">LEVEL 3</string>
     <string name="back">BACK</string>
 
-    
     <!-- PLAYER NAME -->
-    
-    <string name="buttonCreatePlayer">Let\'s GO!</string>
 
+    <string name="buttonCreatePlayer">Let\'s GO!</string>
+    
+    <!-- DEVS NAMES -->
+        
+    <string name="sergio_name">Sergio Alves 70515</string>
+    <string name="pedro_name">Pedro Camacho 70533</string>
+    <string name="bruno_name">Bruno Braga 70590</string>
+    
+      <!--  MULTIPLAYER -->
+    <string name="port">8080</string>
+        
 </resources>
