@@ -121,23 +121,19 @@ public class ABMainMenu extends Activity {
 
 	final ImageButton sound = (ImageButton) findViewById(R.id.soundon);
 
-	sound.setOnTouchListener(new View.OnTouchListener() {
-
+	sound.setOnClickListener(new View.OnClickListener() {
 	    @Override
-	    public boolean onTouch(View v, MotionEvent event) {
-
-		if(event.getAction() == (MotionEvent.ACTION_UP)){
-		    if(ABEngine.GAME_MUSIC_SOUND) {
-			stopGameMusic();
-			sound.setImageResource(R.raw.soundoff);
-			ABEngine.GAME_MUSIC_SOUND = false;
-		    } else {
-			startGameMusic();
-			sound.setImageResource(R.raw.soundon);
-			ABEngine.GAME_MUSIC_SOUND = true;
-		    }
+	    public void onClick(View v) {
+		if(ABEngine.GAME_MUSIC_SOUND) {
+		    stopGameMusic();
+		    sound.setImageResource(R.raw.soundoff);
+		    ABEngine.GAME_MUSIC_SOUND = false;
+		} else {
+		    startGameMusic();
+		    sound.setImageResource(R.raw.soundon);
+		    ABEngine.GAME_MUSIC_SOUND = true;
 		}
-		return true;
+
 	    }
 	});
 
@@ -155,7 +151,7 @@ public class ABMainMenu extends Activity {
 
 
     public void initGameMusic(){
-	
+
 	final ImageButton sound = (ImageButton) findViewById(R.id.soundon);
 	if(ABEngine.GAME_MUSIC_SOUND){
 	    startGameMusic();

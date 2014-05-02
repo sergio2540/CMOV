@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 
 import my.game.achmed.ABEngine;
+import my.game.achmed.ABMusic;
 import my.game.achmed.R;
 import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
@@ -28,6 +29,7 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -107,9 +109,6 @@ public class ABGame extends Activity {
 	ABEngine.ROBOTS = new ArrayList<Robot>();
 
 	ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
-
-	c = counter(Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000));
-	c.start();
 
 	final ImageButton setaEsquerda = (ImageButton) findViewById(R.id.arrow_left);
 
@@ -289,9 +288,8 @@ public class ABGame extends Activity {
 		if(pauseOrPlay ==  R.drawable.pause){
 		    button.setImageResource(R.drawable.play);
 		    this.pauseOrPlay = R.drawable.play;
-		    onPause();
 		    c.cancel();
-
+		    onPause();
 		}
 		else {
 		    button.setImageResource(R.drawable.pause);
@@ -299,6 +297,7 @@ public class ABGame extends Activity {
 		    c = counter(millisUntilFinished);
 		    c.start();
 		    onResume();
+
 
 		}
 
@@ -368,8 +367,12 @@ public class ABGame extends Activity {
     @Override
     protected void onResume() {
 	Log.w("resume","paused");
+
 	super.onResume();
 	gameView.onResume();
+
+	Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
+	startService(backMusic);
 
     }
 
@@ -377,8 +380,13 @@ public class ABGame extends Activity {
     @Override
     protected void onPause() {
 	Log.w("pause","paused");
+
+
 	super.onPause();
 	gameView.onPause();
+
+	Intent backMusic = new Intent(getApplicationContext(), ABMusic.class);
+	stopService(backMusic);
 
     }
 
@@ -388,10 +396,41 @@ public class ABGame extends Activity {
     }
 
     @Override
-    public void onBackPressed() {
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+	if(keyCode == KeyEvent.KEYCODE_BACK)
+	{
+
+	    c.cancel();
+	    onPause();
+
+	    backPopUp.takeKeyEvents(false);
+	    backPopUp.show();
+
+	    Log.d("Test", "Back button pressed!");
+	}
+	else if(keyCode == KeyEvent.KEYCODE_HOME)
+	{
+
+	    Log.d("Test", "Home button pressed!");
+	}
+	return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onStart() {
+	super.onStart();
+//	c = counter(millisUntilFinished);
+//	c.start();
+//	onResume();
+    }
+
+    @Override
+    protected void onStop() {
+	super.onStop();
 	c.cancel();
 	onPause();
-	backPopUp.show();
+
     }
 
     public void onClickResume(View v){
