@@ -48,6 +48,11 @@
         </activity>
         <activity android:name="my.game.achmed.Activities.ABCreateSinglePlayer" >
         </activity>
+        
+         <activity
+ -            android:name="my.game.achmed.ABAboutMenu" >
+         </activity>
+            
         <activity
             android:name="my.game.achmed.ABMultiplayer" >
         </activity>
