@@ -11,7 +11,7 @@ public class BombState extends State{
 
 	private BOMB_ACTION bombAction;
 
-	public BombState(int pId, Event e, BOMB_ACTION pAction){
+	public BombState(char pId, Event e, BOMB_ACTION pAction){
 		super(pId, e);
 		playerId = pId;
 	}
@@ -27,7 +27,7 @@ public class BombState extends State{
 	}
 	
 	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
-		playerId = stream.readInt();
+		playerId = stream.readChar();
 		event = (Event) stream.readObject();
 		bombAction = (BOMB_ACTION) stream.readObject();
 	}

@@ -8,10 +8,10 @@ import my.game.achmed.ABEngine;
 import my.game.achmed.R;
 import android.os.AsyncTask;
 
-//para nos ligarmos a outro user.
+//Used to connect to group owner.
 public class OutgoingCommTask extends AsyncTask<String, Void, String> {
 	
-	Socket gropuOwner;
+	Socket groupOwner;
 	ReceiveCommTask mComm;
 
 	@Override
@@ -22,7 +22,7 @@ public class OutgoingCommTask extends AsyncTask<String, Void, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		try {
-			gropuOwner = new Socket(params[0], Integer.parseInt(ABEngine.context.getResources().getString(R.string.port)));
+			groupOwner = new Socket(params[0], Integer.parseInt(ABEngine.context.getResources().getString(R.string.port)));
 		} catch (UnknownHostException e) {
 			return "Unknown Host:" + e.getMessage();
 		} catch (IOException e) {
@@ -39,11 +39,10 @@ public class OutgoingCommTask extends AsyncTask<String, Void, String> {
 		}
 		else {
 			mComm = new ReceiveCommTask();
-			mComm.execute(gropuOwner);
+			mComm.setGroupOwner(groupOwner);
+			mComm.execute();
 		}		
 	}
 
-	public Socket getGropuOwner() {
-		return gropuOwner;
-	}
+
 }

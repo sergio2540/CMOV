@@ -5,18 +5,18 @@ import java.io.Serializable;
 public abstract class State implements Serializable {
 	
 
-	protected int playerId;
+	protected char playerId;
 	protected Event event;
 	
 	
-	public State(int pId, Event e){
+	public State(char pId, Event e){
 		
 		playerId = pId;
 		event = e;
 		
 	} 
 	
-	public int getPlayerId() {
+	public char getPlayerId() {
 		return playerId;
 	}
 

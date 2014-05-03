@@ -8,10 +8,11 @@ import java.io.ObjectOutputStream;
 public class InitState extends State{
 
 	private char[][] gameMap;
-	float coordX;
-	float coordY;
+	int coordX;
+	int coordY;
 	
-	public InitState(int pId, Event e, char[][] map, float x, float y){
+	
+	public InitState(char pId, Event e, char[][] map, int x, int y){
 		super(pId, e);
 		gameMap = map;
 		coordX = x;
@@ -23,12 +24,12 @@ public class InitState extends State{
 	}
 
 
-	public float getCoordX() {
+	public int getCoordX() {
 		return coordX;
 	}
 
 
-	public float getCoordY() {
+	public int getCoordY() {
 		return coordY;
 	}
 
@@ -44,11 +45,11 @@ public class InitState extends State{
 	}
 	
 	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
-		playerId = stream.readInt();
+		playerId = stream.readChar();
 		event = (Event) stream.readObject();
 		gameMap = (char[][]) stream.readObject();
-		coordX = (float) stream.readFloat();
-		coordY = (float) stream.readFloat();
+		coordX = (int) stream.readInt();
+		coordY = (int) stream.readInt();
 
 		
 	}

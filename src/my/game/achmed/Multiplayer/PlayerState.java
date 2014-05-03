@@ -22,7 +22,7 @@ public class PlayerState extends State {
 	}
 
 
-	public PlayerState(int pId, Event e, CHARACTER_ACTION pAction){
+	public PlayerState(char pId, Event e, CHARACTER_ACTION pAction){
 		super(pId, e);
 		playerId = pId;
 		playerAction = pAction;
@@ -38,7 +38,7 @@ public class PlayerState extends State {
 	}
 	
 	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
-		playerId = stream.readInt();
+		playerId = stream.readChar();
 		event = (Event) stream.readObject();
 		playerAction = (CHARACTER_ACTION) stream.readObject();
 	}
