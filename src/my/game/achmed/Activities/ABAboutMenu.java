@@ -1,7 +1,8 @@
-package my.game.achmed;
+package my.game.achmed.Activities;
 
-import my.game.achmed.Activities.ABLevelMenu;
-import my.game.achmed.Activities.ABMainMenu;
+import my.game.achmed.R;
+import my.game.achmed.R.id;
+import my.game.achmed.R.layout;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -23,27 +24,27 @@ public class ABAboutMenu extends Activity {
 		TextView textView_Sergio;
 		TextView textView_Pedro;
 		TextView textView_Bruno;
-		final TextView textView_exit;
+		final TextView textView_back;
 
 		Typeface font=Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
 
 		textView_Sergio =(TextView)findViewById(R.id.dev_sergio);
 		textView_Pedro =(TextView)findViewById(R.id.dev_pedro);
 		textView_Bruno = (TextView)findViewById(R.id.dev_bruno);
-		textView_exit =(TextView)findViewById(R.id.about_exit);
+		textView_back =(TextView)findViewById(R.id.about_back);
 
 
 		textView_Sergio.setTypeface(font);
 		textView_Pedro.setTypeface(font);
 		textView_Bruno.setTypeface(font);
-		textView_exit.setTypeface(font);
+		textView_back.setTypeface(font);
 
 		textView_Sergio.setTextColor(Color.WHITE);
 		textView_Pedro.setTextColor(Color.WHITE);
 		textView_Bruno.setTextColor(Color.WHITE);
-		textView_exit.setTextColor(Color.RED);
+		textView_back.setTextColor(Color.RED);
 		
-		textView_exit.setOnClickListener(new View.OnClickListener() {
+		textView_back.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
 

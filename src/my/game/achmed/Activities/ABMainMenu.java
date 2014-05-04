@@ -1,6 +1,5 @@
 package my.game.achmed.Activities;
 
-import my.game.achmed.ABAboutMenu;
 import my.game.achmed.ABEngine;
 import my.game.achmed.ABMusic;
 import my.game.achmed.R;
@@ -91,9 +90,9 @@ public class ABMainMenu extends Activity {
 
 	    @Override
 	    public void onClick(View v) {
-		Intent highscore = new Intent(getApplicationContext(), ABSingleRank.class);
-		ABMainMenu.this.startActivity(highscore);
-		ABMainMenu.this.finish();
+//		Intent highscore = new Intent(getApplicationContext(), ABSingleRank.class);
+//		ABMainMenu.this.startActivity(highscore);
+//		ABMainMenu.this.finish();
 	    }
 
 	});

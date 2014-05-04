@@ -28,10 +28,10 @@
         android:text="@string/bruno_name" />
 
     <TextView
-        android:id="@+id/about_exit"
+        android:id="@+id/about_back"
         style="@style/MenuFont"
         android:gravity="center"
         android:layout_weight="2"
-        android:text="@string/exit" />
+        android:text="@string/back" />
 
 </LinearLayout>

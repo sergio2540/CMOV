@@ -5,32 +5,67 @@ import my.game.achmed.R;
 import my.game.achmed.R.layout;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 public class AchmedBomberActivity extends Activity {
 
+	private Handler handler;
+	private Runnable delayRunnable;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		//		super.onCreate(savedInstanceState);
+		//		overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
+		//		setContentView(R.layout.splash_screen);
+		//
+		//		handler.postDelayed(new Thread() {
+		//			@Override
+		//			public void run() {
+		//
+		//				Intent createSP = new Intent(AchmedBomberActivity.this,
+		//						ABCreateSinglePlayer.class);
+		//				AchmedBomberActivity.this.startActivity(createSP);
+		//				AchmedBomberActivity.this.finish();
+		//				//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
+		//
+		//			}
+		//		}, ABEngine.GAME_THREAD_DELAY);
+		//
+		//	}
+
+
+
 		super.onCreate(savedInstanceState);
-
-		overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
-
 		setContentView(R.layout.splash_screen);
 
-		new Handler().postDelayed(new Thread() {
+		handler = new Handler();
+		delayRunnable = new Thread() {
 			@Override
 			public void run() {
 
 				Intent createSP = new Intent(AchmedBomberActivity.this,
 						ABCreateSinglePlayer.class);
 				AchmedBomberActivity.this.startActivity(createSP);
-				AchmedBomberActivity.this.finish();
 				overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
+				AchmedBomberActivity.this.finish();
 
 			}
-		}, ABEngine.GAME_THREAD_DELAY);
+		};
+
+		handler.postDelayed(delayRunnable, 3000);
 
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		handler.removeCallbacks(delayRunnable);
+	}
+
+
 
 }
