@@ -1,16 +1,14 @@
 package my.game.achmed.Characters.Players;
 
 import javax.microedition.khronos.opengles.GL10;
-
 import my.game.achmed.Characters.Player;
-
 import android.content.Context;
 
-public class ABGreenOgre extends Player {
+public class ABPurpleBat extends Player {
 
-	//id == 1
-	public ABGreenOgre(float xpos, float ypos) {
-		super('1',xpos,ypos);
+	//id == 4
+	public ABPurpleBat(float xpos, float ypos) {
+		super('4',xpos,ypos);
 	}
 
 	@Override
@@ -28,7 +26,7 @@ public class ABGreenOgre extends Player {
 		gl.glMatrixMode(GL10.GL_TEXTURE);
 		gl.glLoadIdentity();
 		gl.glScalef(1f, 1f, 1f);
-		gl.glTranslatef(0.332f, 0.625f, 0f);
+		gl.glTranslatef(0.332f, 0.5f, 0f);
 		this.draw(gl);
 		return false;
 	}
@@ -38,7 +36,7 @@ public class ABGreenOgre extends Player {
 		gl.glMatrixMode(GL10.GL_TEXTURE);
 		gl.glLoadIdentity();
 		gl.glScalef(1f, 1f, 1f);
-		gl.glTranslatef(0.83f,0.625f, 0f);
+		gl.glTranslatef(0.83f,0.5f, 0f);
 		this.draw(gl);
 		return false;
 	}
@@ -48,7 +46,7 @@ public class ABGreenOgre extends Player {
 		gl.glMatrixMode(GL10.GL_TEXTURE);
 		gl.glLoadIdentity();
 		gl.glScalef(1f, 1f, 1f);
-		gl.glTranslatef(0.581f, 0.625f, 0f);
+		gl.glTranslatef(0.581f, 0.5f, 0f);
 		this.draw(gl);
 		return false;
 	}
@@ -58,7 +56,7 @@ public class ABGreenOgre extends Player {
 		gl.glMatrixMode(GL10.GL_TEXTURE);
 		gl.glLoadIdentity();
 		gl.glScalef(1f, 1f, 1f);
-		gl.glTranslatef(0.083f, 0.625f, 0f);
+		gl.glTranslatef(0.083f, 0.5f, 0f);
 		this.draw(gl);
 		return false;
 	}

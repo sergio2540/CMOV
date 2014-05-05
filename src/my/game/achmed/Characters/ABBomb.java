@@ -321,7 +321,7 @@ public class ABBomb extends Character {
 	if (!(obj == 'W')) {
 
 
-	    if((obj == '1') || (obj == '2') || (obj == '3')) {
+	    if((obj == '1') || (obj == '2') || (obj == '3') || (obj == '4')) {
 		Log.w("kill", "player");
 		player.killPlayer(mtx_x,mtx_y);
 	    }

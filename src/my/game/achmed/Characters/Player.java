@@ -18,6 +18,7 @@ import javax.microedition.khronos.opengles.GL10;
 import my.game.achmed.ABEngine;
 import my.game.achmed.Characters.Players.ABAchmed;
 import my.game.achmed.Characters.Players.ABGreenOgre;
+import my.game.achmed.Characters.Players.ABPurpleBat;
 import my.game.achmed.Characters.Players.ABRedMermaid;
 
 import android.content.Context;
@@ -130,15 +131,14 @@ public abstract class Player extends Character {
 		Player p;
 
 		if(id == '1'){
-
 			p = new ABGreenOgre(x, y);
-
 		} else if (id == '2'){
 			p = new ABRedMermaid(x, y);
 		}
-		else {
-
+		else if(id == '3'){
 			p = new ABAchmed(x,y);  
+		} else {
+			p = new ABPurpleBat(x,y); 
 		}
 
 		ABBomb b = new ABBomb(p);
@@ -581,17 +581,18 @@ public abstract class Player extends Character {
 	    options.add('1');
 	    options.add('2');
 	    options.add('3');
+	    options.add('4');
 	    
 	    if(ABEngine.PLAYERS != null){
-		Set<java.lang.Character> players = ABEngine.PLAYERS.keySet();
-		options.removeAll(players);
+			Set<java.lang.Character> players = ABEngine.PLAYERS.keySet();
+			options.removeAll(players);
 	    }
 	    
 	    
 	    
 	    //Mais de 3 players!!!
 	    if(options.size() == 0){
-		return null;
+	    	return null;
 	    }
 	    
 	    char id = (java.lang.Character) options.toArray()[0];

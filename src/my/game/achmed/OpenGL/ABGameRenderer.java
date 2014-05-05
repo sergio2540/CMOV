@@ -310,6 +310,33 @@ public class ABGameRenderer implements Renderer {
 		    }
 
 		    break;
+		    
+		case '4':
+
+		    ps.add("4");
+		    gl.glMatrixMode(GL10.GL_TEXTURE);
+		    gl.glLoadIdentity();
+		    gl.glTranslatef(0.3125f, 0.375f, 0f);
+		    map.draw(gl); 
+
+		    if(ABEngine.FIRST_MAP_DRAW) {
+			Player player = Player.create('4',x*100,y*100);
+			player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
+			ABEngine.PLAYERS.put('4',player);
+		    }else {
+
+//			boolean in = false;
+//			for(Player p : t){
+//			    if(p.getID() == '2'){
+//				in = true;
+//			    }
+//			}
+//
+//			if(!in){
+//			    ABEngine.setObject(x,y,'-');
+//			}
+		    }
+
 
 
 		case 'R':
