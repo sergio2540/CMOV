@@ -8,9 +8,9 @@ import android.content.Context;
 
 public class ABGreenOgre extends Player {
     
-    //id == 2
+    //id == 1
     public ABGreenOgre(float xpos, float ypos) {
-	super('2',xpos,ypos);
+	super('1',xpos,ypos);
     }
 
     @Override

@@ -81,11 +81,14 @@ public class ABBomb extends Character {
 	this.player = player; 
 	this.fire = new ABFire();
 
-	this.rangeOfExplosion = ABEngine.LEVEL.getExplosionRange();
-	this.timeToExplodeInSeconds = ABEngine.LEVEL.getExplosionTimeoutInSeconds();
-
-	this.durationOfExplosionInSeconds = ABEngine.LEVEL.getExplosionDurationInSeconds();
-
+	//this.rangeOfExplosion = ABEngine.LEVEL.getExplosionRange();
+	//this.timeToExplodeInSeconds = ABEngine.LEVEL.getExplosionTimeoutInSeconds();
+	//this.durationOfExplosionInSeconds = ABEngine.LEVEL.getExplosionDurationInSeconds();
+	this.rangeOfExplosion = 1;
+	this.timeToExplodeInSeconds = 2;
+	this.durationOfExplosionInSeconds = 1;
+	
+	
 
 	this.bombAction = BOMB_ACTION.NO_BOMB;
 

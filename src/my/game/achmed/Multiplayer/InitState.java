@@ -36,11 +36,11 @@ public class InitState extends State{
 
 
 	private void writeObject(ObjectOutputStream stream) throws IOException{
-		stream.writeObject(playerId);
+		stream.writeChar(playerId);
 		stream.writeObject(event);
 		stream.writeObject(gameMap);
-		stream.writeObject(coordX);
-		stream.writeObject(coordY);
+		stream.writeInt(coordX);
+		stream.writeInt(coordY);
 
 	}
 	
@@ -48,8 +48,8 @@ public class InitState extends State{
 		playerId = stream.readChar();
 		event = (Event) stream.readObject();
 		gameMap = (char[][]) stream.readObject();
-		coordX = (int) stream.readInt();
-		coordY = (int) stream.readInt();
+		coordX = stream.readInt();
+		coordY = stream.readInt();
 
 		
 	}

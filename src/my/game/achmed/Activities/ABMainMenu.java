@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -20,7 +21,7 @@ public class ABMainMenu extends Activity {
 	super.onCreate(savedInstanceState);
 
 	setContentView(R.layout.ab_main_menu);
-
+	Log.w("mainmenu", "ok");
 	initGameMusic();
 
 	TextView textView_single;
@@ -72,12 +73,12 @@ public class ABMainMenu extends Activity {
 	    @Override
 	    public void onClick(View v) {
 
-		Intent levelMenu = new Intent(getApplicationContext(),
-			ABLevelMenu.class);
+		Intent multiplayerList = new Intent(getApplicationContext(),
+			ABMultiplayer.class);
 
 		ABEngine.isOnMultiplayer = true;
 
-		ABMainMenu.this.startActivity(levelMenu);
+		ABMainMenu.this.startActivity(multiplayerList);
 		ABMainMenu.this.finish();
 		//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
 		//setText() sets the string value of the TextView

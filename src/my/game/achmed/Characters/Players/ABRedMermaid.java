@@ -8,9 +8,9 @@ import android.content.Context;
 
 public class ABRedMermaid extends Player {
 
-    //id == 1
+    //id == 2
     public ABRedMermaid(float xpos, float ypos) {
-	super('1',xpos,ypos);	
+	super('2',xpos,ypos);	
     }
 
     @Override

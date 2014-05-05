@@ -2,10 +2,12 @@ package my.game.achmed.Multiplayer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import my.game.achmed.ABEngine;
@@ -17,7 +19,12 @@ import android.util.Log;
 public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 	private Socket groupOwner;
-	private List<Socket> peers;
+	private final List<Socket> peers;
+	
+	
+	public ReceiveCommTask(){
+	    peers = new ArrayList<Socket>();
+	}
 
 	public Socket getGroupOwner() {
 		return groupOwner;
@@ -33,22 +40,26 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 
 	private State readSocket(Socket s){
-
+	    	Log.w("readsocket", "ok");
 		ObjectInputStream objStream;
 		State message = null;
 
 		try {
-			objStream = new ObjectInputStream(s.getInputStream());
+		    	InputStream i = s.getInputStream();
+		    	int a = 0;
+		    	int b = 0;
+			objStream = new ObjectInputStream(i);
 			message = (State) objStream.readObject();
-			objStream.close();
+			//objStream.close();
 
 
 		} catch (IOException e) {
-			Log.d("Error reading socket:", e.getMessage());
+			Log.w("readsocket", e.getMessage());
 		} catch (ClassNotFoundException e) {
-			Log.d("Error reading socket2:", e.getMessage());
+			Log.w("readsocket", e.getMessage());
 
 		}
+		
 		return message;
 
 	}
@@ -80,8 +91,11 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 		State message;
 		while (!Thread.currentThread().isInterrupted()) {
-			if (groupOwner != null)
+			if (groupOwner != null){
 				message = readSocket(groupOwner);
+				processStateMessage(message);
+			
+			}
 			else 
 				for(Socket peerS : peers){
 					message = readSocket(peerS);
@@ -89,7 +103,9 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 					//publishProgress();
 				}
 		}
+		
 		return null;
+		
 	}
 
 	@Override

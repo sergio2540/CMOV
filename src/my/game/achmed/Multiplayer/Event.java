@@ -1,6 +1,8 @@
 package my.game.achmed.Multiplayer;
 
-public enum Event {
+import java.io.Serializable;
+
+public enum Event implements Serializable {
 
     INIT, PLAYER, BOMB
 

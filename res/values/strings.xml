@@ -27,9 +27,11 @@
     <string name="buttonCreatePlayer">Let\'s GO!</string>
 
     <!-- Multiplayer -->
-    <string name="port">8080</string>
-    <string name="devices">Peers</string>
+    <string name="port">9073</string>
+    <string name="service_port">9074</string>
     
+    <string name="devices">Peers</string>
+    <string name="buttonCreateNewGame">Create Game</string>
     <string name="sergio_name">Sérgio Alves 70515</string>
     <string name="pedro_name">Pedro Camacho 70533</string>
     <string name="bruno_name">Bruno Braga 70590</string>

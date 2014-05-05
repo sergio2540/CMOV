@@ -47,6 +47,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ABGame extends Activity {
 
@@ -58,96 +59,20 @@ public class ABGame extends Activity {
     private CountDownTimer c;
     private long millisUntilFinished;
 
-    private WifiP2pManager mManager;
-
-    private Channel mChannel;
-
-    private WiFiDirectBroadcastReceiver mReceiver;
-
-    private IntentFilter mIntentFilter;
-
-    private boolean mBound;
-
     SingleRankDataSource singleRankDataSource;
 
-    public static List<Peer> peers;
-    public static ArrayAdapter<Peer> peersAd;
+   
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.ab_game);
+	
 
 	singleRankDataSource = new SingleRankDataSource(this);
 
-	if(ABEngine.isOnMultiplayer){
-	    //Set up multiplayer
-	    mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-	    mChannel = mManager.initialize(this, getMainLooper(), null);
-	    mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
-
-	    // register broadcast receiver
-	    mIntentFilter = new IntentFilter();
-	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-	    registerReceiver(mReceiver, mIntentFilter);
-	    mBound = true;
-
-
-
-	    mManager.discoverPeers(mChannel, new ActionListener() {
-
-		@Override
-		public void onSuccess() {
-		    //mReceiver.getPeers();
-
-		}
-
-		@Override
-		public void onFailure(int reason) {
-		    // TODO Auto-generated method stub
-
-		}
-	    });
-
-	    peers = new ArrayList<Peer>();
-	    peersAd = new ArrayAdapter<Peer>(this, android.R.layout.simple_list_item_1, peers); 
-	    //peersAd = new ArrayAdapter<String>(this, R., textViewResourceId);
-	    ListView view = (ListView) findViewById(R.id.deviceslist);
-	    view.setAdapter(peersAd);
-	    peersAd.setNotifyOnChange(true);
-
-	    view.setOnItemClickListener(new OnItemClickListener() {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-		    WifiP2pConfig config = new WifiP2pConfig();
-		    config.deviceAddress = peersAd.getItem(position).getPeerAddress();
-		    mManager.connect(mChannel, config, new ActionListener(){
-
-			@Override
-			public void onFailure(int arg0) {
-			    // TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onSuccess() {
-			    // TODO Auto-generated method stub
-
-			}});
-		    //		    	    Intent mainMenu = new Intent(getApplicationContext(), ABMainMenu.class);
-		    //
-		    //		    	    ABCreateSinglePlayer.this.startActivity(mainMenu);
-		    //		    	    ABCreateSinglePlayer.this.finish();
-
-		}
-	    });
-	}
+	
 
 	backPopUp = new Dialog(this);
 
@@ -180,8 +105,13 @@ public class ABGame extends Activity {
 	ABEngine.PLAYER = null;
 	ABEngine.PLAYERS = new TreeMap<Character,Player>();
 	ABEngine.ROBOTS = new ArrayList<Robot>();
-
-	ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
+	
+	if(ABEngine.LEVEL != null)
+	    ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
+	else {
+	    //ABEngine.create_map(ABEngine.LEVE.getGameLevelMatrix());
+	}
+	
 
 	final ImageButton setaEsquerda = (ImageButton) findViewById(R.id.arrow_left);
 
@@ -399,11 +329,14 @@ public class ABGame extends Activity {
 
 	textView_namePlayer.setText(ABEngine.PLAYER_NICK);
 
-	millisUntilFinished = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
+	//millisUntilFinished = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
+	
+	millisUntilFinished = Math.round(60*1000);
 	c = counter(millisUntilFinished);
 	c.start();
 
 	ABEngine.GAME = ABGame.this;
+	Toast.makeText(getApplicationContext(), "onCreate Done", Toast.LENGTH_LONG);
 
     }
 
@@ -601,6 +534,7 @@ public class ABGame extends Activity {
 	Intent ab_main = new Intent(getApplicationContext(), ABMainMenu.class);
 	startActivity(ab_main);
 	this.finish();
+	
     }
 
 }

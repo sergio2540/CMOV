@@ -83,21 +83,21 @@ public class ABLevelMenu extends Activity {
 	textView_level1.setOnClickListener(new View.OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		loadLevel.execute(1);
+		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,1);
 	    }
 	});
 
 	textView_level2.setOnClickListener(new View.OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		loadLevel.execute(2);
+		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,2);
 	    }
 	});
 
 	textView_level3.setOnClickListener(new View.OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		loadLevel.execute(3);
+		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,3);
 	    }
 	});
 

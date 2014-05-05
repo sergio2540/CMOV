@@ -118,8 +118,10 @@ public abstract class Player extends Character {
 		this.id = id;
 		this.bomb = null;
 
-		this.pointsPerOpponentKilled = ABEngine.LEVEL.getPointsPerOpponentKilled();
-		this.pointsPerRobotKilled = ABEngine.LEVEL.getPointsPerRobotKilled();
+		this.pointsPerOpponentKilled = 10;
+		this.pointsPerRobotKilled = 5;
+//		this.pointsPerOpponentKilled = ABEngine.LEVEL.getPointsPerOpponentKilled();
+//		this.pointsPerRobotKilled = ABEngine.LEVEL.getPointsPerRobotKilled();
 
 	}
 
@@ -580,9 +582,12 @@ public abstract class Player extends Character {
 	    options.add('2');
 	    options.add('3');
 	    
-	    Set<java.lang.Character> players = ABEngine.PLAYERS.keySet();
+	    if(ABEngine.PLAYERS != null){
+		Set<java.lang.Character> players = ABEngine.PLAYERS.keySet();
+		options.removeAll(players);
+	    }
 	    
-	    options.removeAll(players);
+	    
 	    
 	    //Mais de 3 players!!!
 	    if(options.size() == 0){

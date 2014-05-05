@@ -9,74 +9,96 @@ import java.util.List;
 
 import my.game.achmed.ABEngine;
 import my.game.achmed.R;
+import my.game.achmed.Activities.ABMultiplayer;
 import my.game.achmed.Characters.Player;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 //Class used to process communications to peer.
-public class IncommingCommTask extends AsyncTask<Void, Socket, Void> {
+public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 
 
-	private Socket mCliSocket;
-	private ServerSocket mSrvSocket;
-	private String TAG = "===IncommingCommTask===";
-	private ReceiveCommTask rct;
-	private List<Socket> peersSockets;
+    private Socket mCliSocket;
+    private ServerSocket mSrvSocket;
+    private final String TAG = "===IncommingCommTask===";
+    private ReceiveCommTask rct;
+    private List<Socket> peersSockets;
+    protected ABMultiplayer activity;
 
-	@Override
-	protected Void doInBackground(Void... params) {
+    @Override
+    protected Void doInBackground(Integer... params) {
 
-		peersSockets = new ArrayList<Socket>();
-		//Log.d(TAG, "IncommingCommTask started (" + this.hashCode() + ").");
+	peersSockets = new ArrayList<Socket>();
+	//Log.d(TAG, "IncommingCommTask started (" + this.hashCode() + ").");
+	
 
-		try {
-			mSrvSocket = new ServerSocket(Integer.parseInt(ABEngine.context.getResources().getString(R.string.port)));
-		} catch (IOException e) {
-			System.err.println(e.getMessage());
-		}
-		while (!Thread.currentThread().isInterrupted()) {
-			try {
-				Socket clientSocket = mSrvSocket.accept();
-				peersSockets.add(clientSocket);
-				Player pl = ABEngine.createRandomPlayer();
-				InitState initS = new InitState(pl.getID(),Event.INIT,ABEngine.MAP, (int) pl.getXPosition(), (int) pl.getYPosition());
+	
+	try {
+	    
+	    //String port = getResource().getString(params[0]);
+	    
+	    mSrvSocket = new ServerSocket(9091);
+	    
+	    //Toast.makeText(activity, "Init send.", Toast.LENGTH_LONG).show();
 
+	
 
-				for (Socket cSocket : peersSockets){
-					ObjectOutputStream os = new ObjectOutputStream(cSocket.getOutputStream());
-					os.writeObject(initS);
-					os.close();
-				}
-				//ABEngine.PLAYER = Player.create(c,iState.getCoordX(),iState.getCoordY());
-				//if (mCliSocket != null && mCliSocket.isClosed()) {
-				//	mCliSocket = null;
-				//}
-				//if (mCliSocket != null) {
-				//	Log.d(TAG, "Closing accepted socket because mCliSocket still active.");
-				//	sock.close();
-				//} else {
-				publishProgress(clientSocket);
-				//}
-			} catch (IOException ioe) {
-				Log.d("Error accepting socket:", ioe.getMessage());
-				System.err.println(ioe.getMessage());
-				break;
-				//e.printStackTrace();
-			}
-		}
+	} catch (IOException e) {
 
-		return null;
+	   
+
 	}
 
+	while (!Thread.currentThread().isInterrupted()) {
+	    try {
+		Socket clientSocket = mSrvSocket.accept();
+		peersSockets.add(clientSocket);
+		
+		Player pl = ABEngine.createRandomPlayer();
+		char id = pl.getID();
+		Event e = Event.INIT;
+		char[][] m = ABEngine.MAP;
+		int x = (int) pl.getXPosition();
+		int y = (int) pl.getYPosition();
+		
+		InitState initS = new InitState(id,e,m,x,y);
 
-	@Override
-	protected void onProgressUpdate(Socket... values) {
-		if(rct == null){
-			rct = new ReceiveCommTask();
-			rct.execute();
+
+		for (Socket cSocket : peersSockets){
+		    ObjectOutputStream os = new ObjectOutputStream(cSocket.getOutputStream());
+		    //os.writeObject(n);
+		    os.writeObject(initS);
+		    //os.close();
 		}
-		rct.addPeers(values[0]);
+
+		
+		publishProgress(clientSocket);
+		
+	    } catch (IOException e) {
+		
+		while(true){
+		    Log.w("in", e.toString());
+		}
+
+		
+	    }
 	}
+
+	return null;
+    }
+
+
+    @Override
+    protected void onProgressUpdate(Socket... values) {
+	
+	if(rct == null){
+	    rct = new ReceiveCommTask();
+	    rct.execute();
+	}
+	
+	rct.addPeers(values[0]);
+    }
 
 
 }
