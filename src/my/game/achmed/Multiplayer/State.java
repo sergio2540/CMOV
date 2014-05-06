@@ -10,6 +10,12 @@ import my.game.achmed.Characters.BOMB_ACTION;
 public abstract class State implements Serializable {
 	
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    
+    
 	protected char playerId;
 	protected Event event;
 	

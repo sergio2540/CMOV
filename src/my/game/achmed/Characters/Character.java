@@ -1,6 +1,10 @@
 package my.game.achmed.Characters;
 
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -12,8 +16,10 @@ import javax.microedition.khronos.opengles.GL10;
 import my.game.achmed.ABEngine;
 
 
-public abstract class Character {
+public abstract class Character implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private float xpos;
     private float ypos;
 
@@ -79,4 +85,13 @@ public abstract class Character {
 	indexBuffer.put(indices);
 	indexBuffer.position(0);
     }    
+    
+    private void writeObject(ObjectOutputStream stream) throws IOException{
+
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
+
+    }
+    
 }

@@ -8,6 +8,8 @@ import android.content.Context;
 
 public class ABAchmed extends Player {
 
+    private static final long serialVersionUID = 1L;
+
     //id == 3
     public ABAchmed(float xpos, float ypos) {
 	super('3',xpos,ypos);

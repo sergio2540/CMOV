@@ -1,11 +1,8 @@
 package my.game.achmed.Multiplayer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +42,11 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 		State message = null;
 
 		try {
+		    
 		    	InputStream i = s.getInputStream();
-		    	int a = 0;
-		    	int b = 0;
 			objStream = new ObjectInputStream(i);
 			message = (State) objStream.readObject();
 			//objStream.close();
-
 
 		} catch (IOException e) {
 			Log.w("readsocket", e.getMessage());
@@ -81,7 +76,12 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 		case INIT:
 			InitState iState = (InitState) message;
 			ABEngine.create_map(iState.getGameMap()); 
+			ABEngine.LEVEL = iState.getLevel();
+			
 			ABEngine.PLAYER = Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY());
+			//ABEngine.PLAYERS = iState.getOpponentsPlayers();
+			//ABEngine.ROBOTS = iState.getRobots();
+			
 			break;
 		}
 	}
@@ -131,7 +131,6 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 			}
 
 		}catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

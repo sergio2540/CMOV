@@ -38,9 +38,6 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 	this.mManager = manager;
 	this.mChannel = mChannel;
 	this.mActivity = activity;
-	
-	currentIncommingTask = new IncommingCommTask();
- 	currentIncommingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,R.string.port);
     }
 
 
@@ -161,6 +158,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 			    //We start the server on this peer.
 			    Toast.makeText(mActivity, "Group owner.", Toast.LENGTH_LONG).show();
 			    
+			    currentIncommingTask = new IncommingCommTask();
+			    currentIncommingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,R.string.port);
 			   
 
 			   
@@ -170,7 +169,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 			    
 
 
-			    currentIncommingTask.cancel(true);
+//			    currentIncommingTask.cancel(true);
 			    currentOutgoingTask = new OutgoingCommTask();
 			    currentOutgoingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, goAddress.getHostAddress());
 

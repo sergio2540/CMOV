@@ -6,22 +6,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import my.game.achmed.ABEngine;
-import my.game.achmed.R;
+import my.game.achmed.Level;
 import my.game.achmed.Activities.ABMultiplayer;
 import my.game.achmed.Characters.Player;
+import my.game.achmed.Characters.Robot;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 //Class used to process communications to peer.
 public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 
-
-    private Socket mCliSocket;
     private ServerSocket mSrvSocket;
-    private final String TAG = "===IncommingCommTask===";
     private ReceiveCommTask rct;
     private List<Socket> peersSockets;
     protected ABMultiplayer activity;
@@ -61,8 +59,11 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 		char[][] m = ABEngine.MAP;
 		int x = (int) pl.getXPosition();
 		int y = (int) pl.getYPosition();
+		Level level = ABEngine.LEVEL;
+		//Map<Character, Player> opponentsPlayers = ABEngine.PLAYERS;
+		//List<Robot> robots  = ABEngine.ROBOTS;
 		
-		InitState initS = new InitState(id,e,m,x,y);
+		InitState initS = new InitState(id,e,m,x,y, level);
 
 
 		for (Socket cSocket : peersSockets){

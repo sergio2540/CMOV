@@ -1,17 +1,9 @@
 package my.game.achmed.Multiplayer;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
-import my.game.achmed.ABEngine;
-import my.game.achmed.R;
-import my.game.achmed.Activities.ABGame;
-import android.content.res.Resources.NotFoundException;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 //Used to connect to group owner.
 public class OutgoingCommTask extends AsyncTask<String, Void, String> {

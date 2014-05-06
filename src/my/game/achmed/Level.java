@@ -7,29 +7,36 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import android.util.JsonReader;
 
 
-public class Level {
+public class Level implements Serializable {
 
-    private final String levelName;
-    private final float gameDurationInSeconds;
-    private final float explosionTimeoutInSeconds;
-    private final float explosionDurationInSeconds;
-    private final float explosionRange;
-    private final float robotSpeedInCellPerSeconds;
-    private final float pointsPerRobotKilled;
-    private final float pointsPerOpponentKilled;
-    private final char[][] gameLevelMatrix;
+    private static final long serialVersionUID = 1L;
+    
+    private String levelName;
+    private float gameDurationInSeconds;
+    private float explosionTimeoutInSeconds;
+    private float explosionDurationInSeconds;
+    private float explosionRange;
+    private float robotSpeedInCellPerSeconds;
+    private float pointsPerRobotKilled;
+    private float pointsPerOpponentKilled;
+    private char[][] gameLevelMatrix;
 
     private static boolean verified = false;
 
-
-    private Level(String ln, float gd, float et, float ed, float er, float rs, float pr, float po, char [][] gl) {
-
+    public Level(){
+	
+    }
+    
+    public Level(String ln, float gd, float et, float ed, float er, float rs, float pr, float po, char [][] gl) {
 	this.levelName = ln;
 	this.gameDurationInSeconds = gd;
 	this.explosionTimeoutInSeconds = et;
@@ -40,8 +47,6 @@ public class Level {
 	this.pointsPerOpponentKilled = po;
 	this.gameLevelMatrix = gl;
     }
-
-
 
     public String getLevelName(){
 	return levelName;
@@ -79,7 +84,6 @@ public class Level {
 	return gameLevelMatrix;
     }
 
-    //TODO estas informaçoes explosionRange etc, etc... deviam estar no engine?
     public static Level load(String level){
 
 	String ln = "";
@@ -241,7 +245,7 @@ public class Level {
 
 	    }
 
-	    if(this.verified) {
+	    if(Level.verified) {
 		bufferedWriter.write("Verified");
 	    } else {
 		bufferedWriter.write("Not Verified");
@@ -261,4 +265,33 @@ public class Level {
 	} 
 
     }
+    
+    private void writeObject(ObjectOutputStream stream) throws IOException{
+	stream.writeUTF(levelName);
+	
+	stream.writeFloat(gameDurationInSeconds);
+	stream.writeFloat(explosionTimeoutInSeconds);
+	stream.writeFloat(explosionDurationInSeconds);
+	stream.writeFloat(explosionRange);
+	stream.writeFloat(robotSpeedInCellPerSeconds);
+	stream.writeFloat(pointsPerRobotKilled);
+	stream.writeFloat(pointsPerOpponentKilled);
+	
+	stream.writeObject(ABEngine.MAP);
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
+	this.levelName = stream.readUTF();
+	
+	this.gameDurationInSeconds = stream.readFloat();
+	this.explosionTimeoutInSeconds = stream.readFloat();
+	this.explosionDurationInSeconds = stream.readFloat();
+	this.explosionRange = stream.readFloat();
+	this.robotSpeedInCellPerSeconds = stream.readFloat();
+	this.pointsPerRobotKilled = stream.readFloat();
+	this.pointsPerOpponentKilled = stream.readFloat();
+	ABEngine.MAP = (char[][]) stream.readObject();
+	this.gameLevelMatrix = ABEngine.MAP;
+    }
+    
 }

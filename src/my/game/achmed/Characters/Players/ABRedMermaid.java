@@ -8,6 +8,9 @@ import android.content.Context;
 
 public class ABRedMermaid extends Player {
 
+
+    private static final long serialVersionUID = 1L;
+
     //id == 2
     public ABRedMermaid(float xpos, float ypos) {
 	super('2',xpos,ypos);	

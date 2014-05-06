@@ -2,6 +2,9 @@ package my.game.achmed.Characters;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -16,20 +19,22 @@ import my.game.achmed.ABEngine;
 import my.game.achmed.Characters.Robots.ABGreenRobot;
 import my.game.achmed.Characters.Robots.ABRedRobot;
 import my.game.achmed.Characters.Robots.ABYellowRobot;
+import my.game.achmed.Multiplayer.Event;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 import android.util.Log;
 
-public abstract class Robot extends Character {
+public abstract class Robot extends Character implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     protected CHARACTER_ACTION robotAction = CHARACTER_ACTION.LEFT;
 
-
     private float counter = 0;
     private final float COUNTER_MAX; 
-    
+
     private float getCounter(){
 	return counter;
     }
@@ -52,7 +57,7 @@ public abstract class Robot extends Character {
 	return textures;
     }
 
-  
+
     private final static float vertices[] = {
 
 	0.0f, 0.0f, 0.0f,
@@ -93,14 +98,14 @@ public abstract class Robot extends Character {
 	//Log.w("speed", "" +this.speed);
 	this.COUNTER_MAX = (100/this.speed);
     }
-    
-    
+
+
     public static Robot create(float x, float y) {
 
 	Robot robot;
 
 	int i = r.nextInt(3);
-		
+
 	if(i == 0){
 
 	    robot = new ABGreenRobot(x, y);
@@ -115,8 +120,8 @@ public abstract class Robot extends Character {
 
 	return robot;
     }
-    
-    
+
+
 
     public void draw(GL10 gl) {
 
@@ -156,17 +161,17 @@ public abstract class Robot extends Character {
 	    } catch (IOException e) {
 	    }
 	}
-	
+
 	int w = bitmap.getWidth();
 	int h = bitmap.getHeight();
-	
+
 	int w2 = (int) Math.pow(2,Math.ceil(Math.log(w)/Math.log(2.0)));
 	int h2 = (int) Math.pow(2,Math.ceil(Math.log(h)/Math.log(2.0)));
 
 	bitmap =  Bitmap.createScaledBitmap(bitmap,w2,h2,true);
-	
-	
-		
+
+
+
 	gl.glGenTextures(1, textures, 0);
 	gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 
@@ -428,7 +433,7 @@ public abstract class Robot extends Character {
 
 	if(ABEngine.PLAYER.isInRange(mtx_x, mtx_y)){
 	    ABEngine.PLAYER.kill();
-	   // ABEngine.PLAYER = null;
+	    // ABEngine.PLAYER = null;
 
 	}
 	else {
@@ -454,6 +459,14 @@ public abstract class Robot extends Character {
 	int mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),robotAction);
 	ABEngine.setObject(mtx_x,mtx_y,'-');
 	isDead = true;
+
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException{
+
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
 
     }
 
