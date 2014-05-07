@@ -29,7 +29,7 @@ public class PlayerState extends State {
 	
 	
 	private void writeObject(ObjectOutputStream stream) throws IOException{
-		stream.writeObject(playerId);
+		stream.writeChar(playerId);
 		stream.writeObject(event);
 		stream.writeObject(playerAction);
 	}

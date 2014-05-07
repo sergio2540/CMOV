@@ -56,18 +56,7 @@ public class OutgoingCommTask extends AsyncTask<String, Void, String> {
 	}		
     }
 
-    public void sendPlayerAction(CHARACTER_ACTION ca, char playerId) {
-
-	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca);
-	try {
-	    OutputStream os = new ObjectOutputStream(groupOwner.getOutputStream());
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-
-    }
-
-
-
+   
+    
 
 }

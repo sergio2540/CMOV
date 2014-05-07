@@ -16,6 +16,8 @@ import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
 import my.game.achmed.Events.LoadingEvent;
+import my.game.achmed.Multiplayer.OutgoingCommTask;
+import my.game.achmed.Multiplayer.ReceiveCommTask;
 import android.view.View;
 import android.widget.TextView;
 
@@ -352,5 +354,8 @@ public class ABEngine {
 	return ABEngine.loadingEvent;
     }
 
-
+    public static void sendPlayerAction(char playerId, CHARACTER_ACTION ca) {
+	ReceiveCommTask.sendPlayerAction(ca, playerId);
+    }
+    
 }

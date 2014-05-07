@@ -105,7 +105,7 @@ public class ABGameRenderer implements Renderer {
 	
 	
 	if(ABEngine.ROBOTS.size() != 0)
-	    moveRobots(gl);
+	    //moveRobots(gl);
 
 	if(ABEngine.PLAYERS.size() != 0)
 	    movePlayers(gl);
@@ -162,8 +162,8 @@ public class ABGameRenderer implements Renderer {
 
 		p.move(gl);
 
-		if (p.getCounter() == 0)
-		    p.changePlayerAction();
+//		if (p.getCounter() == 0)
+//		    p.changePlayerAction();
 
 	    }
 	}
@@ -412,10 +412,13 @@ public class ABGameRenderer implements Renderer {
 		    ABEngine.PLAYERS = new TreeMap<java.lang.Character,Player>();
 
 		}
+		
+		
+		ABEngine.FIRST_MAP_DRAW = false;
 
 	}
 	
-	ABEngine.FIRST_MAP_DRAW = false;
+	
 
     }
 

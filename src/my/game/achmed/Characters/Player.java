@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -69,6 +70,11 @@ public abstract class Player extends Character implements Serializable {
 
     public void setAction(CHARACTER_ACTION playerAction) {
 	this.playerAction = playerAction;
+	
+	if(ABEngine.isOnMultiplayer && this.id == ABEngine.PLAYER.getID()){
+	    ABEngine.sendPlayerAction(id, playerAction);
+	}
+    
     }
 
     private int counter = 0;
@@ -585,11 +591,18 @@ public abstract class Player extends Character implements Serializable {
 	options.add('2');
 	options.add('3');
 	options.add('4');
-
+	
+	Set<java.lang.Character> players = new HashSet<java.lang.Character>();
+	
 	if(ABEngine.PLAYERS != null){
-	    Set<java.lang.Character> players = ABEngine.PLAYERS.keySet();
-	    options.removeAll(players);
+	    players.addAll(ABEngine.PLAYERS.keySet());
 	}
+	
+	if(ABEngine.PLAYER != null)
+	    players.add(ABEngine.PLAYER.getID());
+	
+	
+	options.removeAll(players);
 
 
 

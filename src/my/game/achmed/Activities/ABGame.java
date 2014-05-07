@@ -224,7 +224,6 @@ public class ABGame extends Activity {
 
 			if (ABEngine.PLAYER != null)
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.DOWN);
-
 			setaBaixo.setImageResource(R.drawable.arrow_down);
 		    }
 

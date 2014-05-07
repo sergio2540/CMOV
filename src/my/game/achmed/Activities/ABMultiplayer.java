@@ -218,5 +218,6 @@ public class ABMultiplayer extends Activity {
 	});
     }
 
+    public ABMultiplayer blabla(){return ABMultiplayer.this;}
 
 }

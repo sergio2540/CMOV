@@ -55,10 +55,16 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 		
 		Player pl = ABEngine.createRandomPlayer();
 		
+		
+		
+		
 		char id = pl.getID();
 		Event e = Event.INIT;
 		int x = (int) pl.getXPosition();
 		int y = (int) pl.getYPosition();
+		ABEngine.PLAYERS.put(id, pl);
+		ABEngine.setObject(x / 100, y/100, id);
+		ABEngine.FIRST_MAP_DRAW = true;
 		
 		Level level = ABEngine.LEVEL;
 		//Map<Character, Player> opponentsPlayers = ABEngine.PLAYERS;
