@@ -58,7 +58,8 @@ public class ABGame extends Activity {
     private Dialog wonOrLostPopUp;
 
     private CountDownTimer c;
-    private long millisUntilFinished;
+
+    //private long millisUntilFinished;
 
     SingleRankDataSource singleRankDataSource;
 
@@ -125,14 +126,14 @@ public class ABGame extends Activity {
 
 		if(event.getAction() == (MotionEvent.ACTION_UP)){
 
-		    ABEngine.STOP = true;
+		    ABEngine.PLAYER.STOP = true;
 		    setaEsquerda.setImageResource(R.drawable.arrow_left_normal);
 
 		}
 		else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-		    if(ABEngine.STOPPED) {
-			ABEngine.STOP = false;
+		    if(ABEngine.PLAYER.STOPPED) {
+			ABEngine.PLAYER.STOP = false;
 
 			if (ABEngine.PLAYER != null)
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.LEFT);
@@ -154,14 +155,14 @@ public class ABGame extends Activity {
 
 		if(event.getAction() == (MotionEvent.ACTION_UP)){
 
-		    ABEngine.STOP = true;
+		    ABEngine.PLAYER.STOP = true;
 		    setaDireita.setImageResource(R.drawable.arrow_right_normal);
 
 		}
 		else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-		    if(ABEngine.STOPPED) {
-			ABEngine.STOP = false;
+		    if(ABEngine.PLAYER.STOPPED) {
+			ABEngine.PLAYER.STOP = false;
 
 			if (ABEngine.PLAYER != null)
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.RIGHT);
@@ -183,15 +184,15 @@ public class ABGame extends Activity {
 
 		if(event.getAction() == (MotionEvent.ACTION_UP)){
 
-		    ABEngine.STOP = true;
+		    ABEngine.PLAYER.STOP = true;
 		    setaCima.setImageResource(R.drawable.arrow_up_normal);
 
 
 		}
 		else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-		    if(ABEngine.STOPPED) {
-			ABEngine.STOP = false;
+		    if(ABEngine.PLAYER.STOPPED) {
+			ABEngine.PLAYER.STOP = false;
 
 			if (ABEngine.PLAYER != null)
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.UP);
@@ -214,14 +215,14 @@ public class ABGame extends Activity {
 		if(event.getAction() == (MotionEvent.ACTION_UP)){
 
 		    //ABEngine.PLAYER_ACTION = ABEngine.PLAYER_DOWN_RELEASE;
-		    ABEngine.STOP = true;
+		    ABEngine.PLAYER.STOP = true;
 		    setaBaixo.setImageResource(R.drawable.arrow_down_normal);
 
 		}
 		else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-		    if(ABEngine.STOPPED) {
-			ABEngine.STOP = false;
+		    if(ABEngine.PLAYER.STOPPED) {
+			ABEngine.PLAYER.STOP = false;
 
 			if (ABEngine.PLAYER != null)
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.DOWN);
@@ -301,7 +302,7 @@ public class ABGame extends Activity {
 		else {
 		    button.setImageResource(R.drawable.pause);
 		    this.pauseOrPlay = R.drawable.pause;
-		    c = counter(millisUntilFinished);
+		    c = counter((long)ABEngine.MILLIS_UNTIL_FINISHED);
 		    c.start();
 		    onResume();
 
@@ -333,10 +334,10 @@ public class ABGame extends Activity {
 
 	textView_namePlayer.setText(ABEngine.PLAYER_NICK);
 
-	millisUntilFinished = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
+	ABEngine.MILLIS_UNTIL_FINISHED = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
 
 	//millisUntilFinished = Math.round(60*1000);
-	c = counter(millisUntilFinished);
+	c = counter((long)ABEngine.MILLIS_UNTIL_FINISHED);
 	c.start();
 
 	ABEngine.GAME = ABGame.this;
@@ -354,7 +355,7 @@ public class ABGame extends Activity {
 	    @Override
 	    public void onTick(long ms) {
 		date.setTime(ms);
-		millisUntilFinished = ms;
+		ABEngine.MILLIS_UNTIL_FINISHED = ms;
 		((TextView)findViewById(R.id.time)).setText(formatter.format(date));
 	    }
 
@@ -447,7 +448,7 @@ public class ABGame extends Activity {
     }
 
     public void onClickResume(View v){
-	c = counter(millisUntilFinished);
+	c = counter((long)ABEngine.MILLIS_UNTIL_FINISHED);
 	c.start();
 	onResume();
 	backPopUp.cancel();

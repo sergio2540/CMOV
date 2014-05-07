@@ -69,9 +69,12 @@ public class ABEngine {
     public static boolean FIRST_MAP_DRAW = true;
 
     public static int MAX_COUNTER = (int) (100f / 10f);
+    
+    public static float MILLIS_UNTIL_FINISHED = 0;
 
-    public static boolean STOP = true;
-    public static boolean STOPPED = true;
+    
+    //public static boolean STOP = true;
+    //public static boolean STOPPED = true;
 
 
     //State
@@ -354,8 +357,8 @@ public class ABEngine {
 	return ABEngine.loadingEvent;
     }
 
-    public static void sendPlayerAction(char playerId, CHARACTER_ACTION ca) {
-	ReceiveCommTask.sendPlayerAction(ca, playerId);
+    public static void sendPlayerAction(char playerId, CHARACTER_ACTION ca, boolean stop, boolean stopped) {
+	ReceiveCommTask.sendPlayerAction(ca, playerId, stop, stopped);
     }
     
     public static void sendDropBombAction(char playerId, BOMB_ACTION ba) {

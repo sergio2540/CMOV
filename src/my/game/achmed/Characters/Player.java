@@ -37,6 +37,9 @@ public abstract class Player extends Character implements Serializable {
     private final char id;
 
     private ABBomb bomb;
+    
+    public boolean STOP = true;
+    public boolean STOPPED = true;
 
     private void setBomb(ABBomb bomb){
 	this.bomb = bomb; 
@@ -72,7 +75,7 @@ public abstract class Player extends Character implements Serializable {
 	this.playerAction = playerAction;
 	
 	if(ABEngine.isOnMultiplayer && this.id == ABEngine.PLAYER.getID()){
-	    ABEngine.sendPlayerAction(id, playerAction);
+	    ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
 	}
     
     }
@@ -346,11 +349,12 @@ public abstract class Player extends Character implements Serializable {
 
 	    this.setCounter((this.getCounter() + 1) % COUNTER_MAX);
 
-	    if(this.getCounter() == 0 && ABEngine.STOP){
+	    if(this.getCounter() == 0 && this.STOP){
 
-		ABEngine.STOPPED = true;
+		this.STOPPED = true;
 		this.setCounter(0);
 		playerAction = CHARACTER_ACTION.LEFT_RELEASE;
+		ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
 	    }
 
 	    break;
@@ -369,11 +373,12 @@ public abstract class Player extends Character implements Serializable {
 
 	    this.setCounter((this.getCounter() + 1) % COUNTER_MAX );
 
-	    if(this.getCounter() == 0 && ABEngine.STOP) {
+	    if(this.getCounter() == 0 && this.STOP) {
 
-		ABEngine.STOPPED = true;
+		this.STOPPED = true;
 		this.setCounter(0);
 		playerAction = CHARACTER_ACTION.RIGHT_RELEASE;
+		ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
 
 	    }
 
@@ -393,11 +398,12 @@ public abstract class Player extends Character implements Serializable {
 
 	    this.setCounter((this.getCounter() + 1) % COUNTER_MAX );
 
-	    if(this.getCounter() == 0 && ABEngine.STOP) {
+	    if(this.getCounter() == 0 && this.STOP) {
 
-		ABEngine.STOPPED = true;
+		this.STOPPED = true;
 		this.setCounter(0);
 		playerAction = CHARACTER_ACTION.UP_RELEASE;
+		ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
 
 	    }
 
@@ -416,10 +422,11 @@ public abstract class Player extends Character implements Serializable {
 
 	    this.setCounter((this.getCounter() + 1) % COUNTER_MAX );
 
-	    if(this.getCounter() == 0 && ABEngine.STOP) {
-		ABEngine.STOPPED = true;
+	    if(this.getCounter() == 0 && this.STOP) {
+		this.STOPPED = true;
 		this.setCounter(0);
 		playerAction = CHARACTER_ACTION.DOWN_RELEASE;
+		ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
 
 	    }
 

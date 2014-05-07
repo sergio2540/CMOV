@@ -267,9 +267,11 @@ public class Level implements Serializable {
     }
     
     private void writeObject(ObjectOutputStream stream) throws IOException{
+	
 	stream.writeUTF(levelName);
 	
-	stream.writeFloat(gameDurationInSeconds);
+	stream.writeFloat(ABEngine.MILLIS_UNTIL_FINISHED/1000);
+	
 	stream.writeFloat(explosionTimeoutInSeconds);
 	stream.writeFloat(explosionDurationInSeconds);
 	stream.writeFloat(explosionRange);
@@ -281,8 +283,8 @@ public class Level implements Serializable {
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
-	this.levelName = stream.readUTF();
 	
+	this.levelName = stream.readUTF();
 	this.gameDurationInSeconds = stream.readFloat();
 	this.explosionTimeoutInSeconds = stream.readFloat();
 	this.explosionDurationInSeconds = stream.readFloat();
@@ -292,6 +294,7 @@ public class Level implements Serializable {
 	this.pointsPerOpponentKilled = stream.readFloat();
 	ABEngine.MAP = (char[][]) stream.readObject();
 	this.gameLevelMatrix = ABEngine.MAP;
+	
     }
     
 }

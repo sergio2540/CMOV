@@ -20,14 +20,13 @@ import android.util.Log;
 public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
     private static Socket groupOwner = null;
-    private static List<Socket> peers = null;
+    private static List<Socket> peers = new ArrayList<Socket>();;
 
     public ReceiveCommTask(Socket s) {
 	groupOwner = s;
     }
 
     public ReceiveCommTask(){
-	peers = new ArrayList<Socket>();
     }
 
     public Socket getGroupOwner() {
@@ -76,8 +75,14 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	//Players action
 	case PLAYER:
 	    PlayerState pState = (PlayerState) message;
-	    ABEngine.setPlayerAction(pState.getPlayerId(), pState.getPlayerAction());
+	    if(pState.getPlayerId() == ABEngine.PLAYER.getID() ){
+		return;
+	    }
 
+	    ABEngine.setPlayerAction(pState.getPlayerId(), pState.getPlayerAction());
+	    Player player = ABEngine.PLAYERS.get(pState.getPlayerId());
+	    player.STOP = pState.isStop();
+	    player.STOPPED = pState.isStopped();
 	    //if(isGroupOwner()) {
 		//broadCastPlayerEvent(pState);
 	    //}
@@ -86,10 +91,13 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	    //Players bomb
 	case BOMB:
 	    BombState bState = (BombState) message;
+	    if(bState.getPlayerId() == ABEngine.PLAYER.getID() ){
+		return;
+	    }
 	    ABEngine.setBombAction(bState.getPlayerId(), bState.getBombAction());
 	    break;
 	    //Received by the client
-	case INIT:
+	case INIT://e aqui vao haver envios de volta?
 	    InitState iState = (InitState) message;
 
 	    ABEngine.LEVEL = iState.getLevel();
@@ -171,11 +179,13 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	}
 
     }
-    public static void sendPlayerAction(CHARACTER_ACTION ca, char playerId) {
+    public static void sendPlayerAction(CHARACTER_ACTION ca, char playerId, boolean stop, boolean stopped) {
 
-	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca);
+	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca, stop, stopped);
 	if (groupOwner == null)
 	{
+	  
+	    
 	    for (Socket client : peers)
 	    {
 		 ObjectOutputStream os;
