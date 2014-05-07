@@ -1,7 +1,12 @@
 package my.game.achmed.Multiplayer;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import my.game.achmed.Characters.CHARACTER_ACTION;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,17 +26,17 @@ public class OutgoingCommTask extends AsyncTask<String, Void, String> {
 
 	while(true){
 	    try {
-		
+
 		groupOwner = new Socket();
 		groupOwner.bind(null);
 		groupOwner.connect(new InetSocketAddress(params[0],9091), 500);
 		break;
-		
+
 	    } catch (Exception e) {
 		Log.w("out", e.toString());
 	    }  
 	}
-	
+
 	return null;
 
 
@@ -50,6 +55,19 @@ public class OutgoingCommTask extends AsyncTask<String, Void, String> {
 	    mComm.execute();
 	}		
     }
+
+    public void sendPlayerAction(CHARACTER_ACTION ca, char playerId) {
+
+	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca);
+	try {
+	    OutputStream os = new ObjectOutputStream(groupOwner.getOutputStream());
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+
+    }
+
+
 
 
 }

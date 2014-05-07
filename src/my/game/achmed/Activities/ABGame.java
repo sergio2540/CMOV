@@ -102,15 +102,17 @@ public class ABGame extends Activity {
 	gameView.setRenderer(new ABGameRenderer());
 
 
-	ABEngine.PLAYER = null;
-	ABEngine.PLAYERS = new TreeMap<Character,Player>();
-	ABEngine.ROBOTS = new ArrayList<Robot>();
+	//ABEngine.PLAYER = null;
+	//ABEngine.PLAYERS = new TreeMap<Character,Player>();
+	//ABEngine.ROBOTS = new ArrayList<Robot>();
 	
-	if(ABEngine.LEVEL != null)
-	    ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
-	else {
+	//if(ABEngine.LEVEL != null)
+	
+	ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
+	
+	//else {
 	    //ABEngine.create_map(ABEngine.LEVE.getGameLevelMatrix());
-	}
+	//}
 	
 
 	final ImageButton setaEsquerda = (ImageButton) findViewById(R.id.arrow_left);
@@ -329,9 +331,9 @@ public class ABGame extends Activity {
 
 	textView_namePlayer.setText(ABEngine.PLAYER_NICK);
 
-	//millisUntilFinished = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
+	millisUntilFinished = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
 	
-	millisUntilFinished = Math.round(60*1000);
+	//millisUntilFinished = Math.round(60*1000);
 	c = counter(millisUntilFinished);
 	c.start();
 

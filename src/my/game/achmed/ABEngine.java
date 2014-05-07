@@ -15,11 +15,14 @@ import my.game.achmed.Characters.BOMB_ACTION;
 import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
+import my.game.achmed.Events.LoadingEvent;
 import android.view.View;
 import android.widget.TextView;
 
 public class ABEngine {
 
+    public static LoadingEvent loadingEvent = new LoadingEvent();
+    
     public static final int GAME_THREAD_DELAY = 2000;
 
     public static int displayWidth = 0;
@@ -341,6 +344,12 @@ public class ABEngine {
 
 	ABEngine.PLAYERS.get(id).getBomb().setAction(action);
 
+    }
+    
+    
+    
+    public static LoadingEvent getLoadingEvent() {
+	return ABEngine.loadingEvent;
     }
 
 

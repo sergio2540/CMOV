@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.game.achmed.ABEngine;
+import my.game.achmed.Activities.ABMultiplayer;
 import my.game.achmed.Characters.Player;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -75,12 +76,18 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 			//Received by the client
 		case INIT:
 			InitState iState = (InitState) message;
-			ABEngine.create_map(iState.getGameMap()); 
+			
 			ABEngine.LEVEL = iState.getLevel();
 			
+			if (ABEngine.LEVEL != null){
+			    ABEngine.create_map(iState.getLevel().getGameLevelMatrix()); 
+			}
+			
 			ABEngine.PLAYER = Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY());
-			//ABEngine.PLAYERS = iState.getOpponentsPlayers();
-			//ABEngine.ROBOTS = iState.getRobots();
+			
+			//ABEngine.PLAYER = iState.getPlayer();
+			//le.doEvent(true);
+			ABEngine.loadingEvent.doLoadingEvent(true);
 			
 			break;
 		}

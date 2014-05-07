@@ -180,14 +180,18 @@ public class ABGameRenderer implements Renderer {
 
 	ABEngine.START_X = (ABEngine.start_x/0.05f) - x_max/2.f;
 	ABEngine.START_Y = (ABEngine.start_y/0.05f) - y_max/2.f;
+	
+	
+	//No inicio
+	if (ABEngine.FIRST_MAP_DRAW) {
+	    
+	    ABEngine.ROBOTS = new ArrayList<Robot>();
+	    ABEngine.PLAYERS = new TreeMap<java.lang.Character,Player>();
 
+	}
 
-	//List<Player> t = new ArrayList<Player>();
-	//t.addAll(ABEngine.PLAYERS.values());
-	//t.add(ABEngine.PLAYER);
-
-	List<String> rs = new ArrayList<String>();
-	List<String> ps = new ArrayList<String>();
+	//List<String> rs = new ArrayList<String>();
+	//List<String> ps = new ArrayList<String>();
 
 	for(int x=0; x < x_max; x++) {
 	    for(int y=0; y < y_max; y++) {
@@ -230,7 +234,7 @@ public class ABGameRenderer implements Renderer {
 
 		case '1':
 
-		    ps.add("1");
+		    //ps.add("1");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
@@ -257,7 +261,7 @@ public class ABGameRenderer implements Renderer {
 		    break;
 		case '2':
 
-		    ps.add("2");
+		    //ps.add("2");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
@@ -285,7 +289,7 @@ public class ABGameRenderer implements Renderer {
 
 		case '3':
 
-		    ps.add("3");
+		    //ps.add("3");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
@@ -313,7 +317,7 @@ public class ABGameRenderer implements Renderer {
 		    
 		case '4':
 
-		    ps.add("4");
+		    //ps.add("4");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
@@ -340,7 +344,7 @@ public class ABGameRenderer implements Renderer {
 
 
 		case 'R':
-		    rs.add("R");
+		    //rs.add("R");
 		    gl.glMatrixMode(GL10.GL_TEXTURE);
 		    gl.glLoadIdentity();
 		    gl.glTranslatef(0.3125f, 0.375f, 0f);
@@ -367,26 +371,50 @@ public class ABGameRenderer implements Renderer {
 
 	}
 	//gl.glPopMatrix();
-
-
-
-//	Log.w("map","TRUE SIZE Robots"+ABEngine.ROBOTS.size());
-//	Log.w("map","SIZE Robots"+rs.size());
-//	Log.w("map","SIZE Players"+ps.size());
-
-	//Choose random player
+	
+	//No fim
 	if (ABEngine.FIRST_MAP_DRAW){
-	    int i = 1 + r.nextInt(ABEngine.PLAYERS.values().size());
 
-	    char k = (char)(('0')+i);
+		if (ABEngine.PLAYER != null){ 
+			
+		    	//multiplayer
+		
+			//int x = (int) ABEngine.PLAYER.getXPosition()/100;
+			//int y = (int) ABEngine.PLAYER.getYPosition()/100;
+			
+			char id = ABEngine.PLAYER.getID();
+			ABEngine.PLAYERS.remove(id);
+			
+			//colocar player na matrix
+			//ABEngine.setObject(x,y,id);
 
-	    ABEngine.PLAYER = ABEngine.PLAYERS.get(k);
-	    ABEngine.PLAYERS.remove(k);
-	    Log.w("map", ""+k);
+		}
 
-	    //ABEngine.PLAYER =  Player.create('3', 4*100,4*100);
+		if (ABEngine.PLAYER == null){
+			
+		    //single
+		    int i = 1 + r.nextInt(ABEngine.PLAYERS.values().size());
+		    char k = (char)(('0')+i);
+		    ABEngine.PLAYER = ABEngine.PLAYERS.get(k);
+		    ABEngine.PLAYERS.remove(k); //remove player
+		    
+		    //Remove todos os players da matrix menos o player
+
+		    for(Player p : ABEngine.PLAYERS.values()){
+		    	int x = (int) p.getXPosition()/100;
+		    	int y = (int) p.getYPosition()/100;
+		    	//char id = p.getID();
+		    	ABEngine.setObject(x,y,'-');
+
+		    }
+
+		    //Remove todos os players
+		    ABEngine.PLAYERS = new TreeMap<java.lang.Character,Player>();
+
+		}
+
 	}
-
+	
 	ABEngine.FIRST_MAP_DRAW = false;
 
     }

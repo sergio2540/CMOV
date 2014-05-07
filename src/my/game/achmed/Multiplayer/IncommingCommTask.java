@@ -54,21 +54,21 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 		peersSockets.add(clientSocket);
 		
 		Player pl = ABEngine.createRandomPlayer();
+		
 		char id = pl.getID();
 		Event e = Event.INIT;
-		char[][] m = ABEngine.MAP;
 		int x = (int) pl.getXPosition();
 		int y = (int) pl.getYPosition();
+		
 		Level level = ABEngine.LEVEL;
 		//Map<Character, Player> opponentsPlayers = ABEngine.PLAYERS;
 		//List<Robot> robots  = ABEngine.ROBOTS;
 		
-		InitState initS = new InitState(id,e,m,x,y, level);
+		InitState initS = new InitState(id,e,x,y,level);
 
 
 		for (Socket cSocket : peersSockets){
 		    ObjectOutputStream os = new ObjectOutputStream(cSocket.getOutputStream());
-		    //os.writeObject(n);
 		    os.writeObject(initS);
 		    //os.close();
 		}

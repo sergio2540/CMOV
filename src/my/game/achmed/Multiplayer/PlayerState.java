@@ -9,9 +9,6 @@ import my.game.achmed.Characters.CHARACTER_ACTION;
 
 public class PlayerState extends State {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private CHARACTER_ACTION playerAction;

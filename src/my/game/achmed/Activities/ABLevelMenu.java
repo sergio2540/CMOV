@@ -73,6 +73,7 @@ public class ABLevelMenu extends Activity {
 		
 		ABEngine.LEVEL = level;
 		ABEngine.create_map(level.getGameLevelMatrix());
+		ABEngine.PLAYER = null;
 		
 		return true;
 	    }
