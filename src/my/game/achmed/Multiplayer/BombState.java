@@ -9,11 +9,14 @@ import my.game.achmed.Characters.BOMB_ACTION;
 
 public class BombState extends State{
 
+	private static final long serialVersionUID = 1L;
+
 	private BOMB_ACTION bombAction;
 
 	public BombState(char pId, Event e, BOMB_ACTION pAction){
 		super(pId, e);
 		playerId = pId;
+		bombAction = pAction;
 	}
 	
 	public BOMB_ACTION getBombAction() {

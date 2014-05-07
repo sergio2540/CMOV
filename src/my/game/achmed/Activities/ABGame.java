@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import my.game.achmed.ABEngine;
 import my.game.achmed.ABMusic;
 import my.game.achmed.R;
+import my.game.achmed.Characters.BOMB_ACTION;
 import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
@@ -61,18 +62,18 @@ public class ABGame extends Activity {
 
     SingleRankDataSource singleRankDataSource;
 
-   
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.ab_game);
-	
+
 
 	singleRankDataSource = new SingleRankDataSource(this);
 
-	
+
 
 	backPopUp = new Dialog(this);
 
@@ -105,15 +106,15 @@ public class ABGame extends Activity {
 	//ABEngine.PLAYER = null;
 	//ABEngine.PLAYERS = new TreeMap<Character,Player>();
 	//ABEngine.ROBOTS = new ArrayList<Robot>();
-	
+
 	//if(ABEngine.LEVEL != null)
-	
+
 	ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
-	
+
 	//else {
-	    //ABEngine.create_map(ABEngine.LEVE.getGameLevelMatrix());
+	//ABEngine.create_map(ABEngine.LEVE.getGameLevelMatrix());
 	//}
-	
+
 
 	final ImageButton setaEsquerda = (ImageButton) findViewById(R.id.arrow_left);
 
@@ -271,8 +272,10 @@ public class ABGame extends Activity {
 
 		    // ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
 
-		    if (ABEngine.PLAYER != null)
+		    if (ABEngine.PLAYER != null) {
 			ABEngine.PLAYER.getBomb().drop();
+			ABEngine.sendDropBombAction(ABEngine.PLAYER.getID(), BOMB_ACTION.BOMB_DROP);
+		    }
 
 		    bombButton.setImageResource(R.drawable.bomb_button_pressed);
 
@@ -331,7 +334,7 @@ public class ABGame extends Activity {
 	textView_namePlayer.setText(ABEngine.PLAYER_NICK);
 
 	millisUntilFinished = Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000);
-	
+
 	//millisUntilFinished = Math.round(60*1000);
 	c = counter(millisUntilFinished);
 	c.start();
@@ -535,7 +538,7 @@ public class ABGame extends Activity {
 	Intent ab_main = new Intent(getApplicationContext(), ABMainMenu.class);
 	startActivity(ab_main);
 	this.finish();
-	
+
     }
 
 }

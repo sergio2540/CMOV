@@ -10,6 +10,7 @@ import java.util.List;
 
 import my.game.achmed.ABEngine;
 import my.game.achmed.Activities.ABMultiplayer;
+import my.game.achmed.Characters.BOMB_ACTION;
 import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import android.os.AsyncTask;
@@ -199,6 +200,36 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	    e.printStackTrace();
 	}
 
+    }
+
+    public static void sendDropBombAction(BOMB_ACTION ba, char playerId) {
+	
+	BombState ps = new BombState(playerId, Event.BOMB, ba);
+	if (groupOwner == null)
+	{
+	    for (Socket client : peers)
+	    {
+		 ObjectOutputStream os;
+		try {
+		    os = new ObjectOutputStream(client.getOutputStream());
+	            os.writeObject(ps);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+		
+	    }	
+	    return;
+
+	}
+	try {
+
+	    ObjectOutputStream os = new ObjectOutputStream(groupOwner.getOutputStream());
+	    os.writeObject(ps);
+
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	
     }
 
 

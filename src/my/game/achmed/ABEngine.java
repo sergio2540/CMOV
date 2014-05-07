@@ -358,4 +358,7 @@ public class ABEngine {
 	ReceiveCommTask.sendPlayerAction(ca, playerId);
     }
     
+    public static void sendDropBombAction(char playerId, BOMB_ACTION ba) {
+   	ReceiveCommTask.sendDropBombAction(ba, playerId);
+       }
 }
