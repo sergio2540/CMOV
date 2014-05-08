@@ -98,9 +98,12 @@ public class ABGameRenderer implements Renderer {
 
 
 
-    private void draw(GL10 gl){
+    private void draw(GL10 gl) {
 
-	//não trocar a ordem das linhas 
+	//nï¿½o trocar a ordem das linhas 
+    
+    ABEngine.drawMapDebug();
+    	
 	drawMap(gl);
 	
 	
@@ -169,7 +172,7 @@ public class ABGameRenderer implements Renderer {
 	}
     }
 
-    public void movePlayer(GL10 gl) {
+    public synchronized void movePlayer(GL10 gl) {
 	ABEngine.PLAYER.move(gl);
     }
 

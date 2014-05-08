@@ -139,6 +139,8 @@ public class ABGame extends Activity {
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.LEFT);
 
 			setaEsquerda.setImageResource(R.drawable.arrow_left);
+		    }else {
+		    	ABEngine.PLAYER.setAction(CHARACTER_ACTION.LEFT);
 		    }
 
 		}
@@ -161,13 +163,15 @@ public class ABGame extends Activity {
 		}
 		else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-		    if(ABEngine.PLAYER.STOPPED) {
+			if(ABEngine.PLAYER.STOPPED) {
 			ABEngine.PLAYER.STOP = false;
 
 			if (ABEngine.PLAYER != null)
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.RIGHT);
 
 			setaDireita.setImageResource(R.drawable.arrow_right);
+		    }else {
+		    	ABEngine.PLAYER.setAction(CHARACTER_ACTION.RIGHT);
 		    }
 
 		}
@@ -198,6 +202,8 @@ public class ABGame extends Activity {
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.UP);
 
 			setaCima.setImageResource(R.drawable.arrow_up);
+		    }else {
+		    	ABEngine.PLAYER.setAction(CHARACTER_ACTION.UP);
 		    }
 		}
 		return true;
@@ -227,6 +233,8 @@ public class ABGame extends Activity {
 			if (ABEngine.PLAYER != null)
 			    ABEngine.PLAYER.setAction(CHARACTER_ACTION.DOWN);
 			setaBaixo.setImageResource(R.drawable.arrow_down);
+		    } else {
+		    	ABEngine.PLAYER.setAction(CHARACTER_ACTION.DOWN);
 		    }
 
 		}
@@ -296,7 +304,9 @@ public class ABGame extends Activity {
 		if(pauseOrPlay ==  R.drawable.pause){
 		    button.setImageResource(R.drawable.play);
 		    this.pauseOrPlay = R.drawable.play;
-		    c.cancel();
+		    if(!ABEngine.isOnMultiplayer) {
+		    	c.cancel();
+		    }
 		    onPause();
 		}
 		else {

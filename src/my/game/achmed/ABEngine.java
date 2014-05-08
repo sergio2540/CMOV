@@ -18,6 +18,7 @@ import my.game.achmed.Characters.Robot;
 import my.game.achmed.Events.LoadingEvent;
 import my.game.achmed.Multiplayer.OutgoingCommTask;
 import my.game.achmed.Multiplayer.ReceiveCommTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -364,4 +365,23 @@ public class ABEngine {
     public static void sendDropBombAction(char playerId, BOMB_ACTION ba) {
    	ReceiveCommTask.sendDropBombAction(ba, playerId);
        }
+    
+    public static void drawMapDebug() {
+    	
+    	Log.w("map", "*******************************************");
+    	int max_x = ABEngine.getMaxX();
+    	int max_y = ABEngine.getMaxY();
+    	String map = "";
+    	for(int y = 0; y < max_y; y++) {
+
+    		for(int x = 0; x < max_x; x++) {
+    			map += "" + ABEngine.getObject(x, y);
+    		}
+    		
+    		map += "\n";
+    	}
+    	Log.w("map", "*******************************************");
+    	Log.w("map", map);
+    }
+    
 }
