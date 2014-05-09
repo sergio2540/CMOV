@@ -13,25 +13,29 @@ public class PlayerState extends State {
 
 	private CHARACTER_ACTION playerAction;
 	private boolean stop = true;
+	private boolean stopped = true;
+	private boolean hidden = false;
+	
 	public boolean isStop() {
 	    return stop;
 	}
-
-	public PlayerState(char pId, Event e, CHARACTER_ACTION pAction, boolean stop, boolean stopped){
+	public boolean isHidden() {
+		return this.hidden;
+	}
+	
+	public PlayerState(char pId, Event e, CHARACTER_ACTION pAction, boolean stop, boolean stopped, boolean hidden) {
 		super(pId, e);
 		playerId = pId;
 		playerAction = pAction;
 		this.stop = stop;
 		this.stopped = stopped;
-		
+		this.hidden = hidden;
 	}
 	
 	public boolean isStopped() {
 	    return stopped;
 	}
 
-	private boolean stopped = true;
-	
 	public CHARACTER_ACTION getPlayerAction() {
 		return playerAction;
 	}
@@ -42,6 +46,7 @@ public class PlayerState extends State {
 		stream.writeObject(playerAction);
 		stream.writeBoolean(stop);
 		stream.writeBoolean(stopped);
+		stream.writeBoolean(hidden);
 	}
 	
 	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
@@ -50,7 +55,7 @@ public class PlayerState extends State {
 		playerAction = (CHARACTER_ACTION) stream.readObject();
 		stop = stream.readBoolean();
 		stopped = stream.readBoolean();
+		hidden = stream.readBoolean();
 	}
-	
 	
 }

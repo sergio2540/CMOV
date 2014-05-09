@@ -83,6 +83,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	    Player player = ABEngine.PLAYERS.get(pState.getPlayerId());
 	    player.STOP = pState.isStop();
 	    player.STOPPED = pState.isStopped();
+	    player.HIDDEN = pState.isHidden();
 	    //if(isGroupOwner()) {
 		//broadCastPlayerEvent(pState);
 	    //}
@@ -179,9 +180,9 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	}
 
     }
-    public static void sendPlayerAction(CHARACTER_ACTION ca, char playerId, boolean stop, boolean stopped) {
+    public static void sendPlayerAction(CHARACTER_ACTION ca, char playerId, boolean stop, boolean stopped, boolean hidden) {
 
-	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca, stop, stopped);
+	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca, stop, stopped, hidden);
 	if (groupOwner == null)
 	{
 	  
@@ -193,7 +194,6 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 		    os = new ObjectOutputStream(client.getOutputStream());
 	            os.writeObject(ps);
 		} catch (IOException e) {
-		    // TODO Auto-generated catch block
 		    e.printStackTrace();
 		}
 		

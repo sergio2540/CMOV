@@ -19,12 +19,10 @@ import my.game.achmed.ABEngine;
 import my.game.achmed.Characters.Robots.ABGreenRobot;
 import my.game.achmed.Characters.Robots.ABRedRobot;
 import my.game.achmed.Characters.Robots.ABYellowRobot;
-import my.game.achmed.Multiplayer.Event;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
-import android.util.Log;
 
 public abstract class Robot extends Character implements Serializable {
 

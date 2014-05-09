@@ -32,6 +32,8 @@ import android.opengl.GLUtils;
 
 public abstract class Player extends Character implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	private final static int COUNTER_MAX = 10; 
 
 	private final char id;
@@ -40,6 +42,20 @@ public abstract class Player extends Character implements Serializable {
 
 	public boolean STOP = true;
 	public boolean STOPPED = true;
+
+	public boolean HIDDEN = false;
+
+	public boolean isHidden() {
+		return this.HIDDEN;
+	}
+	
+	public boolean isStop() {
+		return this.STOP;
+	}
+	
+	public boolean isStopped() {
+		return this.STOPPED;
+	}
 
 	private void setBomb(ABBomb bomb){
 		this.bomb = bomb; 
@@ -50,7 +66,8 @@ public abstract class Player extends Character implements Serializable {
 	public float getScore(){
 		return score;
 	}
-	public void setScore(float score){
+
+	public void setScore(float score) {
 		this.score = score;
 		if(ABEngine.PLAYER.getID() == id)
 			ABEngine.updateScore(ABEngine.PLAYER.getScore());
@@ -59,13 +76,11 @@ public abstract class Player extends Character implements Serializable {
 	private final float pointsPerOpponentKilled;
 	private final float pointsPerRobotKilled;
 
-
 	private final float speed = 10;
 
 	private float getSpeed(){
 		return speed;
 	}
-
 
 	private final Random r = new Random();
 
@@ -76,23 +91,26 @@ public abstract class Player extends Character implements Serializable {
 
 		if(this.STOPPED)
 			nextPlayerAction = null;
-		
+
 		if(this.getCounter() != 0) {
 			nextPlayerAction = playerAction;
 			return;
 		}
-			if(nextPlayerAction != null) {
-				this.playerAction = nextPlayerAction;
-				this.nextPlayerAction = null;
-			} else {
-				this.playerAction = playerAction;
-			}
-			
-
-		if(ABEngine.isOnMultiplayer && this.id == ABEngine.PLAYER.getID()){
-			ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
+		if(nextPlayerAction != null) {
+			this.playerAction = nextPlayerAction;
+			this.nextPlayerAction = null;
+		} else {
+			this.playerAction = playerAction;
 		}
 
+		if(ABEngine.isOnMultiplayer && this.id == ABEngine.PLAYER.getID() && this.isHidden() == false) {
+			ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED, this.HIDDEN);
+		}
+
+	}
+	
+	public CHARACTER_ACTION getCurrentAction() {
+		return this.playerAction;
 	}
 
 	private volatile int counter = 0;
@@ -139,7 +157,7 @@ public abstract class Player extends Character implements Serializable {
 
 	protected Player(char id, float xpos, float ypos) {
 
-		super(vertices, texture,indices);
+		super(vertices, texture, indices);
 		super.setXPosition(xpos);
 		super.setYPosition(ypos);
 
@@ -161,8 +179,7 @@ public abstract class Player extends Character implements Serializable {
 			p = new ABGreenOgre(x, y);
 		} else if (id == '2'){
 			p = new ABRedMermaid(x, y);
-		}
-		else if(id == '3'){
+		} else if(id == '3'){
 			p = new ABAchmed(x,y);  
 		} else {
 			p = new ABPurpleBat(x,y); 
@@ -173,8 +190,6 @@ public abstract class Player extends Character implements Serializable {
 
 		return p;
 	}
-
-
 
 	public void draw(GL10 gl) {
 
@@ -204,8 +219,8 @@ public abstract class Player extends Character implements Serializable {
 		Bitmap bitmap = null;
 		try {
 			bitmap = BitmapFactory.decodeStream(imagestream);
-		}catch(Exception e){
-		}finally {
+		} catch(Exception e){
+		} finally {
 			try {
 				imagestream.close();
 				imagestream = null;
@@ -244,14 +259,11 @@ public abstract class Player extends Character implements Serializable {
 
 	public abstract boolean moveUp(GL10 gl);
 
-
 	public abstract boolean moveDown(GL10 gl);
 
 	public abstract boolean moveLeft(GL10 gl);
 
-
 	public abstract boolean moveRight(GL10 gl);
-
 
 	public void changePlayerAction() {
 
@@ -306,18 +318,16 @@ public abstract class Player extends Character implements Serializable {
 			correctDecision = upDownDecision;
 		}
 
-		else if (yDistance == 0){
+		else if (yDistance == 0)
 			correctDecision = leftRightDecision;
-		}
+			
 		else if(Math.abs(xDistance) < Math.abs(yDistance))
 			correctDecision = leftRightDecision;
 
 		else if(Math.abs(xDistance) > Math.abs(yDistance))
 			correctDecision= upDownDecision;
 
-
-		//if its equally far.
-		else{
+		else {
 
 			CHARACTER_ACTION[] possibleReturns = {leftRightDecision, upDownDecision};
 			correctDecision = possibleReturns[r.nextInt(1+1)];
@@ -325,24 +335,27 @@ public abstract class Player extends Character implements Serializable {
 
 		if(r.nextInt(100) < 90){
 			this.playerAction = correctDecision;
-		}else {
+		} else {
 			wrongDecision = wrongPositions[r.nextInt(1+1)];
 			this.playerAction = wrongDecision;
 			this.getBomb().drop();
 		}
 
-
-
 	}
 
 	public synchronized void move(GL10 gl) {
 
-		if(isDead()){
+		if(isDead()) {
 			return;
+		}
+		
+		if(this.isHidden()) {
+			gl.glColor4f((float) 1.0, (float) 1.0, (float) 1.0, (float) 0.3);
+		} else {
+			gl.glColor4f((float) 1.0, (float) 1.0, (float) 1.0, (float) 1.0);
 		}
 
 		this.cleanFromMatrix();
-
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
@@ -364,12 +377,12 @@ public abstract class Player extends Character implements Serializable {
 
 			this.setCounter((this.getCounter() + 1) % COUNTER_MAX);
 
-			if(this.getCounter() == 0 && this.STOP){
+			if(this.getCounter() == 0 && this.STOP) {
 
 				this.STOPPED = true;
 				this.setCounter(0);
 				playerAction = CHARACTER_ACTION.LEFT_RELEASE;
-				ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
+				ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED, this.HIDDEN);
 			} else {
 				this.STOPPED = false;
 			}
@@ -395,9 +408,9 @@ public abstract class Player extends Character implements Serializable {
 				this.STOPPED = true;
 				this.setCounter(0);
 				playerAction = CHARACTER_ACTION.RIGHT_RELEASE;
-				ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
+				ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED, this.HIDDEN);
 
-			}else {
+			} else {
 				this.STOPPED = false;
 			}
 
@@ -408,7 +421,7 @@ public abstract class Player extends Character implements Serializable {
 			pos = this.getYPosition() + (100.f - this.getSpeed() * this.getCounter());
 
 
-			if(!ABEngine.detectColision(this.getXPosition(), pos,playerAction)) {
+			if(!ABEngine.detectColision(this.getXPosition(), pos, playerAction)) {
 				this.setYPosition(this.getYPosition() + this.getSpeed());
 			}
 
@@ -422,7 +435,7 @@ public abstract class Player extends Character implements Serializable {
 				this.STOPPED = true;
 				this.setCounter(0);
 				playerAction = CHARACTER_ACTION.UP_RELEASE;
-				ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
+				ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED, this.HIDDEN);
 
 			}else {
 				this.STOPPED = false;
@@ -447,7 +460,7 @@ public abstract class Player extends Character implements Serializable {
 				this.STOPPED = true;
 				this.setCounter(0);
 				playerAction = CHARACTER_ACTION.DOWN_RELEASE;
-				ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED);
+				ABEngine.sendPlayerAction(id, playerAction, this.STOP, this.STOPPED, this.HIDDEN);
 
 			}else {
 				this.STOPPED = false;
@@ -478,7 +491,7 @@ public abstract class Player extends Character implements Serializable {
 
 			this.translate(gl);
 			this.moveDown(gl);
-
+			
 			break;
 
 		}
@@ -503,7 +516,7 @@ public abstract class Player extends Character implements Serializable {
 	public boolean isInRange(float mtx_x, float mtx_y) {
 
 		int r_mtx_x = ABEngine.getXMatrixPosition(this.getXPosition(), playerAction);
-		int r_mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(),playerAction);
+		int r_mtx_y = ABEngine.getYMatrixPosition(this.getYPosition(), playerAction);
 
 		if(mtx_x == r_mtx_x && mtx_y == r_mtx_y){
 			return true;
@@ -578,7 +591,6 @@ public abstract class Player extends Character implements Serializable {
 		}
 	}
 
-
 	public void kill(){
 
 		//Elimina da matriz
@@ -595,8 +607,6 @@ public abstract class Player extends Character implements Serializable {
 		}
 
 	}
-
-
 
 	public void opponentKilled(){
 		setScore(score + pointsPerOpponentKilled);
@@ -631,10 +641,7 @@ public abstract class Player extends Character implements Serializable {
 		if(ABEngine.PLAYER != null)
 			players.add(ABEngine.PLAYER.getID());
 
-
 		options.removeAll(players);
-
-
 
 		//Mais de 3 players!!!
 		if(options.size() == 0){
