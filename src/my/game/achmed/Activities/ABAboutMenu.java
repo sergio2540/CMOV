@@ -50,7 +50,9 @@ public class ABAboutMenu extends Activity {
 
 			Intent mainMenu = new Intent(getApplicationContext(),
 				ABMainMenu.class);
-
+			
+			mainMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			
 			ABAboutMenu.this.startActivity(mainMenu);
 			ABAboutMenu.this.finish();
 

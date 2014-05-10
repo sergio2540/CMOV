@@ -61,7 +61,7 @@ public class ABMainMenu extends Activity {
 		ABEngine.isOnMultiplayer = false;
 
 		ABMainMenu.this.startActivity(levelMenu);
-		ABMainMenu.this.finish();
+		//ABMainMenu.this.finish();
 		//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
 		//setText() sets the string value of the TextView
 		//textView_exit.setText("Clicked");
@@ -79,7 +79,7 @@ public class ABMainMenu extends Activity {
 		ABEngine.isOnMultiplayer = true;
 
 		ABMainMenu.this.startActivity(multiplayerList);
-		ABMainMenu.this.finish();
+		//ABMainMenu.this.finish();
 		//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
 		//setText() sets the string value of the TextView
 		//textView_exit.setText("Clicked");
@@ -104,7 +104,7 @@ public class ABMainMenu extends Activity {
 	    public void onClick(View v) {
 		Intent about = new Intent(getApplicationContext(), ABAboutMenu.class);
 		ABMainMenu.this.startActivity(about);
-		ABMainMenu.this.finish();
+		//ABMainMenu.this.finish();
 	    }
 
 	});

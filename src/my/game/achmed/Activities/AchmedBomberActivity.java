@@ -18,27 +18,7 @@ public class AchmedBomberActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		//		super.onCreate(savedInstanceState);
-		//		overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
-		//		setContentView(R.layout.splash_screen);
-		//
-		//		handler.postDelayed(new Thread() {
-		//			@Override
-		//			public void run() {
-		//
-		//				Intent createSP = new Intent(AchmedBomberActivity.this,
-		//						ABCreateSinglePlayer.class);
-		//				AchmedBomberActivity.this.startActivity(createSP);
-		//				AchmedBomberActivity.this.finish();
-		//				//overridePendingTransition(R.layout.fade_in,R.layout.fade_out);
-		//
-		//			}
-		//		}, ABEngine.GAME_THREAD_DELAY);
-		//
-		//	}
-
-
-
+	    
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_screen);
 

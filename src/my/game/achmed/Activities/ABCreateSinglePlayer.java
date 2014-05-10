@@ -108,7 +108,7 @@ public class ABCreateSinglePlayer extends Activity {
 
 					singleRankDataSource.open();
 					boolean playerAdded = singleRankDataSource.createPlayer(name);
-					singleRankDataSource.close();
+					
 
 					if(playerAdded) {
 						ABEngine.PLAYER_NICK = name;
@@ -128,5 +128,14 @@ public class ABCreateSinglePlayer extends Activity {
 
 		});
 
+	}
+	
+	
+	@Override
+	public void onDestroy(){
+	    
+	    super.onDestroy();
+	    singleRankDataSource.close();
+	
 	}
 }

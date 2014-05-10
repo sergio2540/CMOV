@@ -56,7 +56,7 @@ public class ABSingleRank extends Activity {
 	    public void run() {
 		Intent mainMenu = new Intent(getApplicationContext(),
 			ABMainMenu.class);
-
+		mainMenu.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(mainMenu);
 		finish();
 

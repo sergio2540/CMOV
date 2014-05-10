@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 public class ABLevelMenu extends Activity {
 
-
+    private AsyncTask<Integer, Boolean, Boolean> loadLevel; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +36,79 @@ public class ABLevelMenu extends Activity {
 	textView_level2.setTypeface(font);
 	textView_level3.setTypeface(font);
 	textView_back.setTypeface(font);
-	
+
 	textView_level1.setTextColor(Color.WHITE);
 	textView_level2.setTextColor(Color.WHITE);
 	textView_level3.setTextColor(Color.WHITE);
 	textView_back.setTextColor(Color.RED);
 
 
-	final AsyncTask<Integer, Boolean, Boolean> loadLevel = new AsyncTask<Integer, Boolean, Boolean>() {
+	textView_level1.setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+
+		if(loadLevel.getStatus()== AsyncTask.Status.RUNNING){
+		    loadLevel.cancel(true);
+		}
+
+		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,1);
+	    }
+	});
+
+	textView_level2.setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+
+		if(loadLevel.getStatus()== AsyncTask.Status.RUNNING){
+		    loadLevel.cancel(true);
+		}
+
+		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,2);
+	    }
+	});
+
+	textView_level3.setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+
+		if(loadLevel.getStatus()== AsyncTask.Status.RUNNING){
+		    loadLevel.cancel(true);
+		}
+
+		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,3);
+	    }
+	});
+
+	textView_back.setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+
+		if(ABEngine.isOnMultiplayer){
+		    Intent mainMenu = new Intent(getApplicationContext(),
+			    ABMultiplayer.class);
+		    ABLevelMenu.this.startActivity(mainMenu);
+		    ABLevelMenu.this.finish();
+		}else{
+		    Intent mainMenu = new Intent(getApplicationContext(),
+			    ABMainMenu.class);  
+		    ABLevelMenu.this.startActivity(mainMenu);
+		    ABLevelMenu.this.finish();
+		}
+
+
+
+	    }
+	});
+
+    }
+
+
+
+    @Override
+    public void onResume(){
+	super.onResume();
+
+	loadLevel = new AsyncTask<Integer, Boolean, Boolean>() {
 
 	    @Override
 	    protected void onPostExecute(Boolean levelLoaded) {
@@ -52,12 +117,13 @@ public class ABLevelMenu extends Activity {
 		    Intent game = new Intent(getApplicationContext(),
 			    ABGame.class);
 		    ABLevelMenu.this.startActivity(game);
-		    ABLevelMenu.this.finish();
+		    //ABLevelMenu.this.finish();
 
 		} else {
 		    Intent mainMenu = new Intent(getApplicationContext(),
 			    ABMainMenu.class);
 		    ABLevelMenu.this.startActivity(mainMenu);
+		    //Como avancou para tras o levelMenu deve terminar
 		    ABLevelMenu.this.finish();
 		}
 
@@ -70,51 +136,29 @@ public class ABLevelMenu extends Activity {
 		if(level == null){
 		    return false;
 		}
-		
+
 		ABEngine.LEVEL = level;
 		ABEngine.create_map(level.getGameLevelMatrix());
 		ABEngine.PLAYER = null;
-		
+
 		return true;
 	    }
 
 	};
 
-
-	textView_level1.setOnClickListener(new View.OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,1);
-	    }
-	});
-
-	textView_level2.setOnClickListener(new View.OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,2);
-	    }
-	});
-
-	textView_level3.setOnClickListener(new View.OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		loadLevel.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,3);
-	    }
-	});
-
-	textView_back.setOnClickListener(new View.OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-
-		Intent mainMenu = new Intent(getApplicationContext(),
-			ABMainMenu.class);
-
-		ABLevelMenu.this.startActivity(mainMenu);
-		ABLevelMenu.this.finish();
-
-	    }
-	});
-
     }
 
+    @Override
+    public void onPause(){
+	super.onPause();
+	//activity deixa de estar visivel pq esta no jogo
+	if(loadLevel.getStatus()== AsyncTask.Status.RUNNING){
+	    loadLevel.cancel(true);
+	}
+    }
+
+    @Override
+    public void onDestroy(){
+	super.onDestroy();
+    }
 }

@@ -58,6 +58,9 @@ public class ABMultiplayer extends Activity {
     public static List<Peer> peers;
     public static ArrayAdapter<Peer> peersAd;
 
+
+    private boolean mBound = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
@@ -85,8 +88,8 @@ public class ABMultiplayer extends Activity {
 	mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
 	//registerReceiver(mReceiver, mIntentFilter);
-	
-	
+
+
 	ABEngine.loadingEvent.addOnEventListener(new OnLoadingEventListener() {
 	    @Override
 	    public void onLoadingEvent(boolean loaded) {
@@ -94,7 +97,7 @@ public class ABMultiplayer extends Activity {
 		//Toast.makeText(ABEngine.context, "on loading event", Toast.LENGTH_SHORT).show();
 		Intent mainMenu = new Intent(getApplicationContext(), ABGame.class);
 		ABMultiplayer.this.startActivity(mainMenu);
-		ABMultiplayer.this.finish();
+		//ABMultiplayer.this.finish();
 	    }
 
 	});
@@ -113,8 +116,6 @@ public class ABMultiplayer extends Activity {
 	    public void onClick(View v) {
 		Intent levelMenu = new Intent(getApplicationContext(), ABLevelMenu.class);
 		ABMultiplayer.this.startActivity(levelMenu);
-		ABMultiplayer.this.finish();
-
 	    }
 	});
 
@@ -126,33 +127,70 @@ public class ABMultiplayer extends Activity {
     @Override
     public void onResume(){
 	super.onResume();
-	mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
-	registerReceiver(mReceiver, mIntentFilter);
-	
-	mManager.removeGroup(mChannel, new ActionListener() {
+	if(!mBound){
 
-	    @Override
-	    public void onSuccess() {
-		findPeers();
-	    }
+	    mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+	    registerReceiver(mReceiver, mIntentFilter);
+	    mBound = true;
 
-	    @Override
-	    public void onFailure(int reason) {
-		findPeers();
+	    mManager.removeGroup(mChannel, new ActionListener() {
 
-	    }
-	});
-    
+		@Override
+		public void onSuccess() {
+		    findPeers();
+		}
+
+		@Override
+		public void onFailure(int reason) {
+		    findPeers();
+
+		}
+	    });
+
+	}
     }
 
     @Override
     public void onPause(){
 	super.onPause();
-	unregisterReceiver(mReceiver);
+	//unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onStop(){
+	super.onStop();
+	//unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onDestroy(){
+	super.onDestroy();
+	Toast.makeText(ABMultiplayer.this, "onDestroy.", Toast.LENGTH_LONG).show();
+
+	if(mBound){
+	    
+	    mManager.removeGroup(mChannel, new ActionListener() {
+
+		@Override
+		public void onSuccess() {
+		    Toast.makeText(ABMultiplayer.this, "remove.", Toast.LENGTH_LONG).show();
+		}
+
+		@Override
+		public void onFailure(int reason) {
+		    Toast.makeText(ABMultiplayer.this, "remove.", Toast.LENGTH_LONG).show();
+
+		}
+	    });
+
+	    unregisterReceiver(mReceiver);
+	    
+	}
+
     }
 
     public void findPeers(){
-	
+
 	mManager.discoverPeers(mChannel, new ActionListener() {
 
 	    @Override
@@ -212,12 +250,10 @@ public class ABMultiplayer extends Activity {
 	    public void onSuccess() {
 
 		waitPopUp.show();
-		
+
 	    }
-	    
+
 	});
     }
-
-    public ABMultiplayer blabla(){return ABMultiplayer.this;}
 
 }

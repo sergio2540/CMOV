@@ -477,20 +477,27 @@ public class ABGame extends Activity {
 		//startActivity(ab_game);
 		//this.finish();
 
-		ABEngine.PLAYER = null;
-		ABEngine.PLAYERS = new TreeMap<Character,Player>();
-		ABEngine.ROBOTS = new ArrayList<Robot>();
+//		ABEngine.PLAYER = null;
+//		ABEngine.PLAYERS = new TreeMap<Character,Player>();
+//		ABEngine.ROBOTS = new ArrayList<Robot>();
 
 		ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
-
+		
+		if(!ABEngine.isOnMultiplayer) {
+		    ABEngine.PLAYER = null;
+		}
+		
+		
+		
 		c = counter(Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000));
 		c.start();
 
-		ABEngine.PLAYER.HIDDEN = false;
-		if(ABEngine.isOnMultiplayer) {
-			ABEngine.sendPlayerAction(ABEngine.PLAYER.getID(), ABEngine.PLAYER.getCurrentAction(), 
-					ABEngine.PLAYER.isStop(), ABEngine.PLAYER.isStopped(), ABEngine.PLAYER.HIDDEN);
-		}
+		//ABEngine.PLAYER.HIDDEN = false;
+//		if(ABEngine.isOnMultiplayer) {
+//			ABEngine.sendPlayerAction(ABEngine.PLAYER.getID(), ABEngine.PLAYER.getCurrentAction(), 
+//					ABEngine.PLAYER.isStop(), ABEngine.PLAYER.isStopped(), ABEngine.PLAYER.HIDDEN);
+//		}
+		
 		onResume();
 		backPopUp.cancel();
 	}
@@ -553,12 +560,16 @@ public class ABGame extends Activity {
 				ABSingleRank.class);
 
 		ABGame.this.startActivity(highscore);
+		
+		//E a ultima deve ser feito o finish
 		ABGame.this.finish();
 	}
 
 
 	public void onClickQuit(View v) {
 		Intent ab_main = new Intent(getApplicationContext(), ABMainMenu.class);
+		//limpa stack
+		ab_main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(ab_main);
 		this.finish();
 

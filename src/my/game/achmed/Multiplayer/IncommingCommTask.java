@@ -86,9 +86,7 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 		
 	    } catch (IOException e) {
 		
-		while(true){
-		    Log.w("in", e.toString());
-		}
+		
 
 		
 	    }
