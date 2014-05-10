@@ -53,6 +53,8 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 		Socket clientSocket = mSrvSocket.accept();
 		peersSockets.add(clientSocket);
 		
+		
+		
 		Player pl = ABEngine.createRandomPlayer();
 		
 		
@@ -70,7 +72,7 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 		//Map<Character, Player> opponentsPlayers = ABEngine.PLAYERS;
 		//List<Robot> robots  = ABEngine.ROBOTS;
 		
-		InitState initS = new InitState(id,e,x,y,level);
+		InitState initS = new InitState(id,e,x,y,level, clientSocket.getInetAddress());
 
 
 		for (Socket cSocket : peersSockets){

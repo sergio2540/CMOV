@@ -3,6 +3,7 @@ package my.game.achmed.Multiplayer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 
 import my.game.achmed.Level;
 
@@ -14,15 +15,17 @@ public class InitState extends State {
     int coordX;
     int coordY;
     Level level;
+    InetAddress ipAddress;
     
     
     public InitState(char pId, Event e, int x, int y, 
-	    Level level){
+	    Level level, InetAddress ipAddress){
 	
 	super(pId, e);
 	this.coordX = x;
 	this.coordY = y;
 	this.level = level;
+	this.ipAddress = ipAddress;
 	
     }
 
@@ -40,12 +43,18 @@ public class InitState extends State {
 	return this.level;
     }
 
+    public InetAddress getIp(){
+    	return this.ipAddress;
+    }
+
+    
     private void writeObject(ObjectOutputStream stream) throws IOException{
 	stream.writeChar(playerId);
 	stream.writeObject(event);
 	stream.writeInt(coordX);
 	stream.writeInt(coordY);
 	stream.writeObject(level);
+	stream.writeObject(ipAddress);
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
@@ -54,6 +63,7 @@ public class InitState extends State {
 	this.coordX = stream.readInt();
 	this.coordY = stream.readInt();
 	this.level = (Level) stream.readObject();
+	this.ipAddress = (InetAddress) stream.readObject();
 
     }
 

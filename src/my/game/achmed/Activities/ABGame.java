@@ -59,10 +59,27 @@ public class ABGame extends Activity {
 		backPopUp = new Dialog(this);
 
 		LinearLayout backgroundImg = (LinearLayout) ((LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.ab_game_dialog, null);
+		
+		
 		backPopUp.requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		backPopUp.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 		backgroundImg.setBackgroundColor(Color.TRANSPARENT);
+		if(ABEngine.isOnMultiplayer) {
+			ImageButton ib = (ImageButton) backgroundImg.findViewById(R.id.reload);
+			ib.setImageResource(R.drawable.split);
+			ib.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					onSplit(v);
+				}
+				
+			});
+			
+		}	
+		
 		backPopUp.setContentView(backgroundImg);
+		
 
 		wonOrLostPopUp = new Dialog(this){
 			@Override
@@ -404,8 +421,6 @@ public class ABGame extends Activity {
 		if(keyCode == KeyEvent.KEYCODE_BACK)
 		{
 
-			
-
 			backPopUp.takeKeyEvents(false);
 			backPopUp.show();
 			ABEngine.PLAYER.HIDDEN = true;
@@ -547,6 +562,10 @@ public class ABGame extends Activity {
 		startActivity(ab_main);
 		this.finish();
 
+	}
+	
+	public void onSplit(View v) {
+		
 	}
 
 }

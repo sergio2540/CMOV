@@ -4,6 +4,6 @@ import java.io.Serializable;
 
 public enum Event implements Serializable {
 
-    INIT, PLAYER, BOMB
+    INIT, PLAYER, BOMB, LEAVE
 
 }
