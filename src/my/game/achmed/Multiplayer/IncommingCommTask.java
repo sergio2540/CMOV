@@ -49,48 +49,68 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 		}
 
 		while (!Thread.currentThread().isInterrupted()) {
+
+			Socket clientSocket = null;
+
 			try {
-				Socket clientSocket = mSrvSocket.accept();
-				peersSockets.add(clientSocket);
-
-
-
-				Player pl = ABEngine.createRandomPlayer();
-
-
-
-
-				char id = pl.getID();
-				Event e = Event.INIT;
-				int x = (int) pl.getXPosition();
-				int y = (int) pl.getYPosition();
-				ABEngine.ENEMIES.put(id, pl);
-				ABEngine.setObject(x / 100, y/100, id);
-				ABEngine.FIRST_MAP_DRAW = true;
-
-				Level level = ABEngine.LEVEL;
-				//Map<Character, Player> opponentsPlayers = ABEngine.ENEMIES;
-				//List<Robot> robots  = ABEngine.ROBOTS;
-
-				InitState initS = new InitState(id,e,x,y,level, clientSocket.getInetAddress());
-
-				ReceiveCommTask.characters.put(clientSocket.getInetAddress().getHostAddress(), id);
-
-				for (Socket cSocket : peersSockets){
-					ObjectOutputStream os = new ObjectOutputStream(cSocket.getOutputStream());
-					os.writeObject(initS);
-					//os.close();
-				}
-
-
-				publishProgress(clientSocket);
-
-			} catch (IOException e) {
-
-
-
-
+				clientSocket = mSrvSocket.accept();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+			peersSockets.add(clientSocket);
+
+
+
+			Player pl = ABEngine.createRandomPlayer();
+
+
+
+
+			char id = pl.getID();
+			Event e = Event.INIT;
+			int x = (int) pl.getXPosition();
+			int y = (int) pl.getYPosition();
+			ABEngine.ENEMIES.put(id, pl);
+			ABEngine.setObject(x / 100, y/100, id);
+			ABEngine.FIRST_MAP_DRAW = true;
+
+			Level level = ABEngine.LEVEL;
+			//Map<Character, Player> opponentsPlayers = ABEngine.ENEMIES;
+			//List<Robot> robots  = ABEngine.ROBOTS;
+
+			InitState initS = new InitState(id,e,x,y,level, clientSocket.getInetAddress());
+
+			ReceiveCommTask.characters.put(clientSocket.getInetAddress().getHostAddress(), id);
+			ObjectOutputStream os = null;
+
+			for (Socket cSocket : peersSockets){
+				try {
+					os = new ObjectOutputStream(cSocket.getOutputStream());
+					os.writeObject(initS);
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}finally{
+
+					if(os != null)
+						try {
+							os.close();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
+				}
+				//os.close();
+			}
+
+
+
+			publishProgress(clientSocket);
+
+
 		}
 
 		return null;

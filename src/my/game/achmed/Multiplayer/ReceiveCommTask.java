@@ -56,27 +56,39 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	}
 
 
-	private State readSocket(Socket s){
+	private void readSocket(Socket s){
 		Log.w("readsocket", "ok");
-		ObjectInputStream objStream;
+		ObjectInputStream objStream = null;
 		State message = null;
-		
-	
+
+
 
 
 		try {
-			
+
 			InputStream i = s.getInputStream();
 			objStream = new ObjectInputStream(i);
-			message = (State) objStream.readObject();
-			//objStream.close();
+			while((message = (State) objStream.readObject()) != null){
+				processStateMessage(message);
+			}
 
 		} catch (Exception e) {
 			Log.w("readsocket", e.getMessage());
-			cancel(true);
+			
+			
+			//cancel(true);
+		}finally{
+			
+			try {
+				if(objStream != null)
+					objStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
-		return message;
 
 	}
 
@@ -121,18 +133,18 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 				ABEngine.loadingEvent.doLoadingEvent(true);
 
 
-			
 
-				
+
+
 			}else{
 
 				characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
 				ABEngine.ENEMIES.put(iState.getPlayerId(), Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY()));
 
-				
+
 			}
-			
-		
+
+
 
 
 			break;
@@ -151,21 +163,17 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	@Override
 	protected Void doInBackground(Void... params) {
 
-		State message;
+		State message = null;
 		while (!Thread.currentThread().isInterrupted()) {
 			if (groupOwner != null){
-				message = readSocket(groupOwner);
-				processStateMessage(message);
-
+				readSocket(groupOwner);
 			}
-			else 
+			else{
 				for(Socket peer : peers){
-
-					message = readSocket(peer);
-					processStateMessage(message);
-
+					readSocket(peer);
 					//publishProgress();
 				}
+			}
 		}
 
 		return null;
@@ -196,7 +204,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 		}catch (IOException e) {
 			e.printStackTrace();
-			cancel(true);
+			//cancel(true);
 		}
 	}
 
@@ -204,10 +212,12 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 		HashMap<String,Character> whoLeft = new HashMap<String,Character>();
 		List<Socket> newPeers = new ArrayList<Socket>();
+		ObjectOutputStream out = null;
+		
 		for(Socket peer : peers) {
 
 			try {
-				ObjectOutputStream out = new ObjectOutputStream(peer.getOutputStream());
+				out = new ObjectOutputStream(peer.getOutputStream());
 				out.writeObject(state);
 				newPeers.add(peer);
 			} catch (IOException e) {
@@ -215,6 +225,16 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 				e.printStackTrace();
 				//cancel(true);
+			}finally{
+				
+				if(out != null)
+					try {
+						out.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				
 			}
 
 
@@ -223,7 +243,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 		//peers = newPeers;
 
 		//if(!whoLeft.isEmpty())
-			//announceLeft(whoLeft);
+		//announceLeft(whoLeft);
 	}
 
 	public void announceLeft(HashMap<String, Character> toLeave){
@@ -260,31 +280,52 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 		PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca, stop, stopped, hidden);
 		if (groupOwner == null)
 		{
+			ObjectOutputStream os = null;
 
 
 			for (Socket client : peers)
 			{
-				ObjectOutputStream os;
 				try {
 					os = new ObjectOutputStream(client.getOutputStream());
 					os.writeObject(ps);
 				} catch (IOException e) {
 					e.printStackTrace();
+				
 
+				}finally{
+					if(os != null)
+						try {
+							os.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					
 				}
 
 			}	
 			return;
 
 		}
+		ObjectOutputStream os = null; 
+		
 		try {
 
-			ObjectOutputStream os = new ObjectOutputStream(groupOwner.getOutputStream());
+			os = null; new ObjectOutputStream(groupOwner.getOutputStream());
 			os.writeObject(ps);
 
 		} catch (IOException e) {
 			e.printStackTrace();///////////////////////////////////////
 
+		}finally{
+			
+			if(os != null)
+				try {
+					os.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
 
 	}
