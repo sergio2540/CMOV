@@ -31,7 +31,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 	public ReceiveCommTask(Socket s) {
 		groupOwner = s;
-		
+
 	}
 
 	public ReceiveCommTask(){
@@ -90,9 +90,9 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 			player.STOP = pState.isStop();
 			player.STOPPED = pState.isStopped();
 			player.HIDDEN = pState.isHidden();
-			//if(isGroupOwner()) {
-			//broadCastPlayerEvent(pState);
-			//}
+			if(isGroupOwner()) {
+				broadCastPlayerEvent(pState);
+			}
 
 			break;
 			//Players bomb
@@ -115,11 +115,11 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 			ABEngine.PLAYER = Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY());
 
-		
-			
+
+
 			characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
 			ABEngine.loadingEvent.doLoadingEvent(true);
-			
+
 			break;
 
 		case LEAVE:
@@ -187,8 +187,8 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 	public void broadCastPlayerEvent(State state) {
 
-	    HashMap<String,Character> whoLeft = new HashMap<String,Character>();
-	    List<Socket> newPeers = new ArrayList<Socket>();
+		HashMap<String,Character> whoLeft = new HashMap<String,Character>();
+		List<Socket> newPeers = new ArrayList<Socket>();
 		for(Socket peer : peers) {
 
 			try {
@@ -196,48 +196,49 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 				out.writeObject(state);
 				newPeers.add(peer);
 			} catch (IOException e) {
-			    whoLeft.put(peer.getInetAddress().getHostAddress(),characters.get(peer.getInetAddress().getHostAddress()));
-			    
+				whoLeft.put(peer.getInetAddress().getHostAddress(),characters.get(peer.getInetAddress().getHostAddress()));
+
 				e.printStackTrace();
 				//cancel(true);
 			}
-			
-			
+
+
 		}
-		
-		peers = newPeers;
-		
-		if(!whoLeft.isEmpty())
-		    announceLeft(whoLeft);
+
+		//peers = newPeers;
+
+		//if(!whoLeft.isEmpty())
+			//announceLeft(whoLeft);
 	}
-	
+
 	public void announceLeft(HashMap<String, Character> toLeave){
-	    
-	    ObjectOutputStream os;
-	    for(Entry<String,Character> ent : toLeave.entrySet())
-	    {
-		for(Socket s : peers){
-		    
-		    try {
-			os = new ObjectOutputStream(s.getOutputStream());
-			os.writeObject(new LeaveState(ent.getValue(), Event.LEAVE));
-		    } catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		    }
-		  
-		    
+
+		ObjectOutputStream os;
+		for(Entry<String,Character> ent : toLeave.entrySet())
+		{
+			ABEngine.PLAYERS.remove(ent.getValue());
+			for(Socket s : peers){
+
+				try {
+					os = new ObjectOutputStream(s.getOutputStream());
+					os.writeObject(new LeaveState(ent.getValue(), Event.LEAVE));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+
+			}
+
 		}
-		
-	    }
-	    //removemos do mapa de caracteres.Temos de remover os sockets
-	    for(Entry<String,Character> leaving : toLeave.entrySet()){
-		    
-		characters.remove(leaving.getKey());
-  
+		//removemos do mapa de caracteres.Temos de remover os sockets
+		for(Entry<String,Character> leaving : toLeave.entrySet()){
+
+			characters.remove(leaving.getKey());
+
 		}
-	    
-	    
+
+
 	}
 	public static void sendPlayerAction(CHARACTER_ACTION ca, char playerId, boolean stop, boolean stopped, boolean hidden) {
 
@@ -267,7 +268,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 			os.writeObject(ps);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace();///////////////////////////////////////
 
 		}
 
