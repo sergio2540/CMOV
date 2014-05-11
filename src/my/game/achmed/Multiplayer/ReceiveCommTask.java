@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	private static Socket groupOwner = null;
 	private static List<Socket> peers = new ArrayList<Socket>();
 	public static HashMap<String,java.lang.Character> characters = new HashMap<String,java.lang.Character>();
+	protected int SOCKET_TIMEOUT = 30;
 
 	public ReceiveCommTask(Socket s) {
 		groupOwner = s;
@@ -58,9 +60,12 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 		Log.w("readsocket", "ok");
 		ObjectInputStream objStream;
 		State message = null;
+		
+	
+
 
 		try {
-
+			
 			InputStream i = s.getInputStream();
 			objStream = new ObjectInputStream(i);
 			message = (State) objStream.readObject();
@@ -107,18 +112,28 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 		case INIT://e aqui vao haver envios de volta?
 			InitState iState = (InitState) message;
 
-			ABEngine.LEVEL = iState.getLevel();
 
-			if (ABEngine.LEVEL != null){
+			if(ABEngine.LEVEL == null){
+				ABEngine.LEVEL = iState.getLevel();
 				ABEngine.create_map(iState.getLevel().getGameLevelMatrix()); 
+				ABEngine.PLAYER = Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY());
+				characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
+				ABEngine.loadingEvent.doLoadingEvent(true);
+
+
+			
+
+				
+			}else{
+
+				characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
+				ABEngine.ENEMIES.put(iState.getPlayerId(), Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY()));
+
+				
 			}
+			
+		
 
-			ABEngine.PLAYER = Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY());
-
-
-
-			characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
-			ABEngine.loadingEvent.doLoadingEvent(true);
 
 			break;
 
