@@ -188,10 +188,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 			for (WifiP2pDevice dev : peerList.getDeviceList()){
 
-			    if(dev.isGroupOwner()){
-				haveGO = true;
+			    //if(dev.isGroupOwner()){
+				//haveGO = true;
 				ABMultiplayer.peers.add(new Peer(dev.deviceName, dev.deviceAddress));
-			    }
+			    //}
 
 			    //			    Toast.makeText(mActivity, "found device " + dev.deviceAddress,
 			    //				    Toast.LENGTH_SHORT).show();
@@ -199,13 +199,13 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 
 			//Nao existem grupos formados mostra todos
-			if (!haveGO){
-
-			    for (WifiP2pDevice dev : peerList.getDeviceList()){
-				ABMultiplayer.peers.add(new Peer(dev.deviceName, dev.deviceAddress));    
-			    }
-
-			}
+//			if (!haveGO){
+//
+//			    for (WifiP2pDevice dev : peerList.getDeviceList()){
+//				ABMultiplayer.peers.add(new Peer(dev.deviceName, dev.deviceAddress));    
+//			    }
+//
+//			}
 
 			ABMultiplayer.peersAd.notifyDataSetChanged();
 

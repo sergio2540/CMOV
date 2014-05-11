@@ -25,6 +25,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -184,8 +185,11 @@ public class ABMultiplayer extends Activity {
 	    });
 	    
 	    
-	    mReceiver.getCurrentIncommingTask().cancel(true);
-	    mReceiver.getCurrentOutgoingTask().cancel(true);
+	    if( mReceiver.getCurrentIncommingTask() != null && mReceiver.getCurrentIncommingTask().getStatus() == Status.RUNNING)
+		mReceiver.getCurrentIncommingTask().cancel(true);
+	    
+	    if( mReceiver.getCurrentOutgoingTask() != null && mReceiver.getCurrentOutgoingTask().getStatus() == Status.RUNNING)
+		mReceiver.getCurrentOutgoingTask().cancel(true);
 		
 	    unregisterReceiver(mReceiver);
 	    
