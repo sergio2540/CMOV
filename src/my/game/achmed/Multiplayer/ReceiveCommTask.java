@@ -86,7 +86,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 			}
 
 			ABEngine.setPlayerAction(pState.getPlayerId(), pState.getPlayerAction());
-			Player player = ABEngine.PLAYERS.get(pState.getPlayerId());
+			Player player = ABEngine.ENEMIES.get(pState.getPlayerId());
 			player.STOP = pState.isStop();
 			player.STOPPED = pState.isStopped();
 			player.HIDDEN = pState.isHidden();
@@ -126,7 +126,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 			LeaveState lState = (LeaveState) message;
 
-			ABEngine.PLAYERS.remove(lState.getPlayerId());
+			ABEngine.ENEMIES.remove(lState.getPlayerId());
 
 			break;
 
@@ -216,7 +216,7 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 		ObjectOutputStream os;
 		for(Entry<String,Character> ent : toLeave.entrySet())
 		{
-			ABEngine.PLAYERS.remove(ent.getValue());
+			ABEngine.ENEMIES.remove(ent.getValue());
 			for(Socket s : peers){
 
 				try {

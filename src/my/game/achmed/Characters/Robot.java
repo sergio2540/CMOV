@@ -203,7 +203,7 @@ public abstract class Robot extends Character implements Serializable {
 	List<Player> players = new ArrayList<Player>();
 	if(ABEngine.PLAYER != null)
 	    players.add(ABEngine.PLAYER);
-	players.addAll(ABEngine.PLAYERS.values());
+	players.addAll(ABEngine.ENEMIES.values());
 	//players.add(ABEngine.PLAYER);
 
 	int p = r.nextInt(players.size());
@@ -437,12 +437,12 @@ public abstract class Robot extends Character implements Serializable {
 	else {
 
 	    Map<java.lang.Character,Player> temp = new TreeMap<java.lang.Character,Player>();
-	    temp.putAll(ABEngine.PLAYERS);
+	    temp.putAll(ABEngine.ENEMIES);
 
 	    for(Player p : temp.values()){
 		if(p.isInRange(mtx_x, mtx_y)){
 		    p.kill();
-		    //ABEngine.PLAYERS.remove(p.getID());
+		    //ABEngine.ENEMIES.remove(p.getID());
 
 		}
 	    }

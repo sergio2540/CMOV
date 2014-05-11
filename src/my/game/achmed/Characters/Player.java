@@ -280,7 +280,7 @@ public abstract class Player extends Character implements Serializable {
 		List<Player> players = new ArrayList<Player>();
 		if(ABEngine.PLAYER != null)
 			players.add(ABEngine.PLAYER);
-		players.addAll(ABEngine.PLAYERS.values());
+		players.addAll(ABEngine.ENEMIES.values());
 
 
 		int p = r.nextInt(players.size());
@@ -573,7 +573,7 @@ public abstract class Player extends Character implements Serializable {
 		else {
 
 			Map<java.lang.Character,Player> temp = new TreeMap<java.lang.Character,Player>();
-			temp.putAll(ABEngine.PLAYERS);
+			temp.putAll(ABEngine.ENEMIES);
 
 			for(Player p : temp.values()){
 
@@ -584,7 +584,7 @@ public abstract class Player extends Character implements Serializable {
 						opponentKilled();
 					}
 
-					//ABEngine.PLAYERS.remove(p.getID());
+					//ABEngine.ENEMIES.remove(p.getID());
 
 				}
 			}
@@ -624,34 +624,34 @@ public abstract class Player extends Character implements Serializable {
 		return bomb;
 	}
 
-	public static Player create(int x, int y) {
-
-		Set<java.lang.Character> options = new TreeSet<java.lang.Character>();
-		options.add('1');
-		options.add('2');
-		options.add('3');
-		options.add('4');
-
-		Set<java.lang.Character> players = new HashSet<java.lang.Character>();
-
-		if(ABEngine.PLAYERS != null){
-			players.addAll(ABEngine.PLAYERS.keySet());
-		}
-
-		if(ABEngine.PLAYER != null)
-			players.add(ABEngine.PLAYER.getID());
-
-		options.removeAll(players);
-
-		//Mais de 3 players!!!
-		if(options.size() == 0){
-			return null;
-		}
-
-		char id = (java.lang.Character) options.toArray()[0];
-
-		return create(id, x, y);
-	}
+//	public static Player create(int x, int y) {
+//
+//		Set<java.lang.Character> options = new HashSet<java.lang.Character>();
+//		options.add('1');
+//		options.add('2');
+//		options.add('3');
+//		options.add('4');
+//
+//		Set<java.lang.Character> players = new HashSet<java.lang.Character>();
+//
+//		if(ABEngine.ENEMIES != null){
+//			players.addAll(ABEngine.ENEMIES.keySet());
+//		}
+//
+//		if(ABEngine.PLAYER != null)
+//			players.add(ABEngine.PLAYER.getID());
+//
+//		options.removeAll(players);
+//
+//		//Mais de 3 players!!!
+//		if(options.size() == 0){
+//			return null;
+//		}
+//
+//		char id = (java.lang.Character) options.toArray()[0];
+//
+//		return create(id, x, y);
+//	}
 
 	private void writeObject(ObjectOutputStream stream) throws IOException{
 

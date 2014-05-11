@@ -64,12 +64,12 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 				Event e = Event.INIT;
 				int x = (int) pl.getXPosition();
 				int y = (int) pl.getYPosition();
-				ABEngine.PLAYERS.put(id, pl);
+				ABEngine.ENEMIES.put(id, pl);
 				ABEngine.setObject(x / 100, y/100, id);
 				ABEngine.FIRST_MAP_DRAW = true;
 
 				Level level = ABEngine.LEVEL;
-				//Map<Character, Player> opponentsPlayers = ABEngine.PLAYERS;
+				//Map<Character, Player> opponentsPlayers = ABEngine.ENEMIES;
 				//List<Robot> robots  = ABEngine.ROBOTS;
 
 				InitState initS = new InitState(id,e,x,y,level, clientSocket.getInetAddress());

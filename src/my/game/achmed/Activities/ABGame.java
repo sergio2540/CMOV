@@ -101,7 +101,7 @@ public class ABGame extends Activity {
 
 
 		//ABEngine.PLAYER = null;
-		//ABEngine.PLAYERS = new TreeMap<Character,Player>();
+		//ABEngine.ENEMIES = new TreeMap<Character,Player>();
 		//ABEngine.ROBOTS = new ArrayList<Robot>();
 
 		//if(ABEngine.LEVEL != null)
@@ -478,7 +478,7 @@ public class ABGame extends Activity {
 		//this.finish();
 
 //		ABEngine.PLAYER = null;
-//		ABEngine.PLAYERS = new TreeMap<Character,Player>();
+//		ABEngine.ENEMIES = new TreeMap<Character,Player>();
 //		ABEngine.ROBOTS = new ArrayList<Robot>();
 
 		ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());

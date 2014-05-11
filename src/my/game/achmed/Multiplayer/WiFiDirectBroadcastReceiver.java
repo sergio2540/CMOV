@@ -157,7 +157,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 //
 //			    if(!ReceiveCommTask.characters.isEmpty()){
 //				char c = ReceiveCommTask.characters.get();
-//				ABEngine.PLAYERS.remove(c);
+//				ABEngine.ENEMIES.remove(c);
 //			    }		
 
 			}

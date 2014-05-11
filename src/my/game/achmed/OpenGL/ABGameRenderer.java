@@ -79,7 +79,7 @@ public class ABGameRenderer implements Renderer {
 		if (ABEngine.PLAYER != null){
 			ABEngine.PLAYER.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 		}
-		for(Player p : ABEngine.PLAYERS.values()){
+		for(Player p : ABEngine.ENEMIES.values()){
 			p.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
 		}
 
@@ -102,7 +102,7 @@ public class ABGameRenderer implements Renderer {
 		if(ABEngine.ROBOTS.size() != 0)
 			//moveRobots(gl);
 
-		if(ABEngine.PLAYERS.size() != 0)
+		if(ABEngine.ENEMIES.size() != 0)
 			movePlayers(gl);
 
 		if(ABEngine.PLAYER != null)
@@ -148,7 +148,7 @@ public class ABGameRenderer implements Renderer {
 	public void movePlayers(GL10 gl) {
 
 		Map<Character,Player> temp = new TreeMap<Character,Player>();
-		temp.putAll(ABEngine.PLAYERS);
+		temp.putAll(ABEngine.ENEMIES);
 
 		for(Player p : temp.values()){
 
@@ -181,7 +181,7 @@ public class ABGameRenderer implements Renderer {
 		if (ABEngine.FIRST_MAP_DRAW) {
 
 			ABEngine.ROBOTS = new ArrayList<Robot>();
-			ABEngine.PLAYERS = new TreeMap<java.lang.Character,Player>();
+			ABEngine.ENEMIES = new TreeMap<java.lang.Character,Player>();
 
 		}
 
@@ -237,7 +237,7 @@ public class ABGameRenderer implements Renderer {
 					if(ABEngine.FIRST_MAP_DRAW) {
 						Player player = Player.create('1',x*100,y*100);
 						player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
-						ABEngine.PLAYERS.put('1',player);
+						ABEngine.ENEMIES.put('1',player);
 					} else {
 
 						//			boolean in = false;
@@ -264,7 +264,7 @@ public class ABGameRenderer implements Renderer {
 					if(ABEngine.FIRST_MAP_DRAW) {
 						Player player = Player.create('2',x*100,y*100);
 						player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
-						ABEngine.PLAYERS.put('2',player);
+						ABEngine.ENEMIES.put('2',player);
 					} else {
 
 						//			boolean in = false;
@@ -292,7 +292,7 @@ public class ABGameRenderer implements Renderer {
 					if(ABEngine.FIRST_MAP_DRAW) {
 						Player player = Player.create('3', x*100,y*100);
 						player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
-						ABEngine.PLAYERS.put('3',player);
+						ABEngine.ENEMIES.put('3',player);
 					} else {
 
 						//			boolean in = false;
@@ -320,7 +320,7 @@ public class ABGameRenderer implements Renderer {
 					if(ABEngine.FIRST_MAP_DRAW) {
 						Player player = Player.create('4',x*100,y*100);
 						player.loadTexture(gl, ABEngine.GAME_PLAYER, ABEngine.context);
-						ABEngine.PLAYERS.put('4',player);
+						ABEngine.ENEMIES.put('4',player);
 					} else {
 
 						//			boolean in = false;
@@ -373,7 +373,7 @@ public class ABGameRenderer implements Renderer {
 				//int y = (int) ABEngine.PLAYER.getYPosition()/100;
 
 				char id = ABEngine.PLAYER.getID();
-				ABEngine.PLAYERS.remove(id);
+				ABEngine.ENEMIES.remove(id);
 
 				//colocar player na matrix
 				//ABEngine.setObject(x,y,id);
@@ -382,24 +382,31 @@ public class ABGameRenderer implements Renderer {
 
 			if (ABEngine.PLAYER == null){
 
-				//single
-				int i = 1 + r.nextInt(ABEngine.PLAYERS.values().size());
-				char k = (char)(('0')+i);
-				ABEngine.PLAYER = ABEngine.PLAYERS.get(k);
-				ABEngine.PLAYERS.remove(k); //remove player
-
+				//single ou multiplayer primeira vez
+				//int i = 1 + r.nextInt(ABEngine.ENEMIES.values().size());
+				
+			    	char k = '1';
+				ABEngine.PLAYER = ABEngine.ENEMIES.get(k);
+				ABEngine.ENEMIES.remove(k); //remove player
+				
+				ABEngine.AVAILABLE_PLAYERS = ABEngine.ENEMIES;
+				
 				//Remove todos os players da matrix menos o player
 
-				for(Player p : ABEngine.PLAYERS.values()){
-					int x = (int) p.getXPosition()/100;
+				for(java.lang.Character id : ABEngine.ENEMIES.keySet()){
+				    
+				    	Player p =  ABEngine.ENEMIES.get(id);
+					
+				    	int x = (int) p.getXPosition()/100;
 					int y = (int) p.getYPosition()/100;
-					//char id = p.getID();
+					
+					ABEngine.AVAILABLE_PLAYERS.put(id, p);
+					
 					ABEngine.setObject(x,y,'-');
-
 				}
 
 				//Remove todos os players
-				ABEngine.PLAYERS = new TreeMap<java.lang.Character,Player>();
+				ABEngine.ENEMIES = new TreeMap<java.lang.Character,Player>();
 
 			}
 
