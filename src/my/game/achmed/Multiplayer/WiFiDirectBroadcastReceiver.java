@@ -1,6 +1,7 @@
 package my.game.achmed.Multiplayer;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     private WifiP2pGroup mGroup;
     private final Channel mChannel;
     private final ABMultiplayer mActivity;
+
     private IncommingCommTask currentIncommingTask = null;
     private OutgoingCommTask currentOutgoingTask = null;
 
@@ -45,6 +48,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 	this.mActivity = activity;
 
 	currentIncommingTask = new IncommingCommTask();
+
 	currentIncommingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,R.string.port);
 
     }
@@ -90,10 +94,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 	    // asynchronous call and the calling activity is notified with a
 	    // callback on PeerListListener.onPeersAvailable()
 
-	    
+
 
 	    if (mManager != null) {
-		
+
 		mManager.requestGroupInfo(mChannel, new GroupInfoListener() {
 
 		    @Override
@@ -111,34 +115,62 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 		    }
 
 		    private void getWhoLeft(WifiP2pGroup group) {
+
+			if(group == null) {
+			    Toast.makeText(mActivity, "grupo a null", Toast.LENGTH_LONG).show();
+			}
+
+			//			if(group.getClientList() == null) {
+			//			    Toast.makeText(mActivity, "clientes a null", Toast.LENGTH_LONG).show();
+			//			    return;
+			//			}
+
 			List<WifiP2pDevice> whoLeft = new ArrayList<WifiP2pDevice>();
-			
+
 			String list = "[";
-			
-			for (WifiP2pDevice g : group.getClientList())
-			    list += g.deviceName + ", ";
-			
-			
-			Log.w("clientList",list);
-			
-			
+
+			if(group != null){
+			    for (WifiP2pDevice g : group.getClientList()){
+				String n = g.deviceName; 
+				list += n + ", ";
+			    }
+			}
+
+			list += "]";
+
+			//Toast.makeText(mActivity,list, Toast.LENGTH_LONG).show();
+
+
 			whoLeft.addAll(mGroup.getClientList());
-			whoLeft.removeAll(group.getClientList());
+
+			if(group != null){
+			    whoLeft.removeAll(group.getClientList());
+			}
+
 			mGroup = group;
+			list = "::";
 			for(WifiP2pDevice dev : whoLeft){
 
-			    if(!ReceiveCommTask.characters.isEmpty()){
-				char c = ReceiveCommTask.characters.get(dev.deviceAddress);
-				ABEngine.PLAYERS.remove(c);
-			    }		
+			    list += dev.deviceName + " -";
+
+
+//
+//			    if(!ReceiveCommTask.characters.isEmpty()){
+//				char c = ReceiveCommTask.characters.get();
+//				ABEngine.PLAYERS.remove(c);
+//			    }		
 
 			}
+
+			Toast.makeText(mActivity, list,
+				Toast.LENGTH_LONG).show();
+
 			//eliminar do jogo
 
 
 		    }
 		});
-		
+
 
 
 		mManager.requestPeers(mChannel, new PeerListListener() {
@@ -151,28 +183,28 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 
 			ABMultiplayer.peers.clear();
-			
+
 			boolean haveGO = false;
-			
+
 			for (WifiP2pDevice dev : peerList.getDeviceList()){
-			    
+
 			    if(dev.isGroupOwner()){
 				haveGO = true;
 				ABMultiplayer.peers.add(new Peer(dev.deviceName, dev.deviceAddress));
 			    }
 
-//			    Toast.makeText(mActivity, "found device " + dev.deviceAddress,
-//				    Toast.LENGTH_SHORT).show();
+			    //			    Toast.makeText(mActivity, "found device " + dev.deviceAddress,
+			    //				    Toast.LENGTH_SHORT).show();
 			}
-			
-			
+
+
 			//Nao existem grupos formados mostra todos
 			if (!haveGO){
-			    
+
 			    for (WifiP2pDevice dev : peerList.getDeviceList()){
 				ABMultiplayer.peers.add(new Peer(dev.deviceName, dev.deviceAddress));    
 			    }
-			    
+
 			}
 
 			ABMultiplayer.peersAd.notifyDataSetChanged();
@@ -196,7 +228,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 	    NetworkInfo ninfo = (NetworkInfo) intent.getParcelableExtra(
 		    WifiP2pManager.EXTRA_NETWORK_INFO);
-	    
+
 	    if (ninfo.isConnected()){
 
 
@@ -208,7 +240,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 			InetAddress goAddress = info.groupOwnerAddress;
 
 			Toast.makeText(mActivity, "onConnectionInfoAvailable.", Toast.LENGTH_LONG).show();
-			
+
 			if(info.groupFormed && info.isGroupOwner){
 			    //temos de verificar se somos owners e ja estamos num grupo.
 			    //We start the server on this peer.
@@ -219,8 +251,12 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 			else if (info.groupFormed) {
 
 
-
+			    //			    if(currentIncommingTask.getStatus() == Status.RUNNING || currentIncommingTask.getStatus() == Status.PENDING)
 			    currentIncommingTask.cancel(true);
+
+			    //			    if (currentOutgoingTask.getStatus() == Status.RUNNING || currentOutgoingTask.getStatus() == Status.PENDING)
+			    //				currentOutgoingTask.cancel(true);
+
 			    currentOutgoingTask = new OutgoingCommTask();
 			    currentOutgoingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, goAddress.getHostAddress());
 

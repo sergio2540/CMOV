@@ -93,10 +93,10 @@ public class ABMultiplayer extends Activity {
 	ABEngine.loadingEvent.addOnEventListener(new OnLoadingEventListener() {
 	    @Override
 	    public void onLoadingEvent(boolean loaded) {
-		//waitPopUp.cancel();
+		waitPopUp.cancel();
 		//Toast.makeText(ABEngine.context, "on loading event", Toast.LENGTH_SHORT).show();
-		Intent mainMenu = new Intent(getApplicationContext(), ABGame.class);
-		ABMultiplayer.this.startActivity(mainMenu);
+		Intent abGame = new Intent(getApplicationContext(), ABGame.class);
+		ABMultiplayer.this.startActivity(abGame);
 		//ABMultiplayer.this.finish();
 	    }
 
@@ -182,7 +182,11 @@ public class ABMultiplayer extends Activity {
 
 		}
 	    });
-
+	    
+	    
+	    mReceiver.getCurrentIncommingTask().cancel(true);
+	    mReceiver.getCurrentOutgoingTask().cancel(true);
+		
 	    unregisterReceiver(mReceiver);
 	    
 	}

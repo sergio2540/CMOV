@@ -22,6 +22,8 @@ public class AchmedBomberActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_screen);
 
+		ABEngine.context = getApplicationContext();
+		
 		handler = new Handler();
 		delayRunnable = new Thread() {
 			@Override

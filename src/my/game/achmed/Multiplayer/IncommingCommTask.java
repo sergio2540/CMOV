@@ -74,6 +74,7 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 
 				InitState initS = new InitState(id,e,x,y,level, clientSocket.getInetAddress());
 
+				ReceiveCommTask.characters.put(clientSocket.getInetAddress().getHostAddress(), id);
 
 				for (Socket cSocket : peersSockets){
 					ObjectOutputStream os = new ObjectOutputStream(cSocket.getOutputStream());

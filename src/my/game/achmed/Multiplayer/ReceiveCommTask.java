@@ -8,8 +8,10 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import my.game.achmed.ABEngine;
@@ -25,10 +27,11 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 	private static Socket groupOwner = null;
 	private static List<Socket> peers = new ArrayList<Socket>();
-	public static TreeMap<InetAddress,java.lang.Character> characters = new TreeMap<InetAddress,java.lang.Character>();
+	public static HashMap<String,java.lang.Character> characters = new HashMap<String,java.lang.Character>();
 
 	public ReceiveCommTask(Socket s) {
 		groupOwner = s;
+		
 	}
 
 	public ReceiveCommTask(){
@@ -112,10 +115,11 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 			ABEngine.PLAYER = Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY());
 
-			//ABEngine.PLAYER = iState.getPlayer();
-			//le.doEvent(true);
+		
+			
+			characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
 			ABEngine.loadingEvent.doLoadingEvent(true);
-			//characters.put((InetAddress)iState.getIp(), iState.getPlayerId());
+			
 			break;
 
 		case LEAVE:
@@ -183,18 +187,57 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 
 	public void broadCastPlayerEvent(State state) {
 
+	    HashMap<String,Character> whoLeft = new HashMap<String,Character>();
+	    List<Socket> newPeers = new ArrayList<Socket>();
 		for(Socket peer : peers) {
 
 			try {
 				ObjectOutputStream out = new ObjectOutputStream(peer.getOutputStream());
 				out.writeObject(state);
+				newPeers.add(peer);
 			} catch (IOException e) {
+			    whoLeft.put(peer.getInetAddress().getHostAddress(),characters.get(peer.getInetAddress().getHostAddress()));
+			    
 				e.printStackTrace();
-				cancel(true);
+				//cancel(true);
 			}
-
+			
+			
 		}
-
+		
+		peers = newPeers;
+		
+		if(!whoLeft.isEmpty())
+		    announceLeft(whoLeft);
+	}
+	
+	public void announceLeft(HashMap<String, Character> toLeave){
+	    
+	    ObjectOutputStream os;
+	    for(Entry<String,Character> ent : toLeave.entrySet())
+	    {
+		for(Socket s : peers){
+		    
+		    try {
+			os = new ObjectOutputStream(s.getOutputStream());
+			os.writeObject(new LeaveState(ent.getValue(), Event.LEAVE));
+		    } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		    }
+		  
+		    
+		}
+		
+	    }
+	    //removemos do mapa de caracteres.Temos de remover os sockets
+	    for(Entry<String,Character> leaving : toLeave.entrySet()){
+		    
+		characters.remove(leaving.getKey());
+  
+		}
+	    
+	    
 	}
 	public static void sendPlayerAction(CHARACTER_ACTION ca, char playerId, boolean stop, boolean stopped, boolean hidden) {
 
