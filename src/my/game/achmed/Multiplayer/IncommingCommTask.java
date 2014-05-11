@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,12 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			try {
+			    clientSocket.setSoTimeout(5);
+			} catch (SocketException e2) {
+			    // TODO Auto-generated catch block
+			    e2.printStackTrace();
+			}
 			peersSockets.add(clientSocket);
 
 
@@ -94,13 +101,13 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 					e1.printStackTrace();
 				}finally{
 
-					if(os != null)
-						try {
-							os.close();
-						} catch (IOException e1) {
+					//if(os != null)
+					//	try {
+							//os.close();
+					//	} catch (IOException e1) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+						//	e1.printStackTrace();
+					//	}
 
 				}
 				//os.close();

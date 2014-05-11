@@ -90,13 +90,13 @@ public class ReceiveCommTask extends AsyncTask<Void, String, Void> {
 	
 	finally{
 
-	try {
-	    if(objStream != null)
-		objStream.close();
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+//	try {
+//	    if(objStream != null)
+//		objStream.close();
+//	} catch (IOException e) {
+//	    // TODO Auto-generated catch block
+//	    e.printStackTrace();
+//	}
 
     }
 
@@ -240,13 +240,13 @@ public void broadCastPlayerEvent(State state) {
 	    //cancel(true);
 	}finally{
 
-	    if(out != null)
-		try {
-		    out.close();
-		} catch (IOException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
+//	    if(out != null)
+//		try {
+//		    out.close();
+//		} catch (IOException e) {
+//		    // TODO Auto-generated catch block
+//		    e.printStackTrace();
+//		}
 
 	}
 
@@ -306,13 +306,13 @@ public static void sendPlayerAction(CHARACTER_ACTION ca, char playerId, boolean 
 
 
 	    }finally{
-		if(os != null)
-		    try {
-			os.close();
-		    } catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		    }
+//		if(os != null)
+//		    try {
+//			os.close();
+//		    } catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		    }
 
 	    }
 
@@ -332,13 +332,13 @@ public static void sendPlayerAction(CHARACTER_ACTION ca, char playerId, boolean 
 
     }finally{
 
-	if(os != null)
-	    try {
-		os.close();
-	    } catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
+//	if(os != null)
+//	    try {
+//		os.close();
+//	    } catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	    }
     }
 
 }
