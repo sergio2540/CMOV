@@ -96,6 +96,7 @@ public class ABMultiplayer extends Activity {
 	    public void onLoadingEvent(boolean loaded) {
 		waitPopUp.cancel();
 		//Toast.makeText(ABEngine.context, "on loading event", Toast.LENGTH_SHORT).show();
+		
 		Intent abGame = new Intent(getApplicationContext(), ABGame.class);
 		ABMultiplayer.this.startActivity(abGame);
 		//ABMultiplayer.this.finish();
@@ -115,6 +116,26 @@ public class ABMultiplayer extends Activity {
 
 	    @Override
 	    public void onClick(View v) {
+	    	
+	    //cria grupo
+	    	mManager.createGroup(mChannel, new ActionListener() {
+
+	    		@Override
+				public void onSuccess() {
+					// TODO Auto-generated method stub
+					
+				}
+
+	    		
+				@Override
+				public void onFailure(int reason) {
+					// TODO Auto-generated method stub
+					
+				}
+		
+	    });
+	    
+	    	
 		Intent levelMenu = new Intent(getApplicationContext(), ABLevelMenu.class);
 		ABMultiplayer.this.startActivity(levelMenu);
 	    }
