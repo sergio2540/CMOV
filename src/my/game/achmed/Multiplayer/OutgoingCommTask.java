@@ -39,8 +39,6 @@ public class OutgoingCommTask extends AsyncTask<String, Void, String> {
 
 		return null;
 
-
-
 	}
 
 	@Override

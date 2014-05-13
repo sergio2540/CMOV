@@ -91,7 +91,7 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 			ReceiveCommTask.characters.put(clientSocket.getInetAddress().getHostAddress(), id);
 			ObjectOutputStream os = null;
 
-			for (Socket cSocket : peersSockets){
+			for (Socket cSocket : peersSockets) {
 				try {
 					os = new ObjectOutputStream(cSocket.getOutputStream());
 					os.writeObject(initS);
