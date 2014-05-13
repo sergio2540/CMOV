@@ -7,16 +7,16 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 public class ClientInThread implements Runnable {
 
-	Socket go;
-	InHandler inHandler;
+	private Socket goSocket;
+	private InHandler inHandler;
 
 	public ClientInThread(Socket groupOwner, InHandler inHandler) {
-		this.go = groupOwner;
+		this.goSocket = groupOwner;
 		this.inHandler = inHandler;
 	}
 
@@ -24,34 +24,54 @@ public class ClientInThread implements Runnable {
 	@Override
 	public void run() {
 
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				Looper.prepare();
+				inHandler = new InHandler();
+				Looper.loop();
+			}
+
+		}).start();
+
+		while(true) {
+			this.readSocket();
+		}
+
 	}
 
-	private void readSocket(Socket s){
-		
+	private void readSocket() {
+
 		ObjectInputStream objStream = null;
 		State message = null;
-		Bundle bundle;
+		Bundle bundle = null;
+		Message msg = null;
 
 		try {
-			
-			InputStream i = s.getInputStream();
+
+			InputStream i = goSocket.getInputStream();
 			objStream = new ObjectInputStream(i);
 
-			while((message = (State) objStream.readObject()) != null){
-				
-				//this.inHandler.sendMessage(new Message().);
+			while((message = (State) objStream.readObject()) != null) {
+
+				bundle = new Bundle();
+				bundle.putSerializable("State", message);
+				msg = new Message();
+				msg.setData(bundle);
+
+				this.inHandler.sendMessage(msg);
+
 			}
 
 		} catch (EOFException e){
-			//Log.w("readsocket", e.getMessage());
-		}
-		catch (ClassNotFoundException e){
 
-			//Log.w("readsocket", e.getMessage());
+		} catch (ClassNotFoundException e){
 
 		} catch (IOException e) {
-			//Log.w("readsocket", e.getMessage());
-		}
+
+		} 
 
 		finally{
 

@@ -37,7 +37,8 @@ public class IncommingCommTask extends AsyncTask<Integer, Socket, Void> {
 
 			//String port = getResource().getString(params[0]);
 
-			mSrvSocket = new ServerSocket(9091);
+			//porta ta mal -> 9091
+			mSrvSocket = new ServerSocket(9080);
 
 			//Toast.makeText(activity, "Init send.", Toast.LENGTH_LONG).show();
 

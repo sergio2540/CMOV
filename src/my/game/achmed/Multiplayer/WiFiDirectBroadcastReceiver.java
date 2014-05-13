@@ -38,7 +38,9 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 	private IncommingCommTask currentIncommingTask = null;
 	private OutgoingCommTask currentOutgoingTask = null;
-
+	
+	public static ClientCom client;
+	public static ServerCom server;
 
 	public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel mChannel, ABMultiplayer activity) {
 
@@ -47,9 +49,9 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 		this.mChannel = mChannel;
 		this.mActivity = activity;
 
-		currentIncommingTask = new IncommingCommTask();
+		//currentIncommingTask = new IncommingCommTask();
 
-		currentIncommingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,R.string.port);
+		//currentIncommingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,R.string.port);
 
 	}
 
@@ -245,20 +247,25 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 							//temos de verificar se somos owners e ja estamos num grupo.
 							//We start the server on this peer.
 							Toast.makeText(mActivity, "Group owner.", Toast.LENGTH_LONG).show();
-
+							if(server == null)
+							server = new ServerCom();
+							if(client == null)
+							client = new ClientCom(goAddress.getHostAddress());
 
 						}
 						else if (info.groupFormed) {
-
+							
+							if(client == null)
+							client = new ClientCom(goAddress.getHostAddress());
 
 							//			    if(currentIncommingTask.getStatus() == Status.RUNNING || currentIncommingTask.getStatus() == Status.PENDING)
-							currentIncommingTask.cancel(true);
+							//currentIncommingTask.cancel(true);
 
 							//			    if (currentOutgoingTask.getStatus() == Status.RUNNING || currentOutgoingTask.getStatus() == Status.PENDING)
 							//				currentOutgoingTask.cancel(true);
 
-							currentOutgoingTask = new OutgoingCommTask();
-							currentOutgoingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, goAddress.getHostAddress());
+							//currentOutgoingTask = new OutgoingCommTask();
+							//currentOutgoingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, goAddress.getHostAddress());
 
 
 							Toast.makeText(mActivity, "Group formed.", Toast.LENGTH_LONG).show();

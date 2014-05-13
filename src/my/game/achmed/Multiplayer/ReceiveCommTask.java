@@ -22,6 +22,7 @@ import my.game.achmed.Characters.BOMB_ACTION;
 import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.util.Log;
 
 //Processes input from clients/group owner
@@ -143,20 +144,12 @@ private void processStateMessage(State message){
 	    characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
 	    ABEngine.loadingEvent.doLoadingEvent(true);
 
-
-
-
-
-	}else{
+	} else {
 
 	    characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
 	    ABEngine.ENEMIES.put(iState.getPlayerId(), Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY()));
 
-
 	}
-
-
-
 
 	break;
 

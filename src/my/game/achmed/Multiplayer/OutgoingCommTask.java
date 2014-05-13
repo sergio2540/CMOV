@@ -1,12 +1,9 @@
 package my.game.achmed.Multiplayer;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import my.game.achmed.Characters.CHARACTER_ACTION;
 import android.os.AsyncTask;
 import android.util.Log;
 

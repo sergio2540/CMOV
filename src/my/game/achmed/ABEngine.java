@@ -10,7 +10,6 @@ import java.util.TreeMap;
 
 import android.content.Context;
 import android.content.Intent;
-
 import my.game.achmed.R;
 import my.game.achmed.Activities.ABGame;
 import my.game.achmed.Characters.BOMB_ACTION;
@@ -18,8 +17,11 @@ import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
 import my.game.achmed.Events.LoadingEvent;
+import my.game.achmed.Multiplayer.Event;
 import my.game.achmed.Multiplayer.OutgoingCommTask;
+import my.game.achmed.Multiplayer.PlayerState;
 import my.game.achmed.Multiplayer.ReceiveCommTask;
+import my.game.achmed.Multiplayer.WiFiDirectBroadcastReceiver;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -357,11 +359,15 @@ public class ABEngine {
     }
 
     public static void sendPlayerAction(char playerId, CHARACTER_ACTION ca, boolean stop, boolean stopped, boolean hidden) {
-	ReceiveCommTask.sendPlayerAction(ca, playerId, stop, stopped, hidden);
+	//ReceiveCommTask.sendPlayerAction(ca, playerId, stop, stopped, hidden);
+    	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca, stop, stopped, hidden);
+    	
+    	WiFiDirectBroadcastReceiver.client.client.sendStateToSendingThread(ps);
+    	
     }
 
     public static void sendDropBombAction(char playerId, BOMB_ACTION ba) {
-	ReceiveCommTask.sendDropBombAction(ba, playerId);
+	//ReceiveCommTask.sendDropBombAction(ba, playerId);
     }
 
     public static void sendPausePlayer(char playerId, boolean pause) {
