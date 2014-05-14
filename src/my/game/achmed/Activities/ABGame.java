@@ -273,7 +273,7 @@ public class ABGame extends Activity {
 				}
 				else if(event.getAction() == (MotionEvent.ACTION_DOWN)) {
 
-					// ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
+					//ABEngine.BOMB_ACTION = ABEngine.DROP_BOMB;
 
 					if (ABEngine.PLAYER != null) {
 						ABEngine.PLAYER.getBomb().drop();
@@ -492,11 +492,11 @@ public class ABGame extends Activity {
 		c = counter(Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000));
 		c.start();
 
-		//ABEngine.PLAYER.HIDDEN = false;
-//		if(ABEngine.isOnMultiplayer) {
-//			ABEngine.sendPlayerAction(ABEngine.PLAYER.getID(), ABEngine.PLAYER.getCurrentAction(), 
-//					ABEngine.PLAYER.isStop(), ABEngine.PLAYER.isStopped(), ABEngine.PLAYER.HIDDEN);
-//		}
+		ABEngine.PLAYER.HIDDEN = false;
+		if(ABEngine.isOnMultiplayer) {
+			ABEngine.sendPlayerAction(ABEngine.PLAYER.getID(), ABEngine.PLAYER.getCurrentAction(), 
+					ABEngine.PLAYER.isStop(), ABEngine.PLAYER.isStopped(), ABEngine.PLAYER.HIDDEN);
+		}
 		
 		onResume();
 		backPopUp.cancel();

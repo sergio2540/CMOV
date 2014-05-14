@@ -1,5 +1,10 @@
 package my.game.achmed;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,11 +22,13 @@ import my.game.achmed.Characters.CHARACTER_ACTION;
 import my.game.achmed.Characters.Player;
 import my.game.achmed.Characters.Robot;
 import my.game.achmed.Events.LoadingEvent;
-import my.game.achmed.Multiplayer.Event;
-import my.game.achmed.Multiplayer.OutgoingCommTask;
-import my.game.achmed.Multiplayer.PlayerState;
-import my.game.achmed.Multiplayer.ReceiveCommTask;
-import my.game.achmed.Multiplayer.WiFiDirectBroadcastReceiver;
+import my.game.achmed.Multiplayer.p2p.WiFiDirectBroadcastReceiver;
+import my.game.achmed.State.BombState;
+import my.game.achmed.State.Event;
+import my.game.achmed.State.InitState;
+import my.game.achmed.State.LeaveState;
+import my.game.achmed.State.PlayerState;
+import my.game.achmed.State.State;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -61,6 +68,8 @@ public class ABEngine {
     public static final int PLAYER_ACHMED_FRAMES = 0;
     public static final int PLAYER_FRAMES_BETWEEN_ANI = 9;
 
+    //private static final int GO_PORT = 9091;
+
     public static boolean isOnMultiplayer = false;
 
 
@@ -79,8 +88,14 @@ public class ABEngine {
 
     public static float MILLIS_UNTIL_FINISHED = 0;
 
+    
+    //MULTIPLATER
+    public static Socket GO_SOCKET;
+    public static List<Socket> PEERS = new ArrayList<Socket>();
+    
+    public static List<ObjectOutputStream> PEERSSTREAMS = new ArrayList<ObjectOutputStream>();
 
-    //public static boolean STOP = true;
+    //pulic static boolean STOP = true;
     //public static boolean STOPPED = true;
 
 
@@ -108,7 +123,7 @@ public class ABEngine {
 	{'W','-','-','O','R','W'},
 	{'W','-','-','O','-','W'}};
 
-    public static Player createRandomPlayer() {
+    public synchronized static Player createRandomPlayer() {
 
 	Player player = null;
 
@@ -303,7 +318,7 @@ public class ABEngine {
 
     }
 
-    public static void create_map(char[][] gameLevelMatrix) {
+    public synchronized static void create_map(char[][] gameLevelMatrix) {
 
 	char[][] tempMap  = new char[gameLevelMatrix.length][gameLevelMatrix[0].length];
 
@@ -342,13 +357,13 @@ public class ABEngine {
     //
     //	}
 
-    public static void setPlayerAction(char id, CHARACTER_ACTION action){
+    public synchronized static void setPlayerAction(char id, CHARACTER_ACTION action){
 
 	ABEngine.ENEMIES.get(id).setAction(action);
 
     }
 
-    public static void setBombAction(char id, BOMB_ACTION action){
+    public synchronized static void setBombAction(char id, BOMB_ACTION action){
 
 	ABEngine.ENEMIES.get(id).getBomb().setAction(action);
 
@@ -358,22 +373,148 @@ public class ABEngine {
 	return ABEngine.loadingEvent;
     }
 
-    public static void sendPlayerAction(char playerId, CHARACTER_ACTION ca, boolean stop, boolean stopped, boolean hidden) {
-	//ReceiveCommTask.sendPlayerAction(ca, playerId, stop, stopped, hidden);
-    	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca, stop, stopped, hidden);
-    	
-    	WiFiDirectBroadcastReceiver.client.client.sendStateToSendingThread(ps);
-    	
+    public synchronized static void sendPlayerAction(char playerId, CHARACTER_ACTION ca, boolean stop, boolean stopped, boolean hidden) {
+	
+	PlayerState ps = new PlayerState(playerId, Event.PLAYER, ca, stop, stopped, hidden);
+	
+	
+	if(WiFiDirectBroadcastReceiver.client != null) {
+	    ABEngine.sendStateMessage(ps);
+	} else {
+	    ABEngine.broadCastMessage(ps);
+	} 
+	
+
     }
 
-    public static void sendDropBombAction(char playerId, BOMB_ACTION ba) {
-	//ReceiveCommTask.sendDropBombAction(ba, playerId);
+    public synchronized static void sendDropBombAction(char playerId, BOMB_ACTION ba) {
+	
+	BombState bombState = new BombState(playerId, Event.BOMB, ba);
+
+	if(WiFiDirectBroadcastReceiver.client != null) {
+	    ABEngine.sendStateMessage(bombState);
+	} else {
+	    ABEngine.broadCastMessage(bombState);
+	} 
+	
+	
     }
 
     public static void sendPausePlayer(char playerId, boolean pause) {
 	//ReceiveCommTask.sendPausePlayer(pause, playerId);
     }  
 
+
+
+    //Todas as threads actualizam o estado
+    public static void processStateMessage(State message){
+
+	switch(message.getEvent()){
+	//Players action
+	case PLAYER:
+	    PlayerState pState = (PlayerState) message;
+	    if(pState.getPlayerId() == ABEngine.PLAYER.getID() ){
+		return;
+	    }
+
+	    ABEngine.setPlayerAction(pState.getPlayerId(), pState.getPlayerAction());
+	    Player player = ABEngine.ENEMIES.get(pState.getPlayerId());
+	    player.STOP = pState.isStop();
+	    player.STOPPED = pState.isStopped();
+	    player.HIDDEN = pState.isHidden();
+	    
+//	    if(WiFiDirectBroadcastReceiver.client == null) {
+//		ABEngine.broadCastMessage(pState);
+//	    }
+
+	    break;
+	    //Players bomb
+	case BOMB:
+	    BombState bState = (BombState) message;
+	    if(bState.getPlayerId() == ABEngine.PLAYER.getID() ){
+		return;
+	    }
+	    ABEngine.setBombAction(bState.getPlayerId(), bState.getBombAction());
+	    break;
+	    //Received by the client
+	case INIT://e aqui vao haver envios de volta?
+	    InitState iState = (InitState) message;
+
+
+	    if(ABEngine.LEVEL == null){
+		ABEngine.LEVEL = iState.getLevel();
+		ABEngine.create_map(iState.getLevel().getGameLevelMatrix()); 
+		ABEngine.PLAYER = Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY());
+		//characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
+		ABEngine.loadingEvent.doLoadingEvent(true);
+
+	    } else {
+
+		//characters.put(iState.getIp().getHostAddress(), iState.getPlayerId());
+		ABEngine.ENEMIES.put(iState.getPlayerId(), Player.create(iState.getPlayerId(), iState.getCoordX(),iState.getCoordY()));
+
+
+	    }
+
+
+	    break;
+
+	case LEAVE:
+
+	    LeaveState lState = (LeaveState) message;
+
+	    ABEngine.ENEMIES.remove(lState.getPlayerId());
+
+	    break;
+
+	}
+    }
+
+
+    public static synchronized void sendStateMessage(State message){
+
+	ObjectOutputStream os = null;
+
+	try{
+
+
+	    
+	    os = new ObjectOutputStream(GO_SOCKET.getOutputStream());
+	    os.reset();
+	    os.writeObject(message);
+	    os.flush();
+	
+
+	} catch (UnknownHostException e) {
+	    Log.e("exception", "Don't know about host");
+	} catch (IOException e) {
+	    Log.e("exception", "Couldn't get I/O for the connection to host");
+	} finally {
+
+	   
+		
+		    //os.close();
+		
+	}
+
+    }
+
+
+    public static synchronized void broadCastMessage(State state) {
+
+
+	for(ObjectOutputStream s : PEERSSTREAMS) {
+	    try {
+		s.writeObject(state);
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+
+
+	}
+
+    }
+    
     public static void drawMapDebug() {
 
 	Log.w("map", "*******************************************");

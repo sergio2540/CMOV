@@ -1,4 +1,4 @@
-package my.game.achmed.Multiplayer;
+package my.game.achmed.State;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -1,6 +1,9 @@
 package my.game.achmed.Multiplayer;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -9,41 +12,35 @@ import java.util.List;
 import my.game.achmed.ABEngine;
 import my.game.achmed.Level;
 import my.game.achmed.Characters.Player;
+import my.game.achmed.State.Event;
+import my.game.achmed.State.InitState;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Parcelable;
 
 public class ServerThread implements Runnable {
-
-	
-	List<InHandler> peersInHandlers;
-	OutHandler peersOutHandlers;
-
+    
 	List<ServerInThread> inThread = new ArrayList<ServerInThread>();
-	ServerOutThread outThread;
+	//ServerOutThread outThread;
 	
-	List<Socket> peersSockets = new ArrayList<Socket>();
+	//List<Socket> peersSockets = new ArrayList<Socket>();
 	
 	ServerSocket goSocket;
 	
 
 	public ServerThread() {
 		
-		outThread = new ServerOutThread();
-		new Thread(outThread).start();
+		//outThread = new ServerOutThread();
+		//new Thread(outThread).start();
 		
 		try {
 			
-			goSocket = new ServerSocket(9091);
+			goSocket = new ServerSocket(9253);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-	}
-	
-	public void start() {
-		this.accept();
 	}
 
 
@@ -56,12 +53,22 @@ public class ServerThread implements Runnable {
 
 			try {
 				
-				clientSocket = goSocket.accept();
-
-				peersSockets.add(clientSocket);
-				outThread.addPeerSocket(clientSocket);
-				ServerInThread serverInThread = new ServerInThread(clientSocket, outThread);
+			clientSocket = goSocket.accept();
+			//peersSockets.add(clientSocket);
+			ABEngine.PEERS.add(clientSocket);
+				
+			ObjectOutputStream objOut = new ObjectOutputStream(clientSocket.getOutputStream());
+				    		    
+			ABEngine.PEERSSTREAMS.add(objOut);
+				
+				
+				ServerInThread serverInThread = new ServerInThread(clientSocket);
 				inThread.add(serverInThread);
+				
+				//outThread.addPeerSocket(clientSocket);
+				
+				
+				
 				new Thread(serverInThread).start();
 				
 				Player pl = ABEngine.createRandomPlayer();
@@ -77,7 +84,8 @@ public class ServerThread implements Runnable {
 				//List<Robot> robots  = ABEngine.ROBOTS;
 				InitState initS = new InitState(id,e,x,y,level, clientSocket.getInetAddress());
 				
-				this.sendStateToSendingThread(initS);
+				ABEngine.broadCastMessage(initS);
+				
 //				ReceiveCommTask.characters.put(clientSocket.getInetAddress().getHostAddress(), id);
 //				ObjectOutputStream os = null;
 				
@@ -89,26 +97,26 @@ public class ServerThread implements Runnable {
 
 	}
 	
-	public void sendStateToSendingThread(State state) {
-
-
-		if(this.outThread.servOutHandler != null) {
-
-			Message msg = new Message();
-			Bundle bundle = new Bundle();
-			bundle.putSerializable("State", state);
-			msg.setData(bundle);
-			
-			this.outThread.servOutHandler.sendMessage(msg);
-			
-		}
-
-	}
+//	public void sendStateToSendingThread(State state) {
+//
+//
+//		if(this.outThread.servOutHandler != null) {
+//
+//			Message msg = new Message();
+//			Bundle bundle = new Bundle();
+//			bundle.putSerializable("State", state);
+//			msg.setData(bundle);
+//			
+//			this.outThread.servOutHandler.sendMessage(msg);
+//			
+//		}
+//
+//	}
 	
 	@Override
 	public void run() {
 
-			this.start();
+	    this.accept();
 	
 	}
 

@@ -8,9 +8,8 @@ import my.game.achmed.Level;
 import my.game.achmed.R;
 import my.game.achmed.Events.LoadingEvent;
 import my.game.achmed.Listeners.OnLoadingEventListener;
-import my.game.achmed.Multiplayer.IncommingCommTask;
-import my.game.achmed.Multiplayer.Peer;
-import my.game.achmed.Multiplayer.WiFiDirectBroadcastReceiver;
+import my.game.achmed.Multiplayer.p2p.WiFiDirectBroadcastReceiver;
+import my.game.achmed.State.Peer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -206,11 +205,11 @@ public class ABMultiplayer extends Activity {
 			});
 
 
-			if( mReceiver.getCurrentIncommingTask() != null && mReceiver.getCurrentIncommingTask().getStatus() == Status.RUNNING)
-				mReceiver.getCurrentIncommingTask().cancel(true);
-
-			if( mReceiver.getCurrentOutgoingTask() != null && mReceiver.getCurrentOutgoingTask().getStatus() == Status.RUNNING)
-				mReceiver.getCurrentOutgoingTask().cancel(true);
+//			if( mReceiver.getCurrentIncommingTask() != null && mReceiver.getCurrentIncommingTask().getStatus() == Status.RUNNING)
+//				mReceiver.getCurrentIncommingTask().cancel(true);
+//
+//			if( mReceiver.getCurrentOutgoingTask() != null && mReceiver.getCurrentOutgoingTask().getStatus() == Status.RUNNING)
+//				mReceiver.getCurrentOutgoingTask().cancel(true);
 
 			unregisterReceiver(mReceiver);
 

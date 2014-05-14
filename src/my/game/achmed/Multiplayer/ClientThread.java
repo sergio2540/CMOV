@@ -3,6 +3,8 @@ package my.game.achmed.Multiplayer;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import my.game.achmed.ABEngine;
+
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Parcelable;
@@ -10,11 +12,11 @@ import android.util.Log;
 
 public class ClientThread implements Runnable {
 
-	InHandler handlerIn;
-	OutHandler handlerOut;
+	//InHandler handlerIn;
+	//OutHandler handlerOut;
 
 	ClientInThread threadIn;
-	ClientOutThread threadOut;
+	//ClientOutThread threadOut;
 
 	Socket groupOwner;
 	String goIp;
@@ -22,20 +24,19 @@ public class ClientThread implements Runnable {
 	public ClientThread(String ip) {
 		this.goIp = ip;
 	}
-	
-	public void start() {
-		this.connect();
-	}
 
 	public void connect() {
 		while(true){
 			try {
 
-				groupOwner = new Socket();
-				groupOwner.bind(null);
-				groupOwner.connect(new InetSocketAddress(this.goIp, 9091), 500);
-				this.startInThread();
-				this.startOutThread();
+				groupOwner = new Socket(this.goIp, 9253);
+				
+				ABEngine.GO_SOCKET = groupOwner;
+//				
+				//groupOwner.bind(null);
+//				groupOwner.connect(new InetSocketAddress(this.goIp, 9091), 500);
+//				this.startInThread();
+//				this.startOutThread();
 				return;
 
 			} catch (Exception e) {
@@ -48,37 +49,25 @@ public class ClientThread implements Runnable {
 
 	private void startInThread() {
 
-		threadIn = new ClientInThread(this.groupOwner, this.handlerIn);
+		threadIn = new ClientInThread(this.groupOwner);
 		new Thread(threadIn).start();
 
 	}
 
 	private void startOutThread() {
 
-		threadOut = new ClientOutThread(this.groupOwner);
-		new Thread(threadOut).start();
+//		threadOut = new ClientOutThread(this.groupOwner);
+//		new Thread(threadOut).start();
 		
-	}
-
-	public void sendStateToSendingThread(State state) {
-
-
-		if(this.threadOut.outHandler != null) {
-
-			Message msg = new Message();
-			Bundle bundle = new Bundle();
-			bundle.putSerializable("State", state);
-			msg.setData(bundle);
-			//bundle.clear();
-			this.threadOut.outHandler.sendMessage(msg);
-			
-		}
-
 	}
 	
 	@Override
 	public void run() {
-		this.start();
+	    
+		connect();
+		startInThread();
+		//startOutThread();
+		
 	}
 	
 }

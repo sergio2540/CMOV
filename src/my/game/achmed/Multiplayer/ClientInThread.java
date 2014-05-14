@@ -6,79 +6,68 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
+import my.game.achmed.ABEngine;
+import my.game.achmed.State.State;
+
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
 
 public class ClientInThread implements Runnable {
 
-	private Socket goSocket;
-	private InHandler inHandler;
+    private final Socket goSocket;
 
-	public ClientInThread(Socket groupOwner, InHandler inHandler) {
-		this.goSocket = groupOwner;
-		this.inHandler = inHandler;
+    public ClientInThread(Socket groupOwner) {
+	this.goSocket = groupOwner;
+	
+    }
+
+
+    @Override
+    public void run() {
+
+	while(true) {
+	    this.readSocket();
+	}
+
+    }
+
+    private void readSocket() {
+
+	ObjectInputStream objStream = null;
+	State message = null;
+	
+	try {
+
+	    InputStream i = goSocket.getInputStream();
+	    objStream = new ObjectInputStream(i);
+	  
+	    
+	    while((message = (State) objStream.readObject()) != null) {
+		
+		ABEngine.processStateMessage(message);
+		
+
+	    }
+
+	} catch (EOFException e){
+	    System.out.println(e);
+	} catch (ClassNotFoundException e){
+	    System.out.println(e);
+	} catch (IOException e) {
+	    System.out.println(e);
+	} 
+
+	finally{
+	    
+//	    if(objStream != null){
+//		objStream.close();
+//	    }
+
 	}
 
 
-	@Override
-	public void run() {
-
-
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				Looper.prepare();
-				inHandler = new InHandler();
-				Looper.loop();
-			}
-
-		}).start();
-
-		while(true) {
-			this.readSocket();
-		}
-
-	}
-
-	private void readSocket() {
-
-		ObjectInputStream objStream = null;
-		State message = null;
-		Bundle bundle = null;
-		Message msg = null;
-
-		try {
-
-			InputStream i = goSocket.getInputStream();
-			objStream = new ObjectInputStream(i);
-
-			while((message = (State) objStream.readObject()) != null) {
-
-				bundle = new Bundle();
-				bundle.putSerializable("State", message);
-				msg = new Message();
-				msg.setData(bundle);
-
-				this.inHandler.sendMessage(msg);
-
-			}
-
-		} catch (EOFException e){
-
-		} catch (ClassNotFoundException e){
-
-		} catch (IOException e) {
-
-		} 
-
-		finally{
-
-		}
-
-
-	}
+    }
 
 
 }

@@ -87,7 +87,7 @@ public abstract class Player extends Character implements Serializable {
 	protected CHARACTER_ACTION playerAction = CHARACTER_ACTION.LEFT_RELEASE;
 	protected CHARACTER_ACTION nextPlayerAction = null;
 
-	public void setAction(CHARACTER_ACTION playerAction) {
+	public synchronized void setAction(CHARACTER_ACTION playerAction) {
 
 		if(this.STOPPED)
 			nextPlayerAction = null;
