@@ -144,12 +144,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 							Toast.makeText(mActivity, "grupo a null", Toast.LENGTH_LONG).show();
 						}
 
-						//			if(group.getClientList() == null) {
-						//			    Toast.makeText(mActivity, "clientes a null", Toast.LENGTH_LONG).show();
-						//			    return;
-						//			}
-
-						List<WifiP2pDevice> whoLeft = new ArrayList<WifiP2pDevice>();
+			whoLeft.addAll(mGroup.getClientList());
 
 						String list = "[";
 
@@ -178,16 +173,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 							list += dev.deviceName + " -";
 
 
-							//
-							//			    if(!ReceiveCommTask.characters.isEmpty()){
-							//				char c = ReceiveCommTask.characters.get();
-							//				ABEngine.ENEMIES.remove(c);
-							//			    }		
-
-						}
-
-						Toast.makeText(mActivity, list,
-								Toast.LENGTH_LONG).show();
+		mManager.requestPeers(mChannel, new PeerListListener() {
 
 						//eliminar do jogo
 

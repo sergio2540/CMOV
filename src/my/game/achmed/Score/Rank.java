@@ -1,4 +1,4 @@
-package my.game.achmed.Rank;
+package my.game.achmed.Score;
 
 public class Rank {
 	
