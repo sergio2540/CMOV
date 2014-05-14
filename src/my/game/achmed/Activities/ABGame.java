@@ -645,7 +645,11 @@ public class ABGame extends Activity {
 	}
 
 	public void onSplit(View v) {
-
+		
+		Intent ab_split = new Intent(getApplicationContext(), ABSplit.class);
+		startActivity(ab_split);
+		
+		
 	}
 
 }
