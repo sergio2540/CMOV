@@ -45,9 +45,6 @@ import android.widget.Toast;
 
 public class ABMultiplayer extends Activity {
 
-	private WifiP2pManager mManager;
-
-	private Channel mChannel;
 
 	private WiFiDirectBroadcastReceiver mReceiver;
 
@@ -75,8 +72,8 @@ public class ABMultiplayer extends Activity {
 		waitPopUp.setContentView(wait_xml);
 
 		//Set up multiplayer
-		mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-		mChannel = mManager.initialize(this, getMainLooper(), null);
+		ABEngine.mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+		ABEngine.mChannel = ABEngine.mManager.initialize(this, getMainLooper(), null);
 
 		//mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
 
@@ -117,7 +114,7 @@ public class ABMultiplayer extends Activity {
 			public void onClick(View v) {
 
 				//cria grupo
-				mManager.createGroup(mChannel, new ActionListener() {
+				ABEngine.mManager.createGroup(ABEngine.mChannel, new ActionListener() {
 
 					@Override
 					public void onSuccess() {
@@ -150,11 +147,11 @@ public class ABMultiplayer extends Activity {
 		super.onResume();
 		if(!mBound){
 
-			mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+			mReceiver = new WiFiDirectBroadcastReceiver(ABEngine.mManager, ABEngine.mChannel, this);
 			registerReceiver(mReceiver, mIntentFilter);
 			mBound = true;
 
-			mManager.removeGroup(mChannel, new ActionListener() {
+			ABEngine.mManager.removeGroup(ABEngine.mChannel, new ActionListener() {
 
 				@Override
 				public void onSuccess() {
@@ -190,7 +187,7 @@ public class ABMultiplayer extends Activity {
 
 		if(mBound){
 
-			mManager.removeGroup(mChannel, new ActionListener() {
+			ABEngine.mManager.removeGroup(ABEngine.mChannel, new ActionListener() {
 
 				@Override
 				public void onSuccess() {
@@ -219,7 +216,7 @@ public class ABMultiplayer extends Activity {
 
 	public void findPeers(){
 
-		mManager.discoverPeers(mChannel, new ActionListener() {
+		ABEngine.mManager.discoverPeers(ABEngine.mChannel, new ActionListener() {
 
 			@Override
 			public void onSuccess() {
@@ -266,7 +263,7 @@ public class ABMultiplayer extends Activity {
 		config.deviceAddress = peersAd.getItem(position).getPeerAddress();
 		config.groupOwnerIntent = 0;
 
-		mManager.connect(mChannel, config, new ActionListener(){
+		ABEngine.mManager.connect(ABEngine.mChannel, config, new ActionListener(){
 
 			@Override
 			public void onFailure(int arg0) {

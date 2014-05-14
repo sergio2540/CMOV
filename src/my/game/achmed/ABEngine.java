@@ -29,6 +29,8 @@ import my.game.achmed.State.InitState;
 import my.game.achmed.State.LeaveState;
 import my.game.achmed.State.PlayerState;
 import my.game.achmed.State.State;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -94,6 +96,10 @@ public class ABEngine {
     public static List<Socket> PEERS = new ArrayList<Socket>();
     
     public static List<ObjectOutputStream> PEERSSTREAMS = new ArrayList<ObjectOutputStream>();
+    
+    public static WifiP2pManager mManager;
+
+	public static Channel mChannel;
 
     //pulic static boolean STOP = true;
     //public static boolean STOPPED = true;
