@@ -8,7 +8,7 @@ import my.game.achmed.ABEngine;
 import my.game.achmed.R;
 import my.game.achmed.Database.SingleRankDataSource;
 import my.game.achmed.R.layout;
-import my.game.achmed.Rank.Rank;
+import my.game.achmed.Score.Rank;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;

@@ -60,6 +60,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="landscape" >
         </activity>
+         <activity
+            android:name="my.game.achmed.Activities.ABMultiRank"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="landscape" >
+        </activity>
         <activity
             android:name="my.game.achmed.Activities.ABCreateSinglePlayer"
             android:configChanges="orientation|keyboardHidden"

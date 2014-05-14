@@ -145,7 +145,6 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 			//Toast.makeText(mActivity,list, Toast.LENGTH_LONG).show();
 
-
 			whoLeft.addAll(mGroup.getClientList());
 
 			if(group != null){
@@ -175,8 +174,6 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 		    }
 		});
-
-
 
 		mManager.requestPeers(mChannel, new PeerListListener() {
 

@@ -5,8 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import my.game.achmed.Rank.Rank;
-
+import my.game.achmed.Score.Rank;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

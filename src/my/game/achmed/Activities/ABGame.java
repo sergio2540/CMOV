@@ -1,7 +1,11 @@
 package my.game.achmed.Activities;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.TreeMap;
 
@@ -15,6 +19,10 @@ import my.game.achmed.Characters.Robot;
 import my.game.achmed.Database.SingleRankDataSource;
 import my.game.achmed.OpenGL.ABGameRenderer;
 import my.game.achmed.OpenGL.ABGameSurfaceView;
+import my.game.achmed.Score.MultiPlayerScore;
+import my.game.achmed.Score.MultiplayerRank;
+import my.game.achmed.State.Event;
+import my.game.achmed.State.LeaveState;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -59,8 +67,8 @@ public class ABGame extends Activity {
 		backPopUp = new Dialog(this);
 
 		LinearLayout backgroundImg = (LinearLayout) ((LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.ab_game_dialog, null);
-		
-		
+
+
 		backPopUp.requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		backPopUp.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 		backgroundImg.setBackgroundColor(Color.TRANSPARENT);
@@ -68,18 +76,18 @@ public class ABGame extends Activity {
 			ImageButton ib = (ImageButton) backgroundImg.findViewById(R.id.reload);
 			ib.setImageResource(R.drawable.split);
 			ib.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					onSplit(v);
 				}
-				
+
 			});
-			
+
 		}	
-		
+
 		backPopUp.setContentView(backgroundImg);
-		
+
 
 		wonOrLostPopUp = new Dialog(this){
 			@Override
@@ -428,7 +436,7 @@ public class ABGame extends Activity {
 				ABEngine.sendPlayerAction(ABEngine.PLAYER.getID(), ABEngine.PLAYER.getCurrentAction(), 
 						ABEngine.PLAYER.isStop(), ABEngine.PLAYER.isStopped(), ABEngine.PLAYER.HIDDEN);
 			}
-			
+
 			c.cancel();
 			onPause();
 
@@ -458,14 +466,14 @@ public class ABGame extends Activity {
 
 	public void onClickResume(View v){
 		c = counter((long)ABEngine.MILLIS_UNTIL_FINISHED);
-		
+
 		backPopUp.cancel();
 		ABEngine.PLAYER.HIDDEN = false;
 		if(ABEngine.isOnMultiplayer) {
 			ABEngine.sendPlayerAction(ABEngine.PLAYER.getID(), ABEngine.PLAYER.getCurrentAction(), 
 					ABEngine.PLAYER.isStop(), ABEngine.PLAYER.isStopped(), ABEngine.PLAYER.HIDDEN);
 		}
-		
+
 		c.start();
 		onResume();
 
@@ -477,18 +485,18 @@ public class ABGame extends Activity {
 		//startActivity(ab_game);
 		//this.finish();
 
-//		ABEngine.PLAYER = null;
-//		ABEngine.ENEMIES = new TreeMap<Character,Player>();
-//		ABEngine.ROBOTS = new ArrayList<Robot>();
+		//		ABEngine.PLAYER = null;
+		//		ABEngine.ENEMIES = new TreeMap<Character,Player>();
+		//		ABEngine.ROBOTS = new ArrayList<Robot>();
 
 		ABEngine.create_map(ABEngine.LEVEL.getGameLevelMatrix());
-		
+
 		if(!ABEngine.isOnMultiplayer) {
-		    ABEngine.PLAYER = null;
+			ABEngine.PLAYER = null;
 		}
-		
-		
-		
+
+
+
 		c = counter(Math.round(ABEngine.LEVEL.getGameDurationInSeconds()*1000));
 		c.start();
 
@@ -497,7 +505,7 @@ public class ABGame extends Activity {
 			ABEngine.sendPlayerAction(ABEngine.PLAYER.getID(), ABEngine.PLAYER.getCurrentAction(), 
 					ABEngine.PLAYER.isStop(), ABEngine.PLAYER.isStopped(), ABEngine.PLAYER.HIDDEN);
 		}
-		
+
 		onResume();
 		backPopUp.cancel();
 	}
@@ -548,35 +556,96 @@ public class ABGame extends Activity {
 
 	public void showRanks() {
 
-		String level = ABEngine.LEVEL.getLevelName();
-		float score = ABEngine.PLAYER.getScore();
-		String name = ABEngine.PLAYER_NICK;
+		if(ABEngine.isOnMultiplayer) {
 
-		singleRankDataSource.open();
-		singleRankDataSource.updatePlayerScore(name, level, score);
-		singleRankDataSource.close();
+			Intent highscore = new Intent(getApplicationContext(),
+					ABMultiRank.class);
 
-		Intent highscore = new Intent(getApplicationContext(),
-				ABSingleRank.class);
+			MultiplayerRank multiRank = new MultiplayerRank();
 
-		ABGame.this.startActivity(highscore);
-		
-		//E a ultima deve ser feito o finish
-		ABGame.this.finish();
+			if(ABEngine.ENEMIES != null) {
+				Collection<Player> enemies = ABEngine.ENEMIES.values();
+
+
+				for(Player enemie : enemies) {
+					//TODO trocar para getName
+					multiRank.addPlayer(new MultiPlayerScore("name", enemie.getScore(), false));
+				}
+
+			}
+
+			Player player = ABEngine.PLAYER;
+
+			multiRank.addPlayer(new MultiPlayerScore("name", player.getScore(), true));
+
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("MR", multiRank);
+			highscore.putExtra("MR", bundle);
+
+			ABGame.this.startActivity(highscore);
+			ABGame.this.finish();
+
+		} else {
+
+			String level = ABEngine.LEVEL.getLevelName();
+			float score = ABEngine.PLAYER.getScore();
+			String name = ABEngine.PLAYER_NICK;
+
+			singleRankDataSource.open();
+			singleRankDataSource.updatePlayerScore(name, level, score);
+			singleRankDataSource.close();
+
+			Intent highscore = new Intent(getApplicationContext(),
+					ABSingleRank.class);
+
+			ABGame.this.startActivity(highscore);
+
+			//E a ultima deve ser feito o finish
+			ABGame.this.finish();
+
+		}
 	}
 
 
 	public void onClickQuit(View v) {
 		Intent ab_main = new Intent(getApplicationContext(), ABMainMenu.class);
-		//limpa stack
+
+		//manda mensagem LEAVE para o GO
+		LeaveState leaveMessage = new LeaveState(ABEngine.PLAYER.getID(), Event.LEAVE);
+		ABEngine.sendStateMessage(leaveMessage);
+
 		ab_main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(ab_main);
 		this.finish();
 
 	}
-	
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		//resetar o que foi feito na recepcao da mensagem de INIT
+		//ter em conta o caso do group owner
+		if(ABEngine.isOnMultiplayer) {
+			ABEngine.LEVEL = null;
+			ABEngine.MAP = null;
+			ABEngine.FIRST_MAP_DRAW = false;
+			ABEngine.ENEMIES.clear();
+			ABEngine.AVAILABLE_PLAYERS.remove(ABEngine.PLAYER);
+			ABEngine.PLAYER = null;
+			ABEngine.isOnMultiplayer = false;
+
+			try {
+				ABEngine.GO_SOCKET.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+
+	}
+
 	public void onSplit(View v) {
-		
+
 	}
 
 }
