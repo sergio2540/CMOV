@@ -553,9 +553,9 @@ public abstract class Player extends Character implements Serializable {
 			if(r.isInRange(mtx_x,mtx_y)){
 				r.kill();
 
-				if(ABEngine.PLAYER.getID() == id){
+				//if(ABEngine.PLAYER.getID() == id){
 					robotKilled();
-				}
+				//}
 
 				break;
 			}
@@ -580,9 +580,9 @@ public abstract class Player extends Character implements Serializable {
 				if(p.isInRange(mtx_x, mtx_y)){
 					p.kill();
 
-					if(ABEngine.PLAYER.getID() == id){
+					//if(ABEngine.PLAYER.getID() == id){
 						opponentKilled();
-					}
+					//}
 
 					//ABEngine.ENEMIES.remove(p.getID());
 
@@ -613,7 +613,7 @@ public abstract class Player extends Character implements Serializable {
 	}
 
 	public void robotKilled(){
-		setScore(score = score + pointsPerRobotKilled);
+		setScore(score + pointsPerRobotKilled);
 	}
 
 	public char getID() {

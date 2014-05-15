@@ -7,119 +7,145 @@ import java.util.Set;
 
 import my.game.achmed.ABEngine;
 import my.game.achmed.R;
-import my.game.achmed.R.id;
-import my.game.achmed.R.layout;
-import my.game.achmed.R.menu;
+import my.game.achmed.Adapters.SplitPeersAdapter;
 import my.game.achmed.State.Peer;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 public class ABSplit extends Activity {
 
-	private static List<Peer> peers;
+	private volatile static List<Peer> peers;
 	private Set<Integer> playersToCreateGroup;
-
-
-
-
-
+	private static SplitPeersAdapter splitPeersAdapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_absplit);
 
-		//peers = new ArrayList<Peer>();
-
 		playersToCreateGroup = new HashSet<Integer>();
-
-
-		initializeGroupPeersList();
-
+		this.initializeGroupPeersList();
+		
 	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.absplit, menu);
-		return true;
+	protected void onResume() {
+		super.onResume();
+		
+		TextView tView = (TextView) findViewById(R.id.devices);
+		final Typeface font = Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
+		tView.setTypeface(font);
+		tView.setText("Online Players");
+		tView.setTextColor(Color.BLUE);
+		tView.setTextSize(16);
+		
+		Button b = (Button) findViewById(R.id.split);
+		b.setBackgroundColor(Color.DKGRAY);
+		b.setTextColor(Color.WHITE);
+		b.setTypeface(font);
+		b.setTextSize(16);
+		
 	}
 
 	public void splitGroup(View v){
+		
+		List<Peer> selectedPlayers = this.getPeersSelected(v);
 
-		connect();
+		//connect(selectedPlayers);
 
 	}
 
 
 	private void initializeGroupPeersList(){
 
-		//peersAd = new ArrayAdapter<String>(this, R., textViewResourceId);
-		int index = 0;
+		splitPeersAdapter = new SplitPeersAdapter(this, R.id.splitDevList, peers);
+		
 		ListView view = (ListView) findViewById(R.id.splitDevList);
-		for(Peer p : peers){
-			CheckBox box = new CheckBox(ABEngine.context);
-			box.setText(p.getPeerName());
-			view.addView(box, index);
-			
-			index++;
-
-		}
-
+		view.setAdapter(splitPeersAdapter);
 
 		view.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 				//connect(position);
-				playersToCreateGroup.add(position);
+				//playersToCreateGroup.add(position);
 
 			}
 		});
-
-
+		
 	}
 
 	public static void setPeers(List<Peer> peers2) {
 
 		peers = peers2;
+		//splitPeersAdapter.notifyDataSetChanged();
 	}
 
 
-	public void connect(){
+	public void connect(List<Peer> selectedPlayers) {
 
-		for(Integer player : playersToCreateGroup){
+		for(Peer player : selectedPlayers){
 
 			WifiP2pConfig config = new WifiP2pConfig();
-			config.deviceAddress = peers.get(player).getPeerAddress();
+			config.deviceAddress = player.getPeerAddress();
 			config.groupOwnerIntent = 0;
-			ABEngine.mManager.connect(ABEngine.mChannel, config, new ActionListener(){
-				@Override
-				public void onFailure(int arg0) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void onSuccess() {
-
-
-				}
-
-			});
+//			ABEngine.mManager.connect(ABEngine.mChannel, config, new ActionListener(){
+//				@Override
+//				public void onFailure(int reason) {
+//
+//				}
+//
+//				@Override
+//				public void onSuccess() {
+//
+//
+//				}
+//
+//			});
 
 
 		}
 
-
-
+	}
+	
+	public List<Peer> getPeersSelected(View v) {
+		
+		List<Peer> peersSelected = new ArrayList<Peer>();
+		
+		
+		ListView list = (ListView) findViewById(R.id.splitDevList);
+		LinearLayout view;
+		
+		
+		
+		for(int i = 0; i < list.getCount(); i++) {
+			view = (LinearLayout) list.getChildAt(i);
+			
+			CheckBox cBox = (CheckBox) view.findViewById(R.id.checkBox1);
+			
+			if(cBox.isChecked()) {
+				peersSelected.add(splitPeersAdapter.getItem(i));
+				Log.w("peers", "" + peersSelected.get(i));
+			}
+			
+				
+		}
+		
+		return peersSelected;
+		
 	}
 
 

@@ -105,10 +105,18 @@ public class ABMultiplayer extends Activity {
 		peers = new ArrayList<Peer>();
 		peersAd = new ArrayAdapter<Peer>(this, android.R.layout.simple_list_item_1, peers); 
 
+		final Typeface font = Typeface.createFromAsset(getAssets(),"fonts/Kraash Black.ttf");
+		
 		Button createNewGame  = (Button) findViewById(R.id.createNewGame);
 
-
+		createNewGame.setBackgroundColor(Color.DKGRAY);
+		createNewGame.setTextColor(Color.WHITE);
+		createNewGame.setTypeface(font);
+		createNewGame.setTextSize(16);
+		
 		createNewGame.setOnClickListener(new OnClickListener() {
+			
+			
 
 			@Override
 			public void onClick(View v) {
@@ -150,7 +158,7 @@ public class ABMultiplayer extends Activity {
 			mReceiver = new WiFiDirectBroadcastReceiver(ABEngine.mManager, ABEngine.mChannel, this);
 			registerReceiver(mReceiver, mIntentFilter);
 			mBound = true;
-
+			
 			ABEngine.mManager.removeGroup(ABEngine.mChannel, new ActionListener() {
 
 				@Override
