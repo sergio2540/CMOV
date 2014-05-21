@@ -57,9 +57,7 @@ public class ServerThread implements Runnable {
 			//peersSockets.add(clientSocket);
 			ABEngine.PEERS.add(clientSocket);
 				
-			ObjectOutputStream objOut = new ObjectOutputStream(clientSocket.getOutputStream());
-				    		    
-			ABEngine.PEERSSTREAMS.add(objOut);
+			
 				
 				
 				ServerInThread serverInThread = new ServerInThread(clientSocket);
@@ -73,6 +71,11 @@ public class ServerThread implements Runnable {
 				
 				Player pl = ABEngine.createRandomPlayer();
 				char id = pl.getID();
+				
+				ObjectOutputStream objOut = new ObjectOutputStream(clientSocket.getOutputStream());
+    		    
+				ABEngine.PEERSSTREAMS.put(id, objOut);
+				
 				Event e = Event.INIT;
 				int x = (int) pl.getXPosition();
 				int y = (int) pl.getYPosition();
@@ -83,6 +86,9 @@ public class ServerThread implements Runnable {
 				//Map<Character, Player> opponentsPlayers = ABEngine.ENEMIES;
 				//List<Robot> robots  = ABEngine.ROBOTS;
 				InitState initS = new InitState(id,e,x,y,level, clientSocket.getInetAddress());
+				PeerData pd = new PeerData();
+				pd.setIpAddress(clientSocket.getInetAddress().getHostAddress());
+				ServerCom.playingPeersnew.put(id,pd);
 				
 				ABEngine.broadCastMessage(initS);
 				

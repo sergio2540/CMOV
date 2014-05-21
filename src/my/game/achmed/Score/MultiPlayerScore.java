@@ -11,7 +11,7 @@ public class MultiPlayerScore implements Serializable {
 	
 	public String name; 
 	public float score;
-	boolean highlight;
+	public boolean highlight;
 	
 	public MultiPlayerScore(String name, float score, boolean highlight) {
 		this.name = name;

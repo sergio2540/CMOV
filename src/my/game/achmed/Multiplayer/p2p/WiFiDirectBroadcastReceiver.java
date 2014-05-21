@@ -19,6 +19,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.MatrixCursor;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
@@ -40,6 +42,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 	private final Channel mChannel;
 	private final ABMultiplayer mActivity;
 
+
 	//	private final IncommingCommTask currentIncommingTask = null;
 	//	private final OutgoingCommTask currentOutgoingTask = null;
 
@@ -52,6 +55,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 		this.mManager = manager;
 		this.mChannel = mChannel;
 		this.mActivity = activity;
+
 
 		//currentIncommingTask = new IncommingCommTask();
 
@@ -68,8 +72,13 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 	//		return currentOutgoingTask;
 	//	}
 
+
+
+
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
+
 		String action = intent.getAction();
 
 		if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
@@ -109,106 +118,105 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 					@Override
 					public void onGroupInfoAvailable(WifiP2pGroup group) {
 
-						String peersString = "";
+						//String peersString = "";
 
-						List<Peer> peers = new ArrayList<Peer>();
-						if(group != null){
+						//if(group != null){
 
-							WifiP2pDevice owner = group.getOwner();
+							//WifiP2pDevice owner = group.getOwner();
 
-								//e o group owner
-								if(owner.isGroupOwner()) { 
-//								Toast.makeText(mActivity, "Group owner?" + owner.isGroupOwner(), Toast.LENGTH_LONG).show();
-								peers.add(new Peer(owner.deviceName,owner.deviceAddress));
-								}
+							//e o group owner
+							//if(group.isGroupOwner()) { 
+
+								//for(WifiP2pDevice dev : group.getClientList()){
+								//	String deviceN = dev.deviceName;
+								//	String devAdd = dev.deviceAddress;
+								//	peers.add(new Peer(deviceN,devAdd));
+								//}
+							//}
+							//else{
+
+							//	peers.add(new Peer(owner.deviceName,owner.deviceAddress));
+							//}
+
+							//ABSplit.setPeers(peers);
+							//Toast.makeText(mActivity, peersString, Toast.LENGTH_LONG).show();
+
 						
 
-							for(WifiP2pDevice dev : group.getClientList()){
-								String deviceN = dev.deviceName;
-//								peersString += " " + deviceN;
-								String devAdd = dev.deviceAddress;
-								peers.add(new Peer(deviceN,devAdd));
-//								if(peersString.equals("")) {
-//									Toast.makeText(mActivity, "peer a null", Toast.LENGTH_LONG).show();
-//								}
-							}
-							ABSplit.setPeers(peers);
 
-							Toast.makeText(mActivity, peersString, Toast.LENGTH_LONG).show();
-
-						}
+					//}
 
 
 
 
-						if (mGroup == null){
-
-							mGroup = group;
-						}
-						else {
-
-							//verifica quem saiu
-							getWhoLeft(group);
-
-						}
-					}
-
-					private void getWhoLeft(WifiP2pGroup group) {
-
-						if(group == null) {
-							Toast.makeText(mActivity, "grupo a null", Toast.LENGTH_LONG).show();
-						}
-
-						//			if(group.getClientList() == null) {
-						//			    Toast.makeText(mActivity, "clientes a null", Toast.LENGTH_LONG).show();
-						//			    return;
-						//			}
-
-						List<WifiP2pDevice> whoLeft = new ArrayList<WifiP2pDevice>();
-
-						String list = "[";
-
-						if(group != null){
-							for (WifiP2pDevice g : group.getClientList()){
-								String n = g.deviceName; 
-								list += n + ", ";
-							}
-						}
-
-						list += "]";
-
-						//Toast.makeText(mActivity,list, Toast.LENGTH_LONG).show();
-
-
-						whoLeft.addAll(mGroup.getClientList());
-
-						if(group != null){
-							whoLeft.removeAll(group.getClientList());
-						}
+					if (mGroup == null){
 
 						mGroup = group;
-						list = "::";
-						for(WifiP2pDevice dev : whoLeft){
+					}
+					else {
 
-							list += dev.deviceName + " -";
-
-
-							//
-							//			    if(!ReceiveCommTask.characters.isEmpty()){
-							//				char c = ReceiveCommTask.characters.get();
-							//				ABEngine.ENEMIES.remove(c);
-							//			    }		
-
-						}
-
-						Toast.makeText(mActivity, list,
-								Toast.LENGTH_LONG).show();
-
-						//eliminar do jogo
-
+						//verifica quem saiu
+						getWhoLeft(group);
 
 					}
-				});
+				}
+
+				private void getWhoLeft(WifiP2pGroup group) {
+
+					if(group == null) {
+						Toast.makeText(mActivity, "grupo a null", Toast.LENGTH_LONG).show();
+					}
+
+					//			if(group.getClientList() == null) {
+					//			    Toast.makeText(mActivity, "clientes a null", Toast.LENGTH_LONG).show();
+					//			    return;
+					//			}
+
+					List<WifiP2pDevice> whoLeft = new ArrayList<WifiP2pDevice>();
+
+					String list = "[";
+
+					if(group != null){
+						for (WifiP2pDevice g : group.getClientList()){
+							String n = g.deviceName; 
+							list += n + ", ";
+						}
+					}
+
+					list += "]";
+
+					//Toast.makeText(mActivity,list, Toast.LENGTH_LONG).show();
+
+
+					whoLeft.addAll(mGroup.getClientList());
+
+					if(group != null){
+						whoLeft.removeAll(group.getClientList());
+					}
+
+					mGroup = group;
+					list = "::";
+					for(WifiP2pDevice dev : whoLeft){
+
+						list += dev.deviceName + " -";
+
+
+						//
+						//			    if(!ReceiveCommTask.characters.isEmpty()){
+						//				char c = ReceiveCommTask.characters.get();
+						//				ABEngine.ENEMIES.remove(c);
+						//			    }		
+
+					}
+
+					Toast.makeText(mActivity, list,
+							Toast.LENGTH_LONG).show();
+
+					//eliminar do jogo
+
+
+				}
+			});
 
 
 
@@ -257,94 +265,93 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 					}
 				});
 
-			}
-
-		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-
-			WifiP2pInfo ginfo = (WifiP2pInfo) intent.getParcelableExtra(
-					WifiP2pManager.EXTRA_WIFI_P2P_INFO);
-
-
-			NetworkInfo ninfo = (NetworkInfo) intent.getParcelableExtra(
-					WifiP2pManager.EXTRA_NETWORK_INFO);
-
-			if (ninfo.isConnected()){
-
-
-
-				mManager.requestConnectionInfo(mChannel, new ConnectionInfoListener() {
-
-					@Override
-					public void onConnectionInfoAvailable(WifiP2pInfo info) {
-						InetAddress goAddress = info.groupOwnerAddress;
-
-
-
-						Toast.makeText(mActivity, "onConnectionInfoAvailable.", Toast.LENGTH_LONG).show();
-
-						if(info.groupFormed && info.isGroupOwner){
-							//temos de verificar se somos owners e ja estamos num grupo.
-							//We start the server on this peer.
-							Toast.makeText(mActivity, "Group owner.", Toast.LENGTH_LONG).show();
-
-							if(server == null)
-								server = new ServerCom();
-
-							//			    if(client == null)
-							//				client = new ClientCom(goAddress.getHostAddress());
-
-						}
-						else if (info.groupFormed) {
-
-							if(client == null)
-								client = new ClientCom(goAddress.getHostAddress());
-
-							//			    if(currentIncommingTask.getStatus() == Status.RUNNING || currentIncommingTask.getStatus() == Status.PENDING)
-							//currentIncommingTask.cancel(true);
-
-							//			    if (currentOutgoingTask.getStatus() == Status.RUNNING || currentOutgoingTask.getStatus() == Status.PENDING)
-							//				currentOutgoingTask.cancel(true);
-
-							//currentOutgoingTask = new OutgoingCommTask();
-							//currentOutgoingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, goAddress.getHostAddress());
-
-
-							Toast.makeText(mActivity, "Group formed.", Toast.LENGTH_LONG).show();
-
-						}
-
-					} 
-
-				}
-						);
-			}
-			//	    WifiP2pGroup gp2p = (WifiP2pGroup) intent.getParcelableExtra(
-			//		    WifiP2pManager.EXTRA_WIFI_P2P_GROUP);
-
-
-
-			//ginfo.print();
-			boolean isFormedGroup = ginfo.groupFormed;
-			Toast.makeText(mActivity, "Network membership changed ",
-					Toast.LENGTH_SHORT).show();
-
-		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-			//
-			//	    WifiP2pInfo ginfo = (WifiP2pInfo) intent.getSerializableExtra(
-			//		    WifiP2pManager.EXTRA_WIFI_P2P_INFO);
-			//	    
-			//	    WifiP2pDevice dinfo = (WifiP2pDevice) intent.getSerializableExtra(
-			//		    WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-			//
-			//	    //ginfo.print();
-			//	    Toast.makeText(mActivity, dinfo.deviceName + ":" + (ginfo.isGroupOwner ? "GO" : "NOT GO!"),Toast.LENGTH_LONG).show();/////novaaaaa
-			//
-			//	    ChatRoom.gos.add(dinfo.deviceName);
-			//	    ChatRoom.adapter.notifyDataSetChanged(); 
-			//	    
-			Toast.makeText(mActivity, "Group ownership changed",
-					Toast.LENGTH_SHORT).show();
-
 		}
+
+	} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+
+		WifiP2pInfo ginfo = (WifiP2pInfo) intent.getParcelableExtra(
+				WifiP2pManager.EXTRA_WIFI_P2P_INFO);
+
+
+		NetworkInfo ninfo = (NetworkInfo) intent.getParcelableExtra(
+				WifiP2pManager.EXTRA_NETWORK_INFO);
+
+		if (ninfo.isConnected()){
+
+
+			mManager.requestConnectionInfo(mChannel, new ConnectionInfoListener() {
+
+				@Override
+				public void onConnectionInfoAvailable(WifiP2pInfo info) {
+					InetAddress goAddress = info.groupOwnerAddress;
+
+
+
+					Toast.makeText(mActivity, "onConnectionInfoAvailable.", Toast.LENGTH_LONG).show();
+
+					if(info.groupFormed && info.isGroupOwner){
+						//temos de verificar se somos owners e ja estamos num grupo.
+						//We start the server on this peer.
+						Toast.makeText(mActivity, "Group owner.", Toast.LENGTH_LONG).show();
+
+						if(server == null)
+							server = new ServerCom();
+
+						//			    if(client == null)
+						//				client = new ClientCom(goAddress.getHostAddress());
+
+					}
+					else if (info.groupFormed) {
+
+						if(client == null)
+							client = new ClientCom(goAddress.getHostAddress());
+
+						//			    if(currentIncommingTask.getStatus() == Status.RUNNING || currentIncommingTask.getStatus() == Status.PENDING)
+						//currentIncommingTask.cancel(true);
+
+						//			    if (currentOutgoingTask.getStatus() == Status.RUNNING || currentOutgoingTask.getStatus() == Status.PENDING)
+						//				currentOutgoingTask.cancel(true);
+
+						//currentOutgoingTask = new OutgoingCommTask();
+						//currentOutgoingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, goAddress.getHostAddress());
+
+
+						Toast.makeText(mActivity, "Group formed.", Toast.LENGTH_LONG).show();
+
+					}
+
+				} 
+
+			}
+					);
+		}
+		//	    WifiP2pGroup gp2p = (WifiP2pGroup) intent.getParcelableExtra(
+		//		    WifiP2pManager.EXTRA_WIFI_P2P_GROUP);
+
+
+
+		//ginfo.print();
+		boolean isFormedGroup = ginfo.groupFormed;
+		Toast.makeText(mActivity, "Network membership changed ",
+				Toast.LENGTH_SHORT).show();
+
+	} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
+		//
+		//	    WifiP2pInfo ginfo = (WifiP2pInfo) intent.getSerializableExtra(
+		//		    WifiP2pManager.EXTRA_WIFI_P2P_INFO);
+		//	    
+		//	    WifiP2pDevice dinfo = (WifiP2pDevice) intent.getSerializableExtra(
+		//		    WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+		//
+		//	    //ginfo.print();
+		//	    Toast.makeText(mActivity, dinfo.deviceName + ":" + (ginfo.isGroupOwner ? "GO" : "NOT GO!"),Toast.LENGTH_LONG).show();/////novaaaaa
+		//
+		//	    ChatRoom.gos.add(dinfo.deviceName);
+		//	    ChatRoom.adapter.notifyDataSetChanged(); 
+		//	    
+		Toast.makeText(mActivity, "Group ownership changed",
+				Toast.LENGTH_SHORT).show();
+
 	}
+}
 }

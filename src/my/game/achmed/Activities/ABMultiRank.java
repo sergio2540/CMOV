@@ -23,8 +23,6 @@ import android.view.ViewGroup;
 
 public class ABMultiRank extends Activity {
 
-	SingleRankDataSource singleRankDataSource;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,7 +32,7 @@ public class ABMultiRank extends Activity {
 		
 		multiRanks.sortPlayersScore();
 		
-		List<MultiPlayerScore> scores = multiRanks.getMultiplayerScoreList();
+		final List<MultiPlayerScore> scores = multiRanks.getMultiplayerScoreList();
 
 		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,9 +66,14 @@ public class ABMultiRank extends Activity {
 
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
+				boolean highlight = scores.get(position).highlight;
 				View view = super.getView(position, convertView, parent);
 				TextView textview = (TextView) view;
 				textview.setTypeface(font);
+				if(highlight) {
+					textview.setTextColor(Color.BLACK);
+					textview.setBackgroundColor(Color.WHITE);
+				}
 				textview.setGravity(Gravity.CENTER);
 				return textview;
 			}

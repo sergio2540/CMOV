@@ -15,59 +15,59 @@ import android.os.Message;
 
 public class ClientInThread implements Runnable {
 
-    private final Socket goSocket;
+	private final Socket goSocket;
 
-    public ClientInThread(Socket groupOwner) {
-	this.goSocket = groupOwner;
-	
-    }
-
-
-    @Override
-    public void run() {
-
-	while(true) {
-	    this.readSocket();
-	}
-
-    }
-
-    private void readSocket() {
-
-	ObjectInputStream objStream = null;
-	State message = null;
-	
-	try {
-
-	    InputStream i = goSocket.getInputStream();
-	    objStream = new ObjectInputStream(i);
-	  
-	    
-	    while((message = (State) objStream.readObject()) != null) {
-		
-		ABEngine.processStateMessage(message);
-		
-
-	    }
-
-	} catch (EOFException e){
-	    System.out.println(e);
-	} catch (ClassNotFoundException e){
-	    System.out.println(e);
-	} catch (IOException e) {
-	    System.out.println(e);
-	} 
-
-	finally{
-	    
-//	    if(objStream != null){
-//		objStream.close();
-//	    }
+	public ClientInThread(Socket groupOwner) {
+		this.goSocket = groupOwner;
 
 	}
 
 
-    }
+	@Override
+	public void run() {
+
+		while(true) {
+			this.readSocket();
+		}
+
+	}
+
+	private void readSocket() {
+
+		ObjectInputStream objStream = null;
+		State message = null;
+
+		try {
+
+			InputStream i = goSocket.getInputStream();
+			objStream = new ObjectInputStream(i);
+
+
+			while((message = (State) objStream.readObject()) != null) {
+
+				ABEngine.processStateMessage(message);
+
+
+			}
+
+		} catch (EOFException e){
+			System.out.println(e);
+		} catch (ClassNotFoundException e){
+			System.out.println(e);
+		} catch (IOException e) {
+			System.out.println(e);
+		} 
+
+		finally{
+
+			//	    if(objStream != null){
+				//		objStream.close();
+			//	    }
+
+		}
+
+
+	}
 
 
 }

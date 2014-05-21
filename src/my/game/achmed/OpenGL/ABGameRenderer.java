@@ -92,15 +92,11 @@ public class ABGameRenderer implements Renderer {
 
 	private void draw(GL10 gl) {
 
-		//n�o trocar a ordem das linhas 
-
-		//ABEngine.drawMapDebug();
-
 		drawMap(gl);
 
 
 		if(ABEngine.ROBOTS.size() != 0)
-			//moveRobots(gl);
+			moveRobots(gl);
 
 		if(ABEngine.ENEMIES.size() != 0)
 			movePlayers(gl);
@@ -349,6 +345,7 @@ public class ABGameRenderer implements Renderer {
 						robot.loadTexture(gl, ABEngine.GAME_ROBOTS, ABEngine.context);
 						ABEngine.ROBOTS.add(robot);
 					}
+					
 
 					break;
 

@@ -43,6 +43,14 @@ public class ABMusic extends Service {
 	public void onLowMemory() {
 		player.stop();
 	}
+	
+	public void stop() {
+		player.stop();
+	}
+	
+	public void start() {
+		player.start();
+	}
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
